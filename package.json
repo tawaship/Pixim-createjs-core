@@ -4,6 +4,7 @@
   "description": "",
   "main": "dist/pixi-createjs-core.cjs.js",
   "module": "dist/pixi-createjs-core.esm.js",
+  "types": "types/index.d.ts",
   "directories": {
     "lib": "lib"
   },
