@@ -1,5 +1,5 @@
 /*!
- * @tawaship/pixi-createjs-core.js - v1.0.3
+ * @tawaship/pixi-createjs-core.js - v1.0.4
  * 
  * @require pixi.js v5.3.2
  * @author tawaship (makazu.mori@gmail.com)

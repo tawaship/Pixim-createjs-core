@@ -1,6 +1,6 @@
 {
   "name": "@tawaship/pixi-createjs-core",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Plugin for processing the content published by Adobe Animate with pixi.js.",
   "main": "dist/pixi-createjs-core.cjs.js",
   "module": "dist/pixi-createjs-core.esm.js",

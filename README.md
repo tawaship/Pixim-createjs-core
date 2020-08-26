@@ -8,6 +8,13 @@
 
 ---
 
+## Support version
+
+- A complete set of content published with Adobe Animate version 20.02
+- pixi.js 5.3.2
+
+I have not confirmed the operation on other versions.
+
 ## How to install
 
 ```sh
