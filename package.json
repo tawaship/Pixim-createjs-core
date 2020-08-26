@@ -1,5 +1,5 @@
 {
-  "name": "pixi-createjs-core",
+  "name": "@tawaship/pixi-createjs-core",
   "version": "1.0.0",
   "description": "",
   "main": "dist/pixi-createjs-core.cjs.js",
