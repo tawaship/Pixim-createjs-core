@@ -1,0 +1,9 @@
+node_modules/
+docs/
+src/
+test/
+.travis.yml
+.gitignore
+jsdoc.json
+tsconfig.json
+rollup.config.js
