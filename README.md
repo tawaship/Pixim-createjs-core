@@ -39,3 +39,8 @@ npm install --save @tawaship/pixi-animate-core
 - createjs.Graphics
 - createjs.Text
 - createjs.ButtonHelper
+
+## Unimplemented
+
+- Filter effects
+- Unexpected processing method

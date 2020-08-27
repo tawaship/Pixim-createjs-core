@@ -1,5 +1,5 @@
 /*!
- * @tawaship/pixi-animate-core.js - v1.0.1
+ * @tawaship/pixi-animate-core.js - v1.0.2
  * 
  * @require pixi.js v5.3.2
  * @author tawaship (makazu.mori@gmail.com)
@@ -9,6 +9,91 @@
 'use strict';
 
 Object.defineProperty(exports, '__esModule', { value: true });
+
+var PIXI = require('pixi.js');
+
+/**
+ * @see http://pixijs.download/release/docs/PIXI.Container.html
+ * @private
+ */
+class PixiMovieClip extends PIXI.Container {
+    constructor(cjs) {
+        super();
+        this._createjs = cjs;
+    }
+    getCreatejs() {
+        return this._createjs;
+    }
+}
+/**
+ * @see http://pixijs.download/release/docs/PIXI.Sprite.html
+ * @private
+ */
+class PixiSprite extends PIXI.Sprite {
+    constructor(cjs) {
+        super();
+        this._createjs = cjs;
+    }
+    getCreatejs() {
+        return this._createjs;
+    }
+}
+/**
+ * @see http://pixijs.download/release/docs/PIXI.Container.html
+ * @private
+ */
+class PixiShape extends PIXI.Container {
+    constructor(cjs) {
+        super();
+        this._createjs = cjs;
+    }
+    getCreatejs() {
+        return this._createjs;
+    }
+}
+/**
+ * @see http://pixijs.download/release/docs/PIXI.Graphics.html
+ * @private
+ */
+class PixiGraphics extends PIXI.Graphics {
+    constructor(cjs) {
+        super();
+        this._createjs = cjs;
+    }
+    getCreatejs() {
+        return this._createjs;
+    }
+}
+/**
+ * @see http://pixijs.download/release/docs/PIXI.Container.html
+ * @private
+ */
+class PixiTextContainer extends PIXI.Container {
+    constructor(cjs, text) {
+        super();
+        this._createjs = cjs;
+        this._text = text;
+    }
+    get text() {
+        return this._text;
+    }
+    getCreatejs() {
+        return this._createjs;
+    }
+}
+/**
+ * @see http://pixijs.download/release/docs/PIXI.Container.html
+ * @private
+ */
+class PixiButtonHelper extends PIXI.Container {
+    constructor(cjs) {
+        super();
+        this._createjs = cjs;
+    }
+    getCreatejs() {
+        return this._createjs;
+    }
+}
 
 /**
  * @ignore
@@ -45,8 +130,6 @@ function overrideCreatejs(self, pixi) {
 		filters: null
 	};
 	
-	pixi._createjs = self;
-	
 	self._pixiData = {
 		instance: pixi,
 		regObj: pixi.anchor || pixi.pivot,
@@ -67,9 +150,9 @@ const EventMap = {
 		types: ['pointerdown'],
 		factory: function(self, cb) {
 			return function(e) {
-				e.currentTarget = e.currentTarget._createjs;
+				e.currentTarget = e.currentTarget.getCreatejs();
 				
-				e.target = e.target._createjs;
+				e.target = e.target.getCreatejs();
 				const ev = e.data;
 				e.rawX = ev.global.x;
 				e.rawY = ev.global.y;
@@ -85,9 +168,9 @@ const EventMap = {
 		types: ['pointerup'],
 		factory: function(self, cb) {
 			return function(e) {
-				e.currentTarget = e.currentTarget._createjs;
+				e.currentTarget = e.currentTarget.getCreatejs();
 				
-				e.target = e.target._createjs;
+				e.target = e.target.getCreatejs();
 				const ev = e.data;
 				e.rawX = ev.global.x;
 				e.rawY = ev.global.y;
@@ -103,9 +186,9 @@ const EventMap = {
 		types: ['pointerover'],
 		factory: function(self, cb) {
 			return function(e) {
-				e.currentTarget = e.currentTarget._createjs;
+				e.currentTarget = e.currentTarget.getCreatejs();
 				
-				e.target = e.target._createjs;
+				e.target = e.target.getCreatejs();
 				const ev = e.data;
 				e.rawX = ev.global.x;
 				e.rawY = ev.global.y;
@@ -120,9 +203,9 @@ const EventMap = {
 		types: ['pointerout'],
 		factory: function(self, cb) {
 			return function(e) {
-				e.currentTarget = e.currentTarget._createjs;
+				e.currentTarget = e.currentTarget.getCreatejs();
 				
-				e.target = e.currentTarget._createjs;
+				e.target = e.currentTarget.getCreatejs();
 				const ev = e.data;
 				e.rawX = ev.global.x;
 				e.rawY = ev.global.y;
@@ -143,7 +226,7 @@ const EventMap = {
 				
 				e.currentTarget = self;
 				
-				e.target = e.target && e.target._createjs;
+				e.target = e.target && e.target.getCreatejs();
 				const ev = e.data;
 				e.rawX = ev.global.x;
 				e.rawY = ev.global.y;
@@ -164,7 +247,7 @@ const EventMap = {
 				
 				_isDown = false;
 				
-				e.target = e.target && e.target._createjs;
+				e.target = e.target && e.target.getCreatejs();
 				const ev = e.data;
 				e.rawX = ev.global.x;
 				e.rawY = ev.global.y;
@@ -532,8 +615,8 @@ const appendixDescriptor = {
  */
 function makeClass(parent, unuseAppendix = false) {
 	class CjsWrap extends parent {
-		_overrideCreatejs(pixiClass) {
-			overrideCreatejs(this, new pixiClass());
+		_overrideCreatejs(pixi) {
+			overrideCreatejs(this, pixi);
 		}
 	}
 	
@@ -546,13 +629,13 @@ function makeClass(parent, unuseAppendix = false) {
 
 createjs.MovieClip = class MovieClip extends makeClass(createjsOrigin.MovieClip) {
 	constructor() {
-		this._overrideCreatejs(PIXI.Container);
+		this._overrideCreatejs(new PixiMovieClip(this));
 		
 		super(...arguments);
 	}
 	
 	initialize() {
-		this._overrideCreatejs(PIXI.Container);
+		this._overrideCreatejs(new PixiMovieClip(this));
 		this._pixiData.subInstance = this._pixiData.instance;//.addChild(new PIXI.Container());
 		
 		return super.initialize(...arguments);
@@ -591,13 +674,13 @@ createjs.MovieClip = class MovieClip extends makeClass(createjsOrigin.MovieClip)
 
 createjs.Sprite = class Sprite extends makeClass(createjsOrigin.Sprite) {
 	constructor() {
-		this._overrideCreatejs(PIXI.Sprite);
+		this._overrideCreatejs(new PixiSprite(this));
 		
 		super(...arguments);
 	}
 	
 	initialize() {
-		this._overrideCreatejs(PIXI.Sprite);
+		this._overrideCreatejs(new PixiSprite(this));
 		
 		return super.initialize(...arguments);
 	}
@@ -613,9 +696,9 @@ createjs.Sprite = class Sprite extends makeClass(createjsOrigin.Sprite) {
 	}
 };
 
-createjs.Shape = class Sprite extends makeClass(createjsOrigin.Shape) {
+createjs.Shape = class Shape extends makeClass(createjsOrigin.Shape) {
 	constructor() {
-		this._overrideCreatejs(PIXI.Container);
+		this._overrideCreatejs(new PixiShape(this));
 		this._pixiData.masked = [];
 		
 		super(...arguments);
@@ -648,9 +731,9 @@ createjs.Shape = class Sprite extends makeClass(createjsOrigin.Shape) {
 	}
 };
 
-createjs.Graphics = class Sprite extends makeClass(createjsOrigin.Graphics) {
+createjs.Graphics = class Graphics extends makeClass(createjsOrigin.Graphics) {
 	constructor() {
-		this._overrideCreatejs(PIXI.Graphics);
+		this._overrideCreatejs(new PixiGraphics(this));
 		
 		this._pixiData.instance.beginFill(0xFFEEEE, 1);
 		
@@ -905,9 +988,18 @@ Object.defineProperties(createjs.Graphics.prototype, {
 	}
 });
 
-createjs.Text = class Sprite extends makeClass(createjsOrigin.Text) {
+createjs.Text = class Text extends makeClass(createjsOrigin.Text) {
 	constructor(text, font, color) {
-		this._overrideCreatejs(PIXI.Container);
+		const _font = this._parseFont(font);
+		const t = new PIXI.Text(text, {
+			fontSize: _font.fontSize,
+			fontFamily: _font.fontFamily,
+			fill: this._parseColor(color),
+			wordWrap: true
+		});
+		
+		this._overrideCreatejs(new PixiTextContainer(this, t));
+		this._pixiData.instance.addChild(t);
 		
 		this._originParams = Object.assign(this._originParams, {
 			text: text,
@@ -917,15 +1009,6 @@ createjs.Text = class Sprite extends makeClass(createjsOrigin.Text) {
 			lineHeight: 0,
 			lineWidth: 0
 		});
-		
-		const _font = this._parseFont(font);
-		
-		this._pixiData.instance.text = this._pixiData.instance.addChild(new PIXI.Text(text, {
-			fontSize: _font.fontSize,
-			fontFamily: _font.fontFamily,
-			fill: this._parseColor(color),
-			wordWrap: true
-		}));
 		
 		super(...arguments);
 	}
@@ -1024,9 +1107,9 @@ createjs.Text = class Sprite extends makeClass(createjsOrigin.Text) {
 	}
 };
 
-createjs.ButtonHelper = class Sprite extends makeClass(createjsOrigin.ButtonHelper, true) {
+createjs.ButtonHelper = class ButtonHelper extends makeClass(createjsOrigin.ButtonHelper, true) {
 	constructor() {
-		this._overrideCreatejs(PIXI.Container);
+		this._overrideCreatejs(new PixiButtonHelper(this));
 		
 		const createjs = arguments[0];
 		const pixi = createjs._pixiData.instance;
