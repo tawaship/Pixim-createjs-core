@@ -1,5 +1,5 @@
 /*!
- * @tawaship/pixi-createjs-core.js - v1.0.4
+ * @tawaship/pixi-animate-core.js - v1.0.0
  * 
  * @require pixi.js v5.3.2
  * @author tawaship (makazu.mori@gmail.com)
@@ -1094,7 +1094,7 @@ createjs.ButtonHelper = class Sprite extends makeClass(createjsOrigin.ButtonHelp
  * @param id "lib.properties.id" in Animate content.
  * @param basepath Directory path of Animate content.
  */
-function prepareCreatejsAsync(id, basepath) {
+function prepareAnimateAsync(id, basepath) {
     const comp = window.AdobeAn.getComposition(id);
     if (!comp) {
         throw new Error('no composition');
@@ -1146,5 +1146,5 @@ function handleFileLoad(evt, comp) {
     }
 }
 
-export { prepareCreatejsAsync };
-//# sourceMappingURL=pixi-createjs-core.esm.js.map
+export { prepareAnimateAsync };
+//# sourceMappingURL=pixi-animate-core.esm.js.map

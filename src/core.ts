@@ -5,7 +5,7 @@ import * as PIXI from 'pixi.js';
  */
 declare const window: any;
 
-export type TCreatejsLibrary = {
+export type TAnimateLibrary = {
 	[ name: string ]: any;
 }
 
@@ -14,13 +14,13 @@ export type TCreatejsLibrary = {
  * @param id "lib.properties.id" in Animate content.
  * @param basepath Directory path of Animate content.
  */
-export function prepareCreatejsAsync(id: string, basepath: string) {
+export function prepareAnimateAsync(id: string, basepath: string) {
 	const comp = window.AdobeAn.getComposition(id);
 	if (!comp) {
 		throw new Error('no composition');
 	}
 	
-	const lib: TCreatejsLibrary = comp.getLibrary();
+	const lib: TAnimateLibrary = comp.getLibrary();
 	
 	return new Promise((resolve, reject) => {
 		if (lib.properties.manifest.length === 0) {
