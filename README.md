@@ -10,12 +10,20 @@
 
 ## Overview
 
+![overview](https://raw.githubusercontent.com/tawaship/pixi-animate-core/master/overview.png)
+
 ## Support version
 
 - A complete set of content published with Adobe Animate version 20.02
 - pixi.js 5.3.2
 
 I have not confirmed the operation on other versions.
+
+## How to install
+
+```sh
+npm install --save @tawaship/pixi-animate-core
+```
 
 ## Overrides
 
@@ -25,9 +33,3 @@ I have not confirmed the operation on other versions.
 - createjs.Graphics
 - createjs.Text
 - createjs.ButtonHelper
-
-## How to install
-
-```sh
-npm install --save @tawaship/pixi-animate-core
-```

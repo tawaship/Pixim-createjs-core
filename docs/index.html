@@ -3,8 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>@tawaship/pixi-createjs-core - v1.0.4</title>
-	<meta name="description" content="Documentation for @tawaship/pixi-createjs-core - v1.0.4">
+	<title>@tawaship/pixi-animate-core - v1.0.0</title>
+	<meta name="description" content="Documentation for @tawaship/pixi-animate-core - v1.0.0">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="assets/css/main.css">
 </head>
@@ -22,7 +22,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="index.html" class="title">@tawaship/pixi-createjs-core - v1.0.4</a>
+					<a href="index.html" class="title">@tawaship/pixi-animate-core - v1.0.0</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -56,7 +56,7 @@
 					<a href="globals.html">Globals</a>
 				</li>
 			</ul>
-			<h1>@tawaship/pixi-createjs-core - v1.0.4</h1>
+			<h1>@tawaship/pixi-animate-core - v1.0.0</h1>
 		</div>
 	</div>
 </header>
@@ -64,13 +64,17 @@
 	<div class="row">
 		<div class="col-8 col-content">
 			<div class="tsd-panel tsd-typography">
-				<a href="#tawashippixi-createjs-core" id="tawashippixi-createjs-core" style="color: inherit; text-decoration: none;">
-					<h1>@tawaship/pixi-createjs-core</h1>
+				<a href="#tawashippixi-animate-core" id="tawashippixi-animate-core" style="color: inherit; text-decoration: none;">
+					<h1>@tawaship/pixi-animate-core</h1>
 				</a>
 				<p>&quot;pixi-createjs-core&quot; is a plugin for processing the content published by Adobe Animate with &quot;<a href="https://github.com/pixijs/pixi.js">pixi.js</a>&quot;.</p>
 				<p><strong>This plugin is a core module, not intended to run alone.</strong></p>
 				<p><a href="LICENSE"><img src="http://img.shields.io/badge/license-MIT-blue.svg?style=flat" alt="MIT License"></a></p>
 				<hr>
+				<a href="#overview" id="overview" style="color: inherit; text-decoration: none;">
+					<h2>Overview</h2>
+				</a>
+				<p><img src="https://raw.githubusercontent.com/tawaship/pixi-animate-core/master/overview.png" alt="overview"></p>
 				<a href="#support-version" id="support-version" style="color: inherit; text-decoration: none;">
 					<h2>Support version</h2>
 				</a>
@@ -82,7 +86,18 @@
 				<a href="#how-to-install" id="how-to-install" style="color: inherit; text-decoration: none;">
 					<h2>How to install</h2>
 				</a>
-				<pre><code class="language-sh">npm install --save @tawaship/pixi-createjs-core</code></pre>
+				<pre><code class="language-sh">npm install --save @tawaship/pixi-animate-core</code></pre>
+				<a href="#overrides" id="overrides" style="color: inherit; text-decoration: none;">
+					<h2>Overrides</h2>
+				</a>
+				<ul>
+					<li>createjs.Movieclip</li>
+					<li>createjs.Sprite</li>
+					<li>createjs.Shape</li>
+					<li>createjs.Graphics</li>
+					<li>createjs.Text</li>
+					<li>createjs.ButtonHelper</li>
+				</ul>
 			</div>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
