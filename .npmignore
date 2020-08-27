@@ -7,3 +7,5 @@ test/
 jsdoc.json
 tsconfig.json
 rollup.config.js
+*.drawio
+*.png
