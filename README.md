@@ -1,6 +1,6 @@
 # @tawaship/pixi-animate-core
 
-"pixi-createjs-core" is a plugin for processing the content published by Adobe Animate with "[pixi.js](https://github.com/pixijs/pixi.js)".
+"pixi-createjs-core" is a module for processing the content published by Adobe Animate with "[pixi.js](https://github.com/pixijs/pixi.js)".
 
 **This plugin is a core module, not intended to run alone.**
 
@@ -10,7 +10,13 @@
 
 ## Overview
 
-![overview](https://raw.githubusercontent.com/tawaship/pixi-animate-core/master/overview.png)
+### Each original (simplified) flow
+
+![origin](https://raw.githubusercontent.com/tawaship/pixi-animate-core/master/origin.png)
+
+### Flow to be realized
+
+![core](https://raw.githubusercontent.com/tawaship/pixi-animate-core/master/core.png)
 
 ## Support version
 
