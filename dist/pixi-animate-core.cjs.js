@@ -1,5 +1,5 @@
 /*!
- * @tawaship/pixi-animate-core.js - v1.0.3
+ * @tawaship/pixi-animate-core.js - v1.0.4
  * 
  * @require pixi.js v5.3.2
  * @author tawaship (makazu.mori@gmail.com)
@@ -94,6 +94,8 @@ class PixiButtonHelper extends PIXI.Container {
         return this._createjs;
     }
 }
+(function (createjs) {
+})(exports.createjs || (exports.createjs = {}));
 
 /**
  * @ignore

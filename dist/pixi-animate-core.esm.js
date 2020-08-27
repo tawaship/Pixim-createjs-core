@@ -1,5 +1,5 @@
 /*!
- * @tawaship/pixi-animate-core.js - v1.0.3
+ * @tawaship/pixi-animate-core.js - v1.0.4
  * 
  * @require pixi.js v5.3.2
  * @author tawaship (makazu.mori@gmail.com)
@@ -90,6 +90,9 @@ class PixiButtonHelper extends Container {
         return this._createjs;
     }
 }
+var createjs$1;
+(function (createjs) {
+})(createjs$1 || (createjs$1 = {}));
 
 /**
  * @ignore
@@ -1229,5 +1232,5 @@ function handleFileLoad(evt, comp) {
     }
 }
 
-export { prepareAnimateAsync };
+export { createjs$1 as createjs, prepareAnimateAsync };
 //# sourceMappingURL=pixi-animate-core.esm.js.map

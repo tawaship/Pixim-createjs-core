@@ -136,8 +136,8 @@ export type TOriginParam = {
 	visible: boolean,
 	alpha: number,
 	_off: boolean,
-	mask: CreatejsDisplayObject | null,
-	filters: CreatejsColorFilter[] | null
+	mask: createjs.DisplayObject | null,
+	filters: createjs.ColorFilter[] | null
 };
 
 /**
@@ -147,18 +147,6 @@ export type TPixiData = {
 	regObj: PixiPoint,
 	events: { [name: string]: Function[] }
 };
-
-/**
- * @see https://createjs.com/docs/easeljs/classes/DisplayObject.html
- * @private
- */
-declare class CreatejsDisplayObject {}
-
-/**
- * @see https://createjs.com/docs/easeljs/classes/ColorFilter.html
- * @private
- */
-declare class CreatejsColorFilter {}
 
 /**
  * @private
