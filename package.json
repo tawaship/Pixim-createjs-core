@@ -1,9 +1,9 @@
 {
-  "name": "@tawaship/pixi-createjs-core",
-  "version": "1.0.4",
+  "name": "@tawaship/pixi-animate-core",
+  "version": "1.0.0",
   "description": "Plugin for processing the content published by Adobe Animate with pixi.js.",
-  "main": "dist/pixi-createjs-core.cjs.js",
-  "module": "dist/pixi-createjs-core.esm.js",
+  "main": "dist/pixi-animate-core.cjs.js",
+  "module": "dist/pixi-animate-core.esm.js",
   "types": "types/index.d.ts",
   "directories": {
     "lib": "lib"
@@ -21,22 +21,20 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tawaship/pixi-createjs-core.git"
+    "url": "git+https://github.com/tawaship/pixi-animate-core.git"
   },
   "author": "tawashi@",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/tawaship/pixi-createjs-core/issues"
+    "url": "https://github.com/tawaship/pixi-animate-core/issues"
   },
-  "homepage": "https://tawaship.github.io/pixi-createjs-core/",
+  "homepage": "https://tawaship.github.io/pixi-animate-core/",
   "devDependencies": {
-    "@rollup/plugin-buble": "^0.21.3",
     "@rollup/plugin-commonjs": "^11.0.2",
     "@rollup/plugin-node-resolve": "^7.1.1",
     "@rollup/plugin-typescript": "^3.0.0",
     "del": "^5.1.0",
     "rollup": "^1.32.1",
-    "rollup-plugin-terser": "^5.2.0",
     "tslib": "^1.11.0",
     "typedoc": "^0.18.0",
     "typescript": "^3.8.2"

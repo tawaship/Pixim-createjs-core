@@ -2,3 +2,4 @@ testgame/
 \!*
 node_modules/
 types/
+*.drawio

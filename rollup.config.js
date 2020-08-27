@@ -1,8 +1,6 @@
 import nodeResolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import typescript from '@rollup/plugin-typescript';
-//import buble from '@rollup/plugin-buble';
-//import { terser } from 'rollup-plugin-terser';
 import del from 'del';
 
 const conf = require('./package.json');
@@ -11,7 +9,7 @@ const pixi = conf.dependencies['pixi.js'].replace('^', '');
 
 const banner = [
 	'/*!',
-	` * @tawaship/pixi-createjs-core.js - v${version}`,
+	` * @tawaship/pixi-animate-core.js - v${version}`,
 	' * ',
 	` * @require pixi.js v${pixi}`,
 	' * @author tawaship (makazu.mori@gmail.com)',
@@ -31,13 +29,13 @@ export default (async () => {
 			output: [
 				{
 					banner,
-					file: 'dist/pixi-createjs-core.cjs.js',
+					file: 'dist/pixi-animate-core.cjs.js',
 					format: 'cjs',
 					sourcemap: true
 				},
 				{
 					banner,
-					file: 'dist/pixi-createjs-core.esm.js',
+					file: 'dist/pixi-animate-core.esm.js',
 					format: 'esm',
 					sourcemap: true
 				}
@@ -51,69 +49,6 @@ export default (async () => {
 				commonjs(),
 				typescript()
 			]
-		}/*,
-		{
-			input: 'src/index.ts',
-			output: [
-				{
-					banner,
-					file: 'dist/pixi-createjs-core.js',
-					format: 'iife',
-					name: 'pixi-createjs-core',
-					sourcemap: true,
-					extend: true,
-					globals: {
-						'pixi.js': 'PIXI'
-					}
-				}
-			],
-			external: ['pixi.js'],
-			plugins: [
-				nodeResolve(),
-				commonjs(),
-				typescript(),
-				buble(),
-				terser({
-					compress: {
-						//drop_console: true
-						pure_funcs: ['console.log']
-					},
-					mangle: false,
-					output: {
-						beautify: true,
-						braces: true
-					}
-				})
-			]
-		},
-		{
-			input: 'src/index.ts',
-			output: [
-				{
-					banner,
-					file: 'dist/pixi-createjs-core.min.js',
-					format: 'iife',
-					name: 'pixi-createjs-core',
-					extend: true,
-					globals: {
-						'pixi.js': 'PIXI'
-					},
-					compact: true
-				}
-			],
-			external: ['pixi.js'],
-			plugins: [
-				nodeResolve(),
-				commonjs(),
-				typescript(),
-				buble(),
-				terser({
-					compress: {
-						//drop_console: true,
-						pure_funcs: ['console.log']
-					}
-				})
-			]
-		}*/
+		}
 	]
 })();
