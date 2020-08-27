@@ -12,13 +12,17 @@
 
 ### Each original (simplified) flow
 
-![origin](https://raw.githubusercontent.com/tawaship/pixi-animate-core/master/origin.png)
+- createjs contents published with Adobe Animate
+![origin](https://raw.githubusercontent.com/tawaship/pixi-animate-core/master/img/animate.png)
+
+- pixi.js contents
+![origin](https://raw.githubusercontent.com/tawaship/pixi-animate-core/master/img/pixi.png)
 
 ### Flow to be realized
 
-![core](https://raw.githubusercontent.com/tawaship/pixi-animate-core/master/core.png)
+![core](https://raw.githubusercontent.com/tawaship/pixi-animate-core/master/img/core.png)
 
-## Support version
+## Supported versions
 
 - A complete set of content published with Adobe Animate version 20.02
 - pixi.js 5.3.2
