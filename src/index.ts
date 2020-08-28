@@ -1,10 +1,3 @@
-export * from './createjs/StageGL';
-export * from './createjs/MovieClip';
-export * from './createjs/Sprite';
-export * from './createjs/Shape';
-export * from './createjs/Bitmap';
-export * from './createjs/Graphics';
-export * from './createjs/Text';
-export * from './createjs/ButtonHelper';
+export * from './createjs/index';
 export * from './core';
 export { updateDisplayObjectChildren } from './createjs/core';

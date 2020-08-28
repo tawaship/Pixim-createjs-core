@@ -66,4 +66,3 @@ export class CreatejsSprite extends window.createjs.Sprite {
 }
 
 appendDisplayObjectDescriptor(CreatejsSprite);
-window.createjs.Sprite = CreatejsSprite;

@@ -76,4 +76,3 @@ export class CreatejsShape extends window.createjs.Shape {
 }
 
 appendDisplayObjectDescriptor(CreatejsShape);
-window.createjs.Shape = CreatejsShape;

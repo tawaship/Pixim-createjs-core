@@ -106,4 +106,3 @@ export class CreatejsButtonHelper extends window.createjs.ButtonHelper {
 }
 
 appendDisplayObjectDescriptor(CreatejsButtonHelper);
-window.createjs.ButtonHelper = CreatejsButtonHelper;

@@ -2,7 +2,6 @@ import * as PIXI from 'pixi.js';
 import { createPixiData, createOriginParams, updateDisplayObjectChildren } from './core';
 import { appendDisplayObjectDescriptor } from './append';
 
-
 /**
  * @ignore
  */
@@ -90,4 +89,3 @@ export class CreatejsMovieClip extends window.createjs.MovieClip {
 }
 
 appendDisplayObjectDescriptor(CreatejsMovieClip);
-window.createjs.MovieClip = CreatejsMovieClip;

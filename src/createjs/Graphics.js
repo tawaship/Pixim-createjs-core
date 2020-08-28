@@ -307,5 +307,3 @@ Object.defineProperties(CreatejsGraphics.prototype, {
 		value: CreatejsGraphics.prototype.drawPolyStar
 	}
 });
-
-window.createjs.Graphics = CreatejsGraphics;

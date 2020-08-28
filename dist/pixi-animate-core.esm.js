@@ -60,8 +60,6 @@ class CreatejsStageGL extends window.createjs.StageGL {
 	}
 }
 
-window.createjs.StageGL = CreatejsStageGL;
-
 /**
  * @ignore
  */
@@ -614,7 +612,6 @@ class CreatejsMovieClip extends window.createjs.MovieClip {
 }
 
 appendDisplayObjectDescriptor(CreatejsMovieClip);
-window.createjs.MovieClip = CreatejsMovieClip;
 
 /**
  * @ignore
@@ -680,7 +677,6 @@ class CreatejsSprite extends window.createjs.Sprite {
 }
 
 appendDisplayObjectDescriptor(CreatejsSprite);
-window.createjs.Sprite = CreatejsSprite;
 
 /**
  * @ignore
@@ -756,13 +752,6 @@ class CreatejsShape extends window.createjs.Shape {
 }
 
 appendDisplayObjectDescriptor(CreatejsShape);
-window.createjs.Shape = CreatejsShape;
-
-/**
- * @see https://createjs.com/docs/easeljs/classes/Bitmap.html
- */
-class CreatejsBitmap extends window.createjs.CreatejsBitmap {
-}
 
 /**
  * @ignore
@@ -1070,8 +1059,6 @@ Object.defineProperties(CreatejsGraphics.prototype, {
 	}
 });
 
-window.createjs.Graphics = CreatejsGraphics;
-
 /**
  * @ignore
  */
@@ -1249,7 +1236,6 @@ class CreatejsText extends window.createjs.Text {
 }
 
 appendDisplayObjectDescriptor(CreatejsText);
-window.createjs.Text = CreatejsText;
 
 /**
  * @ignore
@@ -1355,7 +1341,6 @@ class CreatejsButtonHelper extends window.createjs.ButtonHelper {
 }
 
 appendDisplayObjectDescriptor(CreatejsButtonHelper);
-window.createjs.ButtonHelper = CreatejsButtonHelper;
 
 /**
  * Prepare createjs content published with Adobe Animate.
@@ -1413,6 +1398,19 @@ function prepareAnimateAsync(id, basepath, options = {}) {
         return lib;
     });
 }
+function initializeAnimate(obj = {}) {
+    window.createjs.StageGL = CreatejsStageGL;
+    window.createjs.MovieClip = CreatejsMovieClip;
+    window.createjs.Sprite = CreatejsSprite;
+    window.createjs.Shape = CreatejsShape;
+    //window.createjs.Bitmap = createjs.CreatejsBitmap;
+    window.createjs.Graphics = CreatejsGraphics;
+    window.createjs.Text = CreatejsText;
+    window.createjs.ButtonHelper = CreatejsButtonHelper;
+    for (let i in obj) {
+        window.createjs[i] = obj[i];
+    }
+}
 /**
  * @ignore
  */
@@ -1423,5 +1421,5 @@ function handleFileLoad(evt, comp) {
     }
 }
 
-export { CreatejsBitmap, CreatejsButtonHelper, CreatejsGraphics, CreatejsMovieClip, CreatejsShape, CreatejsSprite, CreatejsStageGL, CreatejsText, PixiButtonHelper, PixiGraphics, PixiMovieClip, PixiShape, PixiSprite, PixiText, PixiTextContainer, prepareAnimateAsync, updateDisplayObjectChildren };
+export { CreatejsButtonHelper, CreatejsGraphics, CreatejsMovieClip, CreatejsShape, CreatejsSprite, CreatejsStageGL, CreatejsText, PixiButtonHelper, PixiGraphics, PixiMovieClip, PixiShape, PixiSprite, PixiText, PixiTextContainer, initializeAnimate, prepareAnimateAsync, updateDisplayObjectChildren };
 //# sourceMappingURL=pixi-animate-core.esm.js.map

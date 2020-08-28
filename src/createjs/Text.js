@@ -179,4 +179,3 @@ export class CreatejsText extends window.createjs.Text {
 }
 
 appendDisplayObjectDescriptor(CreatejsText);
-window.createjs.Text = CreatejsText;

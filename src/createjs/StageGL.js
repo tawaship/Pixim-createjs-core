@@ -8,5 +8,3 @@ export class CreatejsStageGL extends window.createjs.StageGL {
 		this.dispatchEvent("drawend");
 	}
 }
-
-window.createjs.StageGL = CreatejsStageGL;

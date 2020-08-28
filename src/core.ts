@@ -1,4 +1,5 @@
 import * as PIXI from 'pixi.js';
+import * as createjs from './createjs/index';
 
 /**
  * @ignore
@@ -82,6 +83,21 @@ export function prepareAnimateAsync(id: string, basepath: string, options: TPlay
 		
 		return lib;
 	});
+}
+
+export function initializeAnimate(obj: { [name: string]: any } = {}) {
+	window.createjs.StageGL = createjs.CreatejsStageGL;
+	window.createjs.MovieClip = createjs.CreatejsMovieClip;
+	window.createjs.Sprite = createjs.CreatejsSprite;
+	window.createjs.Shape = createjs.CreatejsShape;
+	//window.createjs.Bitmap = createjs.CreatejsBitmap;
+	window.createjs.Graphics = createjs.CreatejsGraphics;
+	window.createjs.Text = createjs.CreatejsText;
+	window.createjs.ButtonHelper = createjs.CreatejsButtonHelper;
+	
+	for (let i in obj) {
+		window.createjs[i] = obj[i];
+	}
 }
 
 /**
