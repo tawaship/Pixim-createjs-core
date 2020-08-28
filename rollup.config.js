@@ -40,7 +40,7 @@ export default (async () => {
 					sourcemap: true
 				}
 			],
-			external: ['pixi.js', 'createjs'],
+			external: ['pixi.js'],
 			watch: {
 				clearScreen: false
 			},

@@ -9,18 +9,35 @@ export type TAnimateLibrary = {
 	[ name: string ]: any;
 }
 
+export type TPlayerOption = {
+	/**
+	 * Whether synchronous playback of movie clips is enabled.
+	 */
+	useSynchedTimeline?: boolean
+};
+
 /**
  * Prepare createjs content published with Adobe Animate.
  * @param id "lib.properties.id" in Animate content.
  * @param basepath Directory path of Animate content.
  */
-export function prepareAnimateAsync(id: string, basepath: string) {
+export function prepareAnimateAsync(id: string, basepath: string, options: TPlayerOption = {}) {
 	const comp = window.AdobeAn.getComposition(id);
 	if (!comp) {
 		throw new Error('no composition');
 	}
 	
 	const lib: TAnimateLibrary = comp.getLibrary();
+	
+	if (!options.useSynchedTimeline) {
+		Object.defineProperties(window.createjs.MovieClip.prototype, {
+			updateForPixi: {
+				value: function(e) {
+					return this._tick(e);
+				}
+			}
+		});
+	}
 	
 	return new Promise((resolve, reject) => {
 		if (lib.properties.manifest.length === 0) {

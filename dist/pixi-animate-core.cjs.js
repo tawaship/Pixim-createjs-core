@@ -1,5 +1,5 @@
 /*!
- * @tawaship/pixi-animate-core.js - v1.0.4
+ * @tawaship/pixi-animate-core.js - v1.0.5
  * 
  * @require pixi.js v5.3.2
  * @author tawaship (makazu.mori@gmail.com)
@@ -10,134 +10,61 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-var PIXI = require('pixi.js');
+var PIXI$1 = require('pixi.js');
 
 /**
- * @see http://pixijs.download/release/docs/PIXI.Container.html
  * @private
  */
-class PixiMovieClip extends PIXI.Container {
-    constructor(cjs) {
-        super();
-        this._createjs = cjs;
-    }
-    getCreatejs() {
-        return this._createjs;
-    }
+function createOriginParams() {
+    return {
+        x: 0,
+        y: 0,
+        scaleX: 0,
+        scaleY: 0,
+        regx: 0,
+        regy: 0,
+        skewX: 0,
+        skewY: 0,
+        rotation: 0,
+        visible: true,
+        alpha: 1,
+        _off: false,
+        mask: null,
+        filters: null
+    };
 }
 /**
- * @see http://pixijs.download/release/docs/PIXI.Sprite.html
  * @private
  */
-class PixiSprite extends PIXI.Sprite {
-    constructor(cjs) {
-        super();
-        this._createjs = cjs;
-    }
-    getCreatejs() {
-        return this._createjs;
-    }
+function createPixiData(regObj) {
+    return {
+        regObj,
+        events: {}
+    };
 }
-/**
- * @see http://pixijs.download/release/docs/PIXI.Container.html
- * @private
- */
-class PixiShape extends PIXI.Container {
-    constructor(cjs) {
-        super();
-        this._createjs = cjs;
+function updateDisplayObjectChildren(self, e) {
+    const list = self.children.slice();
+    for (let i = 0, l = list.length; i < l; i++) {
+        const child = list[i];
+        if (!child.isVisible()) {
+            continue;
+        }
+        //child.draw();
+        child.updateForPixi(e);
     }
-    getCreatejs() {
-        return this._createjs;
-    }
+    return true;
 }
-/**
- * @see http://pixijs.download/release/docs/PIXI.Graphics.html
- * @private
- */
-class PixiGraphics extends PIXI.Graphics {
-    constructor(cjs) {
-        super();
-        this._createjs = cjs;
-    }
-    getCreatejs() {
-        return this._createjs;
-    }
-}
-/**
- * @see http://pixijs.download/release/docs/PIXI.Container.html
- * @private
- */
-class PixiTextContainer extends PIXI.Container {
-    constructor(cjs, text) {
-        super();
-        this._createjs = cjs;
-        this._text = text;
-    }
-    get text() {
-        return this._text;
-    }
-    getCreatejs() {
-        return this._createjs;
-    }
-}
-/**
- * @see http://pixijs.download/release/docs/PIXI.Container.html
- * @private
- */
-class PixiButtonHelper extends PIXI.Container {
-    constructor(cjs) {
-        super();
-        this._createjs = cjs;
-    }
-    getCreatejs() {
-        return this._createjs;
-    }
-}
-(function (createjs) {
-})(exports.createjs || (exports.createjs = {}));
 
-/**
- * @ignore
- */
-const createjsOrigin = {
-	DisplayObject: createjs.DisplayObject,
-	MovieClip: createjs.MovieClip,
-	Sprite: createjs.Sprite,
-	Container: createjs.Container,
-	Text: createjs.Text,
-	Shape: createjs.Shape,
-	Graphics: createjs.Graphics,
-	ButtonHelper: createjs.ButtonHelper
-};
-
-/**
- * @ignore
- */
-function overrideCreatejs(self, pixi) {
-	self._originParams = {
-		x: 0,
-		y: 0,
-		scaleX: 0,
-		scaleY: 0,
-		regx: 0,
-		regy: 0,
-		skewX: 0,
-		skewY: 0,
-		rotation: 0,
-		visible: true,
-		alpha: 1,
-		_off: false,
-		mask: null,
-		filters: null
-	};
-	
-	self._pixiData = {
-		instance: pixi,
-		regObj: pixi.anchor || pixi.pivot,
-		events: {}
-	};
+class CreatejsStageGL extends window.createjs.StageGL {
+	updateForPixi(props) {
+		if (this.tickOnUpdate) { this.tick(props); }
+		this.dispatchEvent("drawstart");
+		updateDisplayObjectChildren(this);
+		this.dispatchEvent("drawend");
+	}
 }
+
+window.createjs.StageGL = CreatejsStageGL;
 
 /**
  * @ignore
@@ -152,9 +79,9 @@ const EventMap = {
 		types: ['pointerdown'],
 		factory: function(self, cb) {
 			return function(e) {
-				e.currentTarget = e.currentTarget.getCreatejs();
+				e.currentTarget = e.currentTarget.createjs;
 				
-				e.target = e.target.getCreatejs();
+				e.target = e.target.createjs;
 				const ev = e.data;
 				e.rawX = ev.global.x;
 				e.rawY = ev.global.y;
@@ -170,9 +97,9 @@ const EventMap = {
 		types: ['pointerup'],
 		factory: function(self, cb) {
 			return function(e) {
-				e.currentTarget = e.currentTarget.getCreatejs();
+				e.currentTarget = e.currentTarget.createjs;
 				
-				e.target = e.target.getCreatejs();
+				e.target = e.target.createjs;
 				const ev = e.data;
 				e.rawX = ev.global.x;
 				e.rawY = ev.global.y;
@@ -188,9 +115,9 @@ const EventMap = {
 		types: ['pointerover'],
 		factory: function(self, cb) {
 			return function(e) {
-				e.currentTarget = e.currentTarget.getCreatejs();
+				e.currentTarget = e.currentTarget.createjs;
 				
-				e.target = e.target.getCreatejs();
+				e.target = e.target.createjs;
 				const ev = e.data;
 				e.rawX = ev.global.x;
 				e.rawY = ev.global.y;
@@ -205,9 +132,9 @@ const EventMap = {
 		types: ['pointerout'],
 		factory: function(self, cb) {
 			return function(e) {
-				e.currentTarget = e.currentTarget.getCreatejs();
+				e.currentTarget = e.currentTarget.createjs;
 				
-				e.target = e.currentTarget.getCreatejs();
+				e.target = e.currentTarget.createjs;
 				const ev = e.data;
 				e.rawX = ev.global.x;
 				e.rawY = ev.global.y;
@@ -228,7 +155,7 @@ const EventMap = {
 				
 				e.currentTarget = self;
 				
-				e.target = e.target && e.target.getCreatejs();
+				e.target = e.target && e.target.createjs;
 				const ev = e.data;
 				e.rawX = ev.global.x;
 				e.rawY = ev.global.y;
@@ -249,7 +176,7 @@ const EventMap = {
 				
 				_isDown = false;
 				
-				e.target = e.target && e.target.getCreatejs();
+				e.target = e.target && e.target.createjs;
 				const ev = e.data;
 				e.rawX = ev.global.x;
 				e.rawY = ev.global.y;
@@ -263,17 +190,7 @@ const EventMap = {
 /**
  * @ignore
  */
-const DEG_TO_RAD = Math.PI / 180;
-
-/**
- * @ignore
- */
-const COLOR_RED = 16 * 16 * 16 * 16;
-
-/**
- * @ignore
- */
-const COLOR_GREEN = 16 * 16;
+const DEG_TO_RAD$1 = Math.PI / 180;
 
 /**
  * @ignore
@@ -325,7 +242,7 @@ const appendixDescriptor = {
 		},
 		
 		set: function(value) {
-			this._pixiData.instance.skew.x = -value * DEG_TO_RAD;
+			this._pixiData.instance.skew.x = -value * DEG_TO_RAD$1;
 			return this._originParams.skewX = value;
 		}
 	},
@@ -335,7 +252,7 @@ const appendixDescriptor = {
 		},
 		
 		set: function(value) {
-			this._pixiData.instance.skew.y = value * DEG_TO_RAD;
+			this._pixiData.instance.skew.y = value * DEG_TO_RAD$1;
 			return this._originParams.skewY = value;
 		}
 	
@@ -366,7 +283,7 @@ const appendixDescriptor = {
 		},
 		
 		set: function(value) {
-			this._pixiData.instance.rotation = value * DEG_TO_RAD;
+			this._pixiData.instance.rotation = value * DEG_TO_RAD$1;
 			return this._originParams.rotation = value;
 		}
 	},
@@ -408,7 +325,7 @@ const appendixDescriptor = {
 			
 			this._pixiData.instance.emit(type, eventObj);
 			
-			return createjsOrigin.DisplayObject.prototype.dispatchEvent.apply(this, arguments);
+			return window.createjs.DisplayObject.prototype.dispatchEvent.apply(this, arguments);
 		}
 	},
 	*/
@@ -437,7 +354,7 @@ const appendixDescriptor = {
 				this._pixiData.instance.interactive = true;
 			}
 			
-			return createjsOrigin.DisplayObject.prototype.addEventListener.apply(this, arguments);
+			return window.createjs.DisplayObject.prototype.addEventListener.apply(this, arguments);
 		}
 	},
 	removeEventListener: {
@@ -469,7 +386,7 @@ const appendixDescriptor = {
 				}
 			}
 			
-			const res = createjsOrigin.DisplayObject.prototype.removeEventListener.apply(this, arguments);
+			const res = window.createjs.DisplayObject.prototype.removeEventListener.apply(this, arguments);
 			
 			const listeners = this._listeners;
 			if (!listeners) {
@@ -495,7 +412,7 @@ const appendixDescriptor = {
 			this._pixi.instance.interactive = false;
 			this._pixiData.events = {};
 			
-			return createjsOrigin.DisplayObject.prototype.removeAllEventListeners.apply(this, arguments);
+			return window.createjs.DisplayObject.prototype.removeAllEventListeners.apply(this, arguments);
 		}
 	},
 	mask: {
@@ -604,41 +521,57 @@ const appendixDescriptor = {
 			
 			return this._originParams.filters = value;
 		}
-	},
-	getPixi: {
-		value: function() {
-			return this._pixiData.instance;
-		}
 	}
 };
 
 /**
  * @ignore
  */
-function makeClass(parent, unuseAppendix = false) {
-	class CjsWrap extends parent {
-		_overrideCreatejs(pixi) {
-			overrideCreatejs(this, pixi);
-		}
-	}
-	
-	if (!unuseAppendix) {
-		Object.defineProperties(CjsWrap.prototype, appendixDescriptor);
-	}
-	
-	return CjsWrap;
+function appendDisplayObjectDescriptor(cls) {
+	Object.defineProperties(cls.prototype, appendixDescriptor);
 }
 
-createjs.MovieClip = class MovieClip extends makeClass(createjsOrigin.MovieClip) {
+/**
+ * @ignore
+ */
+class PixiMovieClip extends PIXI$1.Container {
+	constructor(cjs) {
+		super();
+		
+		this._createjs = cjs;
+	}
+	
+	get createjs() {
+		return this._createjs;
+	}
+}
+
+/**
+ * @ignore
+ */
+function createMovieClipPixiData(cjs) {
+	const pixi = new PixiMovieClip(cjs);
+	
+	return Object.assign(createPixiData(pixi.pivot), {
+		instance: pixi,
+		subInstance: pixi
+	});
+}
+
+/**
+ * @ignore
+ */
+class CreatejsMovieClip extends window.createjs.MovieClip {
 	constructor() {
-		this._overrideCreatejs(new PixiMovieClip(this));
+		this._originParams = createOriginParams();
+		this._pixiData = createMovieClipPixiData(this);
 		
 		super(...arguments);
 	}
 	
 	initialize() {
-		this._overrideCreatejs(new PixiMovieClip(this));
-		this._pixiData.subInstance = this._pixiData.instance;//.addChild(new PIXI.Container());
+		this._originParams = createOriginParams();
+		this._pixiData = createMovieClipPixiData(this);
 		
 		return super.initialize(...arguments);
 	}
@@ -672,17 +605,61 @@ createjs.MovieClip = class MovieClip extends makeClass(createjsOrigin.MovieClip)
 		
 		return super.removeAllChldren();
 	}
-};
+	
+	get pixi() {
+		return this._pixiData.instance;
+	}
+	
+	updateForPixi(e) {
+		this._updateState();
+		
+		return updateDisplayObjectChildren(this, e);
+	}
+}
 
-createjs.Sprite = class Sprite extends makeClass(createjsOrigin.Sprite) {
+appendDisplayObjectDescriptor(CreatejsMovieClip);
+window.createjs.MovieClip = CreatejsMovieClip;
+
+/**
+ * @ignore
+ */
+class PixiSprite extends PIXI$1.Sprite {
+	constructor(cjs) {
+		super();
+		
+		this._createjs = cjs;
+	}
+	
+	get createjs() {
+		return this._createjs;
+	}
+}
+
+/**
+ * @ignore
+ */
+function createSpritePixiData(cjs) {
+	const pixi = new PixiSprite(cjs);
+	
+	return Object.assign(createPixiData(pixi.anchor), {
+		instance: pixi
+	});
+}
+
+/**
+ * @ignore
+ */
+class CreatejsSprite extends window.createjs.Sprite {
 	constructor() {
-		this._overrideCreatejs(new PixiSprite(this));
+		this._originParams = createOriginParams();
+		this._pixiData = createSpritePixiData(this);
 		
 		super(...arguments);
 	}
 	
 	initialize() {
-		this._overrideCreatejs(new PixiSprite(this));
+		this._originParams = createOriginParams();
+		this._pixiData = createSpritePixiData(this);
 		
 		return super.initialize(...arguments);
 	}
@@ -691,17 +668,58 @@ createjs.Sprite = class Sprite extends makeClass(createjsOrigin.Sprite) {
 		super.gotoAndStop(...arguments);
 		
 		const frame = this.spriteSheet.getFrame(this.currentFrame);
-		const baseTexture = PIXI.BaseTexture.from(frame.image);
-		const texture = new PIXI.Texture(baseTexture, frame.rect);
+		const baseTexture = PIXI$1.BaseTexture.from(frame.image);
+		const texture = new PIXI$1.Texture(baseTexture, frame.rect);
 		
 		this._pixiData.instance.texture = texture;
 	}
-};
+	
+	get pixi() {
+		return this._pixiData.instance;
+	}
+	
+	updateForPixi() {
+		return true;
+	}
+}
 
-createjs.Shape = class Shape extends makeClass(createjsOrigin.Shape) {
+appendDisplayObjectDescriptor(CreatejsSprite);
+window.createjs.Sprite = CreatejsSprite;
+
+/**
+ * @ignore
+ */
+class PixiShape extends PIXI$1.Container {
+	constructor(cjs) {
+		super();
+		
+		this._createjs = cjs;
+	}
+	
+	get createjs() {
+		return this._createjs;
+	}
+}
+
+/**
+ * @ignore
+ */
+function createShapePixiData(cjs) {
+	const pixi = new PixiShape(cjs);
+	
+	return Object.assign(createPixiData(pixi.pivot), {
+		instance: pixi,
+		masked: []
+	});
+}
+
+/**
+ * @ignore
+ */
+class CreatejsShape extends window.createjs.Shape {
 	constructor() {
-		this._overrideCreatejs(new PixiShape(this));
-		this._pixiData.masked = [];
+		this._originParams = createOriginParams();
+		this._pixiData = createShapePixiData(this);
 		
 		super(...arguments);
 	}
@@ -729,20 +747,96 @@ createjs.Shape = class Shape extends makeClass(createjsOrigin.Shape) {
 			this._pixiData.instance.addChild(value._pixiData.instance);
 		}
 		
-		return this._graphics = value;
+		this._graphics = value;
 	}
+	
+	get pixi() {
+		return this._pixiData.instance;
+	}
+	
+	updateForPixi() {
+		return true;
+	}
+}
+
+appendDisplayObjectDescriptor(CreatejsShape);
+window.createjs.Shape = CreatejsShape;
+
+/**
+ * @see https://createjs.com/docs/easeljs/classes/Bitmap.html
+ */
+class CreatejsBitmap extends window.createjs.CreatejsBitmap {
+}
+
+/**
+ * @ignore
+ */
+class PixiGraphics extends PIXI$1.Graphics {
+	constructor(cjs) {
+		super();
+		
+		this._createjs = cjs;
+	}
+	
+	get createjs() {
+		return this._createjs;
+	}
+}
+
+/**
+ * @ignore
+ */
+function createGraphicsPixiData(cjs) {
+	const pixi = new PixiGraphics(cjs);
+	
+	return Object.assign(createPixiData(pixi.pivot), {
+		instance: pixi,
+		strokeFill: 0,
+		strokeAlpha: 1
+	});
+}
+
+/**
+ * @ignore
+ */
+const COLOR_RED = 16 * 16 * 16 * 16;
+
+/**
+ * @ignore
+ */
+const COLOR_GREEN = 16 * 16;
+
+/**
+ * @ignore
+ */
+const LineCap = {
+	0: PIXI$1.LINE_CAP.BUTT,
+	1: PIXI$1.LINE_CAP.ROUND,
+	2: PIXI$1.LINE_CAP.SQUARE
 };
 
-createjs.Graphics = class Graphics extends makeClass(createjsOrigin.Graphics) {
+/**
+ * @ignore
+ */
+const LineJoin = {
+	0: PIXI$1.LINE_JOIN.MITER,
+	1: PIXI$1.LINE_JOIN.ROUND,
+	2: PIXI$1.LINE_JOIN.BEVEL
+};
+
+/**
+ * @ignore
+ */
+class CreatejsGraphics extends window.createjs.Graphics {
 	constructor() {
-		this._overrideCreatejs(new PixiGraphics(this));
-		
-		this._pixiData.instance.beginFill(0xFFEEEE, 1);
-		
-		this._pixiData.strokeFill = 0;
-		this._pixiData.strokeAlpha = 1;
+		this._originParams = createOriginParams();
+		this._pixiData = createGraphicsPixiData(this);
 		
 		super(...arguments);
+		
+		this._pixiData.instance.beginFill(0xFFEEEE, 1);
+		this._pixiData.strokeFill = 0;
+		this._pixiData.strokeAlpha = 1;
 	}
 	
 	moveTo(x, y) {
@@ -796,8 +890,6 @@ createjs.Graphics = class Graphics extends makeClass(createjsOrigin.Graphics) {
 	closePath() {
 		this._pixiData.instance.closePath();
 		
-		const points = this._pixiData.instance.currentPath.points;
-		
 		return super.closePath();
 	}
 	
@@ -823,10 +915,10 @@ createjs.Graphics = class Graphics extends makeClass(createjsOrigin.Graphics) {
 			return res;
 		}
 		
-		color = color.replace(/rgba|\(|\)|\s/g, '').split(',');
+		const colors = color.replace(/rgba|\(|\)|\s/g, '').split(',');
 		
-		res.color = Number(color[0]) * COLOR_RED + Number(color[1]) * COLOR_GREEN + Number(color[2]);
-		res.alpha = Number(color[3]);
+		res.color = Number(colors[0]) * COLOR_RED + Number(colors[1]) * COLOR_GREEN + Number(colors[2]);
+		res.alpha = Number(colors[3]);
 		
 		return res;
 	}
@@ -837,7 +929,7 @@ createjs.Graphics = class Graphics extends makeClass(createjsOrigin.Graphics) {
 		
 		return super.beginFill(color);
 	}
-		
+	
 	endFill() {
 		this._pixiData.instance.endFill();
 		
@@ -845,12 +937,12 @@ createjs.Graphics = class Graphics extends makeClass(createjsOrigin.Graphics) {
 	}
 	
 	setStrokeStyle(thickness, caps, joints, miterLimit, ignoreScale) {
-		this._pixiData.instance.lineStyle({
+		this._pixiData.instance.lineTextureStyle({
 			width: thickness,
 			color: this._pixiData.strokeFill,
 			alpha: this._pixiData.strokeAlpha,
-			cap: (caps in LineCap) ? LineCap[caps] : caps,
-			join: (joints in LineJoin) ? LineJoin[joints] : joints,
+			cap: (caps in LineCap) ? LineCap[caps] : LineCap[0],
+			join: (joints in LineJoin) ? LineJoin[joints] : LineJoin[0],
 			miterLimit: miterLimit
 		});
 		
@@ -888,129 +980,171 @@ createjs.Graphics = class Graphics extends makeClass(createjsOrigin.Graphics) {
 		
 		return super.drawPolyStar(x, y, radius, sides, pointSize, angle);
 	}
-};
+	
+	get pixi() {
+		return this._pixiData.instance;
+	}
+	
+	updateForPixi() {
+		return true;
+	}
+}
 
-/**
- * @ignore
- */
-const LineCap = {
-	0: PIXI.LINE_JOIN.BUTT,
-	1: PIXI.LINE_JOIN.ROUND,
-	2: PIXI.LINE_JOIN.SQUARE
-};
+appendDisplayObjectDescriptor(CreatejsGraphics);
 
-/**
- * @ignore
- */
-const LineJoin = {
-	0: PIXI.LINE_JOIN.MITER,
-	1: PIXI.LINE_JOIN.ROUND,
-	2: PIXI.LINE_JOIN.BEVEL
-};
-
-Object.defineProperties(createjs.Graphics.prototype, {
+Object.defineProperties(CreatejsGraphics.prototype, {
 	curveTo: {
-		value: createjs.Graphics.prototype.quadraticCurveTo
+		value: CreatejsGraphics.prototype.quadraticCurveTo
 	},
 	
 	drawRect: {
-		value: createjs.Graphics.prototype.rect
+		value: CreatejsGraphics.prototype.rect
 	},
 	
 	mt: {
-		value: createjs.Graphics.prototype.moveTo
+		value: CreatejsGraphics.prototype.moveTo
 	},
 	
 	lt: {
-		value: createjs.Graphics.prototype.lineTo
+		value: CreatejsGraphics.prototype.lineTo
 	},
 	
 	at: {
-		value: createjs.Graphics.prototype.arcTo
+		value: CreatejsGraphics.prototype.arcTo
 	},
 	
 	bt: {
-		value: createjs.Graphics.prototype.bezierCurveTo
+		value: CreatejsGraphics.prototype.bezierCurveTo
 	},
 	
 	qt: {
-		value: createjs.Graphics.prototype.quadraticCurveTo
+		value: CreatejsGraphics.prototype.quadraticCurveTo
 	},
 	
 	a: {
-		value: createjs.Graphics.prototype.arc
+		value: CreatejsGraphics.prototype.arc
 	},
 	
 	r: {
-		value: createjs.Graphics.prototype.rect
+		value: CreatejsGraphics.prototype.rect
 	},
 	
 	cp: {
-		value: createjs.Graphics.prototype.closePath
+		value: CreatejsGraphics.prototype.closePath
 	},
 	
 	c: {
-		value: createjs.Graphics.prototype.clear
+		value: CreatejsGraphics.prototype.clear
 	},
 	
 	f: {
-		value: createjs.Graphics.prototype.beginFill
+		value: CreatejsGraphics.prototype.beginFill
 	},
 	
 	ef: {
-		value: createjs.Graphics.prototype.endFill
+		value: CreatejsGraphics.prototype.endFill
 	},
 	
 	ss: {
-		value: createjs.Graphics.prototype.setStrokeStyle
+		value: CreatejsGraphics.prototype.setStrokeStyle
 	},
 	
 	s: {
-		value: createjs.Graphics.prototype.beginStroke
+		value: CreatejsGraphics.prototype.beginStroke
 	},
 	
 	dr: {
-		value: createjs.Graphics.prototype.drawRect
+		value: CreatejsGraphics.prototype.drawRect
 	},
 	
 	rr: {
-		value: createjs.Graphics.prototype.drawRoundRect
+		value: CreatejsGraphics.prototype.drawRoundRect
 	},
 	
 	dc: {
-		value: createjs.Graphics.prototype.drawCircle
+		value: CreatejsGraphics.prototype.drawCircle
 	},
 	
 	de: {
-		value: createjs.Graphics.prototype.drawEllipse
+		value: CreatejsGraphics.prototype.drawEllipse
 	},
 	
 	dp: {
-		value: createjs.Graphics.prototype.drawPolyStar
+		value: CreatejsGraphics.prototype.drawPolyStar
 	}
 });
 
-createjs.Text = class Text extends makeClass(createjsOrigin.Text) {
+window.createjs.Graphics = CreatejsGraphics;
+
+/**
+ * @ignore
+ */
+class PixiText extends PIXI$1.Text {
+}
+
+/**
+ * @ignore
+ */
+class PixiTextContainer extends PIXI$1.Container {
+	constructor(cjs, text) {
+		super();
+		
+		this._createjs = cjs;
+		this._text = text;
+	}
+	
+	get createjs() {
+		return this._createjs;
+	}
+	
+	get text() {
+		return this._text;
+	}
+}
+
+/**
+ * @ignore
+ */
+function createTextOriginParam(text, font, color) {
+	return Object.assign(createOriginParams(), {
+		text: text,
+		font: font,
+		color: color,
+		textAlign: 'left',
+		lineHeight: 0,
+		lineWidth: 0
+	});
+}
+
+/**
+ * @ignore
+ */
+function createTextPixiData(cjs, text) {
+	const pixi = new PixiTextContainer(cjs, text);
+	
+	return Object.assign(createPixiData(pixi.pivot), {
+		instance: pixi
+	});
+}
+
+/**
+ * @ignore
+ */
+class CreatejsText extends window.createjs.Text {
 	constructor(text, font, color) {
+		this._originParams = createTextOriginParam(text, font, color);
+		
 		const _font = this._parseFont(font);
-		const t = new PIXI.Text(text, {
+		
+		const t = new PixiText(text, {
 			fontSize: _font.fontSize,
 			fontFamily: _font.fontFamily,
 			fill: this._parseColor(color),
 			wordWrap: true
 		});
 		
-		this._overrideCreatejs(new PixiTextContainer(this, t));
+		this._pixiData = createTextPixiData(this, t);
 		this._pixiData.instance.addChild(t);
-		
-		this._originParams = Object.assign(this._originParams, {
-			text: text,
-			font: font,
-			color: color,
-			textAlign: 'left',
-			lineHeight: 0,
-			lineWidth: 0
-		});
 		
 		super(...arguments);
 	}
@@ -1023,14 +1157,14 @@ createjs.Text = class Text extends makeClass(createjsOrigin.Text) {
 		this._pixiData.instance.text.text = text;
 		this._align(this.textAlign);
 		
-		return this._originParams.text = text;
+		this._originParams.text = text;
 	}
 	
 	_parseFont(font) {
 		const p = font.split(' ');
 		
 		return {
-			fontSize: Number(p.shift().replace('px', '')),
+			fontSize: Number((p.shift() || '0px').replace('px', '')),
 			fontFamily: p.join(' ').replace(/'/g, '') //'
 		};
 	}
@@ -1044,7 +1178,7 @@ createjs.Text = class Text extends makeClass(createjsOrigin.Text) {
 		this._pixiData.instance.text.style.fontSize = _font.fontSize;
 		this._pixiData.instance.text.style.fontFamily = _font.fontFamily;
 		
-		return this._originParams.font = font;
+		this._originParams.font = font;
 	}
 	
 	_parseColor(color) {
@@ -1054,10 +1188,11 @@ createjs.Text = class Text extends makeClass(createjsOrigin.Text) {
 	get color() {
 		return this._originParams.color;
 	}
+	
 	set color(color) {
 		this._pixiData.instance.text.style.fill = this._parseColor(color);
 		
-		return this._originParams.color = color;
+		this._originParams.color = color;
 	}
 	
 	_align(align) {
@@ -1085,7 +1220,7 @@ createjs.Text = class Text extends makeClass(createjsOrigin.Text) {
 		this._pixiData.instance.text.style.align = align;
 		this._align(align);
 		
-		return this._originParams.textAlign = align;
+		this._originParams.textAlign = align;
 	}
 	
 	get lineHeight() {
@@ -1093,9 +1228,9 @@ createjs.Text = class Text extends makeClass(createjsOrigin.Text) {
 	}
 	
 	set lineHeight(height) {
-		this._pixiData.instance.text.lineHeight = height;
+		this._pixiData.instance.text.style.lineHeight = height;
 		
-		return this._originParams.lineHeight = height;
+		this._originParams.lineHeight = height;
 	}
 	
 	get lineWidth() {
@@ -1103,15 +1238,58 @@ createjs.Text = class Text extends makeClass(createjsOrigin.Text) {
 	}
 	
 	set lineWidth(width) {
-		this._pixiData.instance.text.lineWidthWrap = width;
+		this._pixiData.instance.text.style.wordWrapWidth = width;
 		
-		return this._originParams.lineWidth = width;
+		this._originParams.lineWidth = width;
 	}
-};
+	
+	get pixi() {
+		return this._pixiData.instance;
+	}
+	
+	updateForPixi() {
+		return true;
+	}
+}
 
-createjs.ButtonHelper = class ButtonHelper extends makeClass(createjsOrigin.ButtonHelper, true) {
+appendDisplayObjectDescriptor(CreatejsText);
+window.createjs.Text = CreatejsText;
+
+/**
+ * @ignore
+ */
+class PixiButtonHelper extends PIXI$1.Container {
+	constructor(cjs) {
+		super();
+		
+		this._createjs = cjs;
+	}
+	
+	get createjs() {
+		return this._createjs;
+	}
+}
+
+/**
+ * @ignore
+ */
+function createButtonHelperPixiData(cjs) {
+	const pixi = new PixiButtonHelper(cjs);
+	
+	return Object.assign(createPixiData(pixi.pivot), {
+		instance: pixi
+	});
+}
+
+/**
+ * @ignore
+ */
+class CreatejsButtonHelper extends window.createjs.ButtonHelper {
 	constructor() {
-		this._overrideCreatejs(new PixiButtonHelper(this));
+		this._originParams = createOriginParams();
+		this._pixiData = createButtonHelperPixiData(this);
+		
+		super(...arguments);
 		
 		const createjs = arguments[0];
 		const pixi = createjs._pixiData.instance;
@@ -1173,22 +1351,36 @@ createjs.ButtonHelper = class ButtonHelper extends makeClass(createjsOrigin.Butt
 		
 		hitPixi.interactive = true;
 		hitPixi.cursor = 'pointer';
-		
-		super(...arguments);
 	}
-};
+	
+	get pixi() {
+		return this._pixiData.instance;
+	}
+}
+
+appendDisplayObjectDescriptor(CreatejsButtonHelper);
+window.createjs.ButtonHelper = CreatejsButtonHelper;
 
 /**
  * Prepare createjs content published with Adobe Animate.
  * @param id "lib.properties.id" in Animate content.
  * @param basepath Directory path of Animate content.
  */
-function prepareAnimateAsync(id, basepath) {
+function prepareAnimateAsync(id, basepath, options = {}) {
     const comp = window.AdobeAn.getComposition(id);
     if (!comp) {
         throw new Error('no composition');
     }
     const lib = comp.getLibrary();
+    if (!options.useSynchedTimeline) {
+        Object.defineProperties(window.createjs.MovieClip.prototype, {
+            updateForPixi: {
+                value: function (e) {
+                    return this._tick(e);
+                }
+            }
+        });
+    }
     return new Promise((resolve, reject) => {
         if (lib.properties.manifest.length === 0) {
             resolve({});
@@ -1235,5 +1427,21 @@ function handleFileLoad(evt, comp) {
     }
 }
 
+exports.CreatejsBitmap = CreatejsBitmap;
+exports.CreatejsButtonHelper = CreatejsButtonHelper;
+exports.CreatejsGraphics = CreatejsGraphics;
+exports.CreatejsMovieClip = CreatejsMovieClip;
+exports.CreatejsShape = CreatejsShape;
+exports.CreatejsSprite = CreatejsSprite;
+exports.CreatejsStageGL = CreatejsStageGL;
+exports.CreatejsText = CreatejsText;
+exports.PixiButtonHelper = PixiButtonHelper;
+exports.PixiGraphics = PixiGraphics;
+exports.PixiMovieClip = PixiMovieClip;
+exports.PixiShape = PixiShape;
+exports.PixiSprite = PixiSprite;
+exports.PixiText = PixiText;
+exports.PixiTextContainer = PixiTextContainer;
 exports.prepareAnimateAsync = prepareAnimateAsync;
+exports.updateDisplayObjectChildren = updateDisplayObjectChildren;
 //# sourceMappingURL=pixi-animate-core.cjs.js.map

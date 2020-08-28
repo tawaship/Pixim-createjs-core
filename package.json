@@ -1,6 +1,6 @@
 {
   "name": "@tawaship/pixi-animate-core",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "A module for processing the content published by Adobe Animate with pixi.js.",
   "main": "dist/pixi-animate-core.cjs.js",
   "module": "dist/pixi-animate-core.esm.js",
@@ -10,7 +10,7 @@
   },
   "scripts": {
     "rollup": "rollup -c rollup.config.js",
-    "d": "tsc --target ES5 --emitDeclarationOnly",
+    "d": "tsc --target ES5 --emitDeclarationOnly --downlevelIteration --outDir types/ --declaration",
     "docs": "typedoc --tsconfig tsconfig.json",
     "watch": "npm run rollup -- -w",
     "build": "ENV PROD=1 npm run rollup && npm run docs && npm run d && echo done."
@@ -32,7 +32,7 @@
   "devDependencies": {
     "@rollup/plugin-commonjs": "^11.0.2",
     "@rollup/plugin-node-resolve": "^7.1.1",
-    "@rollup/plugin-typescript": "^3.0.0",
+    "@rollup/plugin-typescript": "^5.0.2",
     "del": "^5.1.0",
     "rollup": "^1.32.1",
     "tslib": "^1.11.0",

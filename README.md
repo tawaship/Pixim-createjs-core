@@ -37,12 +37,13 @@ npm install --save @tawaship/pixi-animate-core
 
 ## Overrides
 
-- createjs.Movieclip
-- createjs.Sprite
-- createjs.Shape
-- createjs.Graphics
-- createjs.Text
-- createjs.ButtonHelper
+- createjs.StageGL = [CreatejsStageGL](https://tawaship.github.io/pixi-animate-core/classes/createjsstagegl.html)
+- createjs.Movieclip = [CreatejsMovieClip](https://tawaship.github.io/pixi-animate-core/classes/createjsmovieclip.html)
+- createjs.Sprite = [CreatejsSprite](https://tawaship.github.io/pixi-animate-core/classes/createjssprite.html)
+- createjs.Shape = [CreatejsShape](https://tawaship.github.io/pixi-animate-core/classes/createjsshape.html)
+- createjs.Graphics = [CreatejsGraphics](https://tawaship.github.io/pixi-animate-core/classes/createjsgraphics.html)
+- createjs.Text = [CreatejsText](https://tawaship.github.io/pixi-animate-core/classes/createjstest.html)
+- createjs.ButtonHelper = [CreatejsButtonHelper](https://tawaship.github.io/pixi-animate-core/classes/createjsbuttonhelper.html)
 
 ## Unimplemented
 

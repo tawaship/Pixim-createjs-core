@@ -1,3 +1,10 @@
-import './overrides';
+export * from './createjs/StageGL';
+export * from './createjs/MovieClip';
+export * from './createjs/Sprite';
+export * from './createjs/Shape';
+export * from './createjs/Bitmap';
+export * from './createjs/Graphics';
+export * from './createjs/Text';
+export * from './createjs/ButtonHelper';
 export * from './core';
-export { createjs } from './classes';
+export { updateDisplayObjectChildren } from './createjs/core';
