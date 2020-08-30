@@ -91,7 +91,7 @@ export class CreatejsGraphics extends window.createjs.Graphics {
 		return super.lineTo(x, y);
 	}
 	
-	arcTon(x1, y1, x2, y2, radius) {
+	arcTo(x1, y1, x2, y2, radius) {
 		this._pixiData.instance.arcTo(x1, y1, x2, y2, radius);
 		
 		return super.arcTo(x1, y1, x2, y2, radius);

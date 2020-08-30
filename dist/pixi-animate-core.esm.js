@@ -1,5 +1,5 @@
 /*!
- * @tawaship/pixi-animate-core.js - v1.0.6
+ * @tawaship/pixi-animate-core.js - v1.0.7
  * 
  * @require pixi.js v5.3.2
  * @author tawaship (makazu.mori@gmail.com)
@@ -842,7 +842,7 @@ class CreatejsGraphics extends window.createjs.Graphics {
 		return super.lineTo(x, y);
 	}
 	
-	arcTon(x1, y1, x2, y2, radius) {
+	arcTo(x1, y1, x2, y2, radius) {
 		this._pixiData.instance.arcTo(x1, y1, x2, y2, radius);
 		
 		return super.arcTo(x1, y1, x2, y2, radius);
