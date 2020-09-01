@@ -9,7 +9,7 @@ const pixi = conf.dependencies['pixi.js'].replace('^', '');
 
 const banner = [
 	'/*!',
-	` * @tawaship/pixi-animate-core.js - v${version}`,
+	` * @tawaship/pixi-animate-core - v${version}`,
 	' * ',
 	` * @require pixi.js v${pixi}`,
 	' * @author tawaship (makazu.mori@gmail.com)',
