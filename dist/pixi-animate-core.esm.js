@@ -1,5 +1,5 @@
 /*!
- * @tawaship/pixi-animate-core - v1.0.9
+ * @tawaship/pixi-animate-core - v1.0.10
  * 
  * @require pixi.js v5.3.2
  * @author tawaship (makazu.mori@gmail.com)
