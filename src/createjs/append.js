@@ -55,7 +55,7 @@ const EventMap = {
 			return function(e) {
 				e.currentTarget = e.currentTarget.createjs;
 				
-				e.target = e.target.createjs;
+				e.target = e.currentTarget.createjs;
 				const ev = e.data;
 				e.rawX = ev.global.x;
 				e.rawY = ev.global.y;

@@ -1,31 +1,74 @@
-import * as PIXI from 'pixi.js';
-import { TPixiData, TOriginParam } from './core';
-
 /**
  * @ignore
  */
 declare const window: any;
 
 /**
- * @see http://pixijs.download/release/docs/PIXI.Container.html
- * @private
- */
-export declare class PixiButtonHelper extends PIXI.Container {
-	private _createjs: CreatejsButtonHelper | null;
-	constructor(cjs: CreatejsButtonHelper | null);
-	get createjs(): CreatejsButtonHelper | null;
-}
-
-/**
- * @private
- */
-type TButtonHelperPixiData = TPixiData & { instance: PixiButtonHelper };
-
-/**
  * @see https://createjs.com/docs/easeljs/classes/ButtonHelper.html
  */
-export declare class CreatejsButtonHelper extends window.createjs.ButtonHelper {
-	private _originParams: TOriginParam;
-	private _pixiData: TButtonHelperPixiData;
-	get pixi(): PixiButtonHelper;
+export class CreatejsButtonHelper extends window.createjs.ButtonHelper {
+	constructor() {
+		super(...arguments);
+		
+		const createjs = arguments[0];
+		const pixi = createjs.pixi;
+		
+		const baseFrame = arguments[1];
+		const overFrame = arguments[2];
+		const downFrame = arguments[3];
+		const hit = arguments[5];
+		const hitFrame = arguments[6];
+		
+		hit.gotoAndStop(hitFrame);
+		const hitPixi = pixi.addChild(hit.pixi);
+		hitPixi.alpha = 0.00001;
+		
+		let isOver = false;
+		let isDown = false;
+		
+		hitPixi.on('pointerover', function() {
+			isOver = true;
+			if (isDown) {
+				createjs.gotoAndStop(downFrame);
+			} else {
+				createjs.gotoAndStop(overFrame);
+			}
+		});
+		
+		hitPixi.on('pointerout', function() {
+			isOver = false;
+			
+			if (isDown) {
+				createjs.gotoAndStop(overFrame);
+			} else {
+				createjs.gotoAndStop(baseFrame);
+			}
+		});
+		
+		hitPixi.on('pointerdown', function() {
+			isDown = true;
+			createjs.gotoAndStop(downFrame);
+		});
+		
+		hitPixi.on('pointerup', function() {
+			isDown = false;
+			if (isOver) {
+				createjs.gotoAndStop(overFrame);
+			} else {
+				createjs.gotoAndStop(baseFrame);
+			}
+		});
+		
+		hitPixi.on('pointerupoutside', function() {
+			isDown = false;
+			if (isOver) {
+				createjs.gotoAndStop(overFrame);
+			} else {
+				createjs.gotoAndStop(baseFrame);
+			}
+		});
+		
+		hitPixi.interactive = true;
+		hitPixi.cursor = 'pointer';
+	}
 }

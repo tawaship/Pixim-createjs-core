@@ -68,7 +68,9 @@ export function createPixiData(regObj: PixiPoint): TPixiData {
 	};
 }
 
-export function updateDisplayObjectChildren(self: CreatejsDisplayObject, e: any) {
+export type TTickerData = { delta: number };
+
+export function updateDisplayObjectChildren(self: CreatejsDisplayObject, e: TTickerData) {
 	const list = self.children.slice();
 	for (let i = 0,l = list.length; i < l; i++) {
 		const child = list[i];

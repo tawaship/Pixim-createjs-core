@@ -1,5 +1,5 @@
 /*!
- * @tawaship/pixi-animate-core - v1.0.8
+ * @tawaship/pixi-animate-core - v1.0.9
  * 
  * @require pixi.js v5.3.2
  * @author tawaship (makazu.mori@gmail.com)
@@ -51,13 +51,18 @@ function updateDisplayObjectChildren(self, e) {
     return true;
 }
 
+/**
+ * @see https://createjs.com/docs/easeljs/classes/StageGL.html
+ */
 class CreatejsStageGL extends window.createjs.StageGL {
-	updateForPixi(props) {
-		if (this.tickOnUpdate) { this.tick(props); }
-		this.dispatchEvent("drawstart");
-		updateDisplayObjectChildren(this);
-		this.dispatchEvent("drawend");
-	}
+    updateForPixi(props) {
+        if (this.tickOnUpdate) {
+            this.tick(props);
+        }
+        this.dispatchEvent("drawstart");
+        updateDisplayObjectChildren(this, props);
+        this.dispatchEvent("drawend");
+    }
 }
 
 /**
@@ -111,7 +116,7 @@ const EventMap = {
 			return function(e) {
 				e.currentTarget = e.currentTarget.createjs;
 				
-				e.target = e.target.createjs;
+				e.target = e.currentTarget.createjs;
 				const ev = e.data;
 				e.rawX = ev.global.x;
 				e.rawY = ev.global.y;
@@ -184,7 +189,7 @@ const EventMap = {
 /**
  * @ignore
  */
-const DEG_TO_RAD$1 = Math.PI / 180;
+const DEG_TO_RAD = Math.PI / 180;
 
 /**
  * @ignore
@@ -236,7 +241,7 @@ const appendixDescriptor = {
 		},
 		
 		set: function(value) {
-			this._pixiData.instance.skew.x = -value * DEG_TO_RAD$1;
+			this._pixiData.instance.skew.x = -value * DEG_TO_RAD;
 			return this._originParams.skewX = value;
 		}
 	},
@@ -246,7 +251,7 @@ const appendixDescriptor = {
 		},
 		
 		set: function(value) {
-			this._pixiData.instance.skew.y = value * DEG_TO_RAD$1;
+			this._pixiData.instance.skew.y = value * DEG_TO_RAD;
 			return this._originParams.skewY = value;
 		}
 	
@@ -277,7 +282,7 @@ const appendixDescriptor = {
 		},
 		
 		set: function(value) {
-			this._pixiData.instance.rotation = value * DEG_TO_RAD$1;
+			this._pixiData.instance.rotation = value * DEG_TO_RAD;
 			return this._originParams.rotation = value;
 		}
 	},
@@ -526,821 +531,764 @@ function appendDisplayObjectDescriptor(cls) {
 }
 
 /**
- * @ignore
+ * @see http://pixijs.download/release/docs/PIXI.Container.html
+ * @private
  */
 class PixiMovieClip extends Container {
-	constructor(cjs) {
-		super();
-		
-		this._createjs = cjs;
-	}
-	
-	get createjs() {
-		return this._createjs;
-	}
+    constructor(cjs) {
+        super();
+        this._createjs = cjs;
+    }
+    get createjs() {
+        return this._createjs;
+    }
 }
-
 /**
  * @ignore
  */
 function createMovieClipPixiData(cjs) {
-	const pixi = new PixiMovieClip(cjs);
-	
-	return Object.assign(createPixiData(pixi.pivot), {
-		instance: pixi,
-		subInstance: pixi
-	});
+    const pixi = new PixiMovieClip(cjs);
+    return Object.assign(createPixiData(pixi.pivot), {
+        instance: pixi,
+        subInstance: pixi
+    });
 }
-
 /**
  * @ignore
+ */
+const CreatejsMovieClipTemp = window.createjs.MovieClip;
+/**
+ * @see https://createjs.com/docs/easeljs/classes/MovieClip.html
  */
 class CreatejsMovieClip extends window.createjs.MovieClip {
-	constructor() {
-		this._originParams = createOriginParams();
-		this._pixiData = createMovieClipPixiData(this);
-		
-		super(...arguments);
-	}
-	
-	initialize() {
-		this._originParams = createOriginParams();
-		this._pixiData = createMovieClipPixiData(this);
-		
-		return super.initialize(...arguments);
-	}
-	
-	addChild(child) {
-		this._pixiData.subInstance.addChild(child._pixiData.instance);
-		
-		return super.addChild(child);
-	}
-	
-	addChildAt(child, index) {
-		this._pixiData.subInstance.addChildAt(child._pixiData.instance, index);
-		
-		return super.addChildAt(child, index);
-	}
-	
-	removeChild(child) {
-		this._pixiData.subInstance.removeChild(child._pixiData.instance);
-		
-		return super.removeChild(child);
-	}
-	
-	removeChildAt(index) {
-		this._pixiData.subInstance.removeChildAt(index);
-		
-		return super.removeChildAt(index);
-	}
-	
-	removeAllChldren() {
-		this._pixiData.subInstance.removeChildren();
-		
-		return super.removeAllChldren();
-	}
-	
-	get pixi() {
-		return this._pixiData.instance;
-	}
-	
-	updateForPixi(e) {
-		this._updateState();
-		
-		return updateDisplayObjectChildren(this, e);
-	}
+    constructor() {
+        super(...arguments);
+        this._originParams = createOriginParams();
+        this._pixiData = createMovieClipPixiData(this);
+        CreatejsMovieClipTemp.apply(this, arguments);
+    }
+    initialize() {
+        this._originParams = createOriginParams();
+        this._pixiData = createMovieClipPixiData(this);
+        return super.initialize(...arguments);
+    }
+    addChild(child) {
+        this._pixiData.subInstance.addChild(child._pixiData.instance);
+        return super.addChild(child);
+    }
+    addChildAt(child, index) {
+        this._pixiData.subInstance.addChildAt(child._pixiData.instance, index);
+        return super.addChildAt(child, index);
+    }
+    removeChild(child) {
+        this._pixiData.subInstance.removeChild(child._pixiData.instance);
+        return super.removeChild(child);
+    }
+    removeChildAt(index) {
+        this._pixiData.subInstance.removeChildAt(index);
+        return super.removeChildAt(index);
+    }
+    removeAllChldren() {
+        this._pixiData.subInstance.removeChildren();
+        return super.removeAllChldren();
+    }
+    get pixi() {
+        return this._pixiData.instance;
+    }
+    updateForPixi(e) {
+        this._updateState();
+        return updateDisplayObjectChildren(this, e);
+    }
 }
-
 appendDisplayObjectDescriptor(CreatejsMovieClip);
+// temporary prototype
+Object.defineProperties(CreatejsMovieClip.prototype, {
+    _originParams: {
+        value: createOriginParams(),
+        writable: true
+    },
+    _pixiData: {
+        value: createMovieClipPixiData({}),
+        writable: true
+    }
+});
 
 /**
- * @ignore
+ * @see http://pixijs.download/release/docs/PIXI.Sprite.html
+ * @private
  */
 class PixiSprite extends Sprite {
-	constructor(cjs) {
-		super();
-		
-		this._createjs = cjs;
-	}
-	
-	get createjs() {
-		return this._createjs;
-	}
+    constructor(cjs) {
+        super();
+        this._createjs = cjs;
+    }
+    get createjs() {
+        return this._createjs;
+    }
 }
-
 /**
  * @ignore
  */
 function createSpritePixiData(cjs) {
-	const pixi = new PixiSprite(cjs);
-	
-	return Object.assign(createPixiData(pixi.anchor), {
-		instance: pixi
-	});
+    const pixi = new PixiSprite(cjs);
+    return Object.assign(createPixiData(pixi.anchor), {
+        instance: pixi
+    });
 }
-
 /**
  * @ignore
+ */
+const CreatejsSpriteTemp = window.createjs.Sprite;
+/**
+ * @see https://createjs.com/docs/easeljs/classes/Sprite.html
  */
 class CreatejsSprite extends window.createjs.Sprite {
-	constructor() {
-		this._originParams = createOriginParams();
-		this._pixiData = createSpritePixiData(this);
-		
-		super(...arguments);
-	}
-	
-	initialize() {
-		this._originParams = createOriginParams();
-		this._pixiData = createSpritePixiData(this);
-		
-		return super.initialize(...arguments);
-	}
-	
-	gotoAndStop() {
-		super.gotoAndStop(...arguments);
-		
-		const frame = this.spriteSheet.getFrame(this.currentFrame);
-		const baseTexture = BaseTexture.from(frame.image);
-		const texture = new Texture(baseTexture, frame.rect);
-		
-		this._pixiData.instance.texture = texture;
-	}
-	
-	get pixi() {
-		return this._pixiData.instance;
-	}
-	
-	updateForPixi() {
-		return true;
-	}
+    constructor() {
+        super(...arguments);
+        this._originParams = createOriginParams();
+        this._pixiData = createSpritePixiData(this);
+        CreatejsSpriteTemp.apply(this, arguments);
+    }
+    initialize() {
+        this._originParams = createOriginParams();
+        this._pixiData = createSpritePixiData(this);
+        return super.initialize(...arguments);
+    }
+    gotoAndStop() {
+        super.gotoAndStop(...arguments);
+        const frame = this.spriteSheet.getFrame(this.currentFrame);
+        const baseTexture = BaseTexture.from(frame.image);
+        const texture = new Texture(baseTexture, frame.rect);
+        this._pixiData.instance.texture = texture;
+    }
+    get pixi() {
+        return this._pixiData.instance;
+    }
+    updateForPixi(e) {
+        return true;
+    }
 }
-
 appendDisplayObjectDescriptor(CreatejsSprite);
+// temporary prototype
+Object.defineProperties(CreatejsSprite.prototype, {
+    _originParams: {
+        value: createOriginParams(),
+        writable: true
+    },
+    _pixiData: {
+        value: createSpritePixiData({}),
+        writable: true
+    }
+});
 
 /**
- * @ignore
+ * @see http://pixijs.download/release/docs/PIXI.Container.html
+ * @private
  */
 class PixiShape extends Container {
-	constructor(cjs) {
-		super();
-		
-		this._createjs = cjs;
-	}
-	
-	get createjs() {
-		return this._createjs;
-	}
+    constructor(cjs) {
+        super();
+        this._createjs = cjs;
+    }
+    get createjs() {
+        return this._createjs;
+    }
 }
-
 /**
  * @ignore
  */
 function createShapePixiData(cjs) {
-	const pixi = new PixiShape(cjs);
-	
-	return Object.assign(createPixiData(pixi.pivot), {
-		instance: pixi,
-		masked: []
-	});
+    const pixi = new PixiShape(cjs);
+    return Object.assign(createPixiData(pixi.pivot), {
+        instance: pixi,
+        masked: []
+    });
 }
-
 /**
  * @ignore
+ */
+const CreatejsShapeTemp = window.createjs.Shape;
+/**
+ * @see https://createjs.com/docs/easeljs/classes/Shape.html
  */
 class CreatejsShape extends window.createjs.Shape {
-	constructor() {
-		this._originParams = createOriginParams();
-		this._pixiData = createShapePixiData(this);
-		
-		super(...arguments);
-	}
-	
-	get graphics() {
-		return this._graphics;
-	}
-	
-	set graphics(value) {
-		if (this._pixiData.masked.length) {
-			this._pixiData.instance.removeChildren();
-			
-			if (value) {
-				for (let i = 0; i < this._pixiData.masked.length; i++) {
-					this._pixiData.masked[i].mask = this._pixiData.instance;
-				}
-			} else {
-				for (let i = 0; i < this._pixiData.masked.length; i++) {
-					this._pixiData.masked[i].mask = null;
-				}
-			}
-		}
-		
-		if (value) {
-			this._pixiData.instance.addChild(value._pixiData.instance);
-		}
-		
-		this._graphics = value;
-	}
-	
-	get pixi() {
-		return this._pixiData.instance;
-	}
-	
-	updateForPixi() {
-		return true;
-	}
+    constructor() {
+        super(...arguments);
+        this._originParams = createOriginParams();
+        this._pixiData = createShapePixiData(this);
+        CreatejsShapeTemp.apply(this, arguments);
+    }
+    get graphics() {
+        return this._graphics;
+    }
+    set graphics(value) {
+        if (this._pixiData.masked.length) {
+            this._pixiData.instance.removeChildren();
+            if (value) {
+                for (let i = 0; i < this._pixiData.masked.length; i++) {
+                    this._pixiData.masked[i].mask = this._pixiData.instance;
+                }
+            }
+            else {
+                for (let i = 0; i < this._pixiData.masked.length; i++) {
+                    this._pixiData.masked[i].mask = null;
+                }
+            }
+        }
+        if (value) {
+            this._pixiData.instance.addChild(value.pixi);
+        }
+        this._graphics = value;
+    }
+    get pixi() {
+        return this._pixiData.instance;
+    }
+    updateForPixi(e) {
+        return true;
+    }
 }
-
 appendDisplayObjectDescriptor(CreatejsShape);
+// temporary prototype
+Object.defineProperties(CreatejsShape.prototype, {
+    _originParams: {
+        value: createOriginParams(),
+        writable: true
+    },
+    _pixiData: {
+        value: createShapePixiData({}),
+        writable: true
+    }
+});
 
+/**
+ * @see http://pixijs.download/release/docs/PIXI.Sprite.html
+ * @private
+ * @since 1.0.9
+ */
+class PixiBitmap extends Sprite {
+    constructor(cjs) {
+        super();
+        this._createjs = cjs;
+    }
+    get createjs() {
+        return this._createjs;
+    }
+}
 /**
  * @ignore
  */
-class PixiGraphics extends Graphics {
-	constructor(cjs) {
-		super();
-		
-		this._createjs = cjs;
-	}
-	
-	get createjs() {
-		return this._createjs;
-	}
+function createBitmapPixiData(cjs) {
+    const pixi = new PixiBitmap(cjs);
+    return Object.assign(createPixiData(pixi.anchor), {
+        instance: pixi
+    });
 }
+/**
+ * @see https://createjs.com/docs/easeljs/classes/Bitmap.html
+ * @since 1.0.9
+ */
+class CreatejsBitmap extends window.createjs.Bitmap {
+    initialize() {
+        this._originParams = createOriginParams();
+        this._pixiData = createBitmapPixiData(this);
+        const res = super.initialize(...arguments);
+        const texture = Texture.from(this.image);
+        this._pixiData.instance.texture = texture;
+        return res;
+    }
+    get pixi() {
+        return this._pixiData.instance;
+    }
+    updateForPixi(e) {
+        return true;
+    }
+}
+appendDisplayObjectDescriptor(CreatejsBitmap);
+// temporary prototype
+Object.defineProperties(CreatejsBitmap.prototype, {
+    _originParams: {
+        value: createOriginParams(),
+        writable: true
+    },
+    _pixiData: {
+        value: createBitmapPixiData({}),
+        writable: true
+    }
+});
 
+/**
+ * @see http://pixijs.download/release/docs/PIXI.Graphics.html
+ * @private
+ */
+class PixiGraphics extends Graphics {
+    constructor(cjs) {
+        super();
+        this._createjs = cjs;
+    }
+    get createjs() {
+        return this._createjs;
+    }
+}
 /**
  * @ignore
  */
 function createGraphicsPixiData(cjs) {
-	const pixi = new PixiGraphics(cjs);
-	
-	return Object.assign(createPixiData(pixi.pivot), {
-		instance: pixi,
-		strokeFill: 0,
-		strokeAlpha: 1
-	});
+    const pixi = new PixiGraphics(cjs);
+    return Object.assign(createPixiData(pixi.pivot), {
+        instance: pixi,
+        strokeFill: 0,
+        strokeAlpha: 1
+    });
 }
-
 /**
  * @ignore
  */
 const COLOR_RED = 16 * 16 * 16 * 16;
-
 /**
  * @ignore
  */
 const COLOR_GREEN = 16 * 16;
-
 /**
  * @ignore
  */
 const LineCap = {
-	0: LINE_CAP.BUTT,
-	1: LINE_CAP.ROUND,
-	2: LINE_CAP.SQUARE
+    0: LINE_CAP.BUTT,
+    1: LINE_CAP.ROUND,
+    2: LINE_CAP.SQUARE
 };
-
 /**
  * @ignore
  */
 const LineJoin = {
-	0: LINE_JOIN.MITER,
-	1: LINE_JOIN.ROUND,
-	2: LINE_JOIN.BEVEL
+    0: LINE_JOIN.MITER,
+    1: LINE_JOIN.ROUND,
+    2: LINE_JOIN.BEVEL
 };
-
 /**
  * @ignore
  */
+const DEG_TO_RAD$1 = Math.PI / 180;
+/**
+ * @ignore
+ */
+const CreatejsGraphicsTemp = window.createjs.Graphics;
+/**
+ * @see https://createjs.com/docs/easeljs/classes/Graphics.html
+ */
 class CreatejsGraphics extends window.createjs.Graphics {
-	constructor() {
-		this._originParams = createOriginParams();
-		this._pixiData = createGraphicsPixiData(this);
-		
-		super(...arguments);
-		
-		this._pixiData.instance.beginFill(0xFFEEEE, 1);
-		this._pixiData.strokeFill = 0;
-		this._pixiData.strokeAlpha = 1;
-	}
-	
-	moveTo(x, y) {
-		if (this._pixiData.instance.clone().endFill().containsPoint({x: x, y: y})) {
-			this._pixiData.instance.beginHole();
-		} else {
-			this._pixiData.instance.endHole();
-		}
-		
-		this._pixiData.instance.moveTo(x, y);
-		
-		return super.moveTo(x, y);
-	}
-	
-	lineTo(x, y) {
-		this._pixiData.instance.lineTo(x, y);
-		
-		return super.lineTo(x, y);
-	}
-	
-	arcTo(x1, y1, x2, y2, radius) {
-		this._pixiData.instance.arcTo(x1, y1, x2, y2, radius);
-		
-		return super.arcTo(x1, y1, x2, y2, radius);
-	}
-	
-	arc(x, y, radius, startAngle, endAngle, anticlockwise) {
-		this._pixiData.instance.arc(x, y, radius, startAngle, endAngle, anticlockwise);
-		
-		return super.arc(x, y, radius, startAngle, endAngle, anticlockwise);
-	}
-	
-	quadraticCurveTo(cpx, cpy, x, y) {
-		this._pixiData.instance.quadraticCurveTo(cpx, cpy, x, y);
-		
-		return super.quadraticCurveTo(cpx, cpy, x, y);
-	}
-	
-	bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y) {
-		this._pixiData.instance.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
-		
-		return super.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
-	}
-	
-	rect(x, y, w, h) {
-		this._pixiData.instance.drawRect(x, y, w, h);
-		
-		return super.rect(x, y, w, h);
-	}
-	
-	closePath() {
-		this._pixiData.instance.closePath();
-		
-		return super.closePath();
-	}
-	
-	clear() {
-		this._pixiData.instance.clear();
-		
-		return super.clear();
-	}
-	
-	_parseColor(color) {
-		const res = {
-			color: 0,
-			alpha: 1
-		};
-		
-		if (!color) {
-			res.alpha = 0;
-			return res;
-		}
-		
-		if (color.charAt(0) === '#') {
-			res.color = parseInt(color.slice(1), 16);
-			return res;
-		}
-		
-		const colors = color.replace(/rgba|\(|\)|\s/g, '').split(',');
-		
-		res.color = Number(colors[0]) * COLOR_RED + Number(colors[1]) * COLOR_GREEN + Number(colors[2]);
-		res.alpha = Number(colors[3]);
-		
-		return res;
-	}
-	
-	beginFill(color) {
-		const c = this._parseColor(color);
-		this._pixiData.instance.beginFill(c.color, c.alpha);
-		
-		return super.beginFill(color);
-	}
-	
-	endFill() {
-		this._pixiData.instance.endFill();
-		
-		return super.endFill();
-	}
-	
-	setStrokeStyle(thickness, caps, joints, miterLimit, ignoreScale) {
-		this._pixiData.instance.lineTextureStyle({
-			width: thickness,
-			color: this._pixiData.strokeFill,
-			alpha: this._pixiData.strokeAlpha,
-			cap: (caps in LineCap) ? LineCap[caps] : LineCap[0],
-			join: (joints in LineJoin) ? LineJoin[joints] : LineJoin[0],
-			miterLimit: miterLimit
-		});
-		
-		return super.setStrokeStyle(thickness, caps, joints, miterLimit, ignoreScale);
-	}
-	
-	beginStroke(color) {
-		const c = this._parseColor(color);
-		this._pixiData.strokeFill = c.color;
-		this._pixiData.strokeAlpha = c.alpha;
-		
-		return super.beginStroke(color);
-	}
-	
-	drawRoundRect(x, y, w, h, radius) {
-		this._pixiData.instance.drawRoundedRect(x, y, w, h, radius);
-		
-		return super.drawRoundRect(x, y, w, h, radius);
-	}
-	
-	drawCircle(x, y, radius) {
-		this._pixiData.instance.drawCircle(x, y, radius);
-		
-		return super.drawCircle(x, y, radius);
-	}
-	
-	drawEllipse(x, y, w, h) {
-		this._pixiData.instance.drawEllipse(x, y, w, h);
-		
-		return super.drawEllipse(x, y, w, h);
-	}
-	
-	drawPolyStar(x, y, radius, sides, pointSize, angle) {
-		this._pixiData.instance.drawRegularPolygon(x, y, radius, sides, angle * DEG_TO_RAD);
-		
-		return super.drawPolyStar(x, y, radius, sides, pointSize, angle);
-	}
-	
-	get pixi() {
-		return this._pixiData.instance;
-	}
-	
-	updateForPixi() {
-		return true;
-	}
+    constructor() {
+        super(...arguments);
+        this._originParams = createOriginParams();
+        this._pixiData = createGraphicsPixiData(this);
+        this._pixiData.instance.beginFill(0xFFEEEE, 1);
+        this._pixiData.strokeFill = 0;
+        this._pixiData.strokeAlpha = 1;
+        CreatejsGraphicsTemp.apply(this, arguments);
+    }
+    moveTo(x, y) {
+        if (this._pixiData.instance.clone().endFill().containsPoint({ x: x, y: y })) {
+            this._pixiData.instance.beginHole();
+        }
+        else {
+            this._pixiData.instance.endHole();
+        }
+        this._pixiData.instance.moveTo(x, y);
+        return super.moveTo(x, y);
+    }
+    lineTo(x, y) {
+        this._pixiData.instance.lineTo(x, y);
+        return super.lineTo(x, y);
+    }
+    arcTo(x1, y1, x2, y2, radius) {
+        this._pixiData.instance.arcTo(x1, y1, x2, y2, radius);
+        return super.arcTo(x1, y1, x2, y2, radius);
+    }
+    arc(x, y, radius, startAngle, endAngle, anticlockwise) {
+        this._pixiData.instance.arc(x, y, radius, startAngle, endAngle, anticlockwise);
+        return super.arc(x, y, radius, startAngle, endAngle, anticlockwise);
+    }
+    quadraticCurveTo(cpx, cpy, x, y) {
+        this._pixiData.instance.quadraticCurveTo(cpx, cpy, x, y);
+        return super.quadraticCurveTo(cpx, cpy, x, y);
+    }
+    bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y) {
+        this._pixiData.instance.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
+        return super.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
+    }
+    rect(x, y, w, h) {
+        this._pixiData.instance.drawRect(x, y, w, h);
+        return super.rect(x, y, w, h);
+    }
+    closePath() {
+        this._pixiData.instance.closePath();
+        return super.closePath();
+    }
+    clear() {
+        this._pixiData.instance.clear();
+        return super.clear();
+    }
+    _parseColor(color) {
+        const res = {
+            color: 0,
+            alpha: 1
+        };
+        if (!color) {
+            res.alpha = 0;
+            return res;
+        }
+        if (color.charAt(0) === '#') {
+            res.color = parseInt(color.slice(1), 16);
+            return res;
+        }
+        const colors = color.replace(/rgba|\(|\)|\s/g, '').split(',');
+        res.color = Number(colors[0]) * COLOR_RED + Number(colors[1]) * COLOR_GREEN + Number(colors[2]);
+        res.alpha = Number(colors[3]);
+        return res;
+    }
+    beginFill(color) {
+        const c = this._parseColor(color);
+        this._pixiData.instance.beginFill(c.color, c.alpha);
+        return super.beginFill(color);
+    }
+    endFill() {
+        this._pixiData.instance.endFill();
+        return super.endFill();
+    }
+    setStrokeStyle(thickness, caps, joints, miterLimit, ignoreScale) {
+        this._pixiData.instance.lineTextureStyle({
+            width: thickness,
+            color: this._pixiData.strokeFill,
+            alpha: this._pixiData.strokeAlpha,
+            cap: (caps in LineCap) ? LineCap[caps] : LineCap[0],
+            join: (joints in LineJoin) ? LineJoin[joints] : LineJoin[0],
+            miterLimit: miterLimit
+        });
+        return super.setStrokeStyle(thickness, caps, joints, miterLimit, ignoreScale);
+    }
+    beginStroke(color) {
+        const c = this._parseColor(color);
+        this._pixiData.strokeFill = c.color;
+        this._pixiData.strokeAlpha = c.alpha;
+        return super.beginStroke(color);
+    }
+    drawRoundRect(x, y, w, h, radius) {
+        this._pixiData.instance.drawRoundedRect(x, y, w, h, radius);
+        return super.drawRoundRect(x, y, w, h, radius);
+    }
+    drawCircle(x, y, radius) {
+        this._pixiData.instance.drawCircle(x, y, radius);
+        return super.drawCircle(x, y, radius);
+    }
+    drawEllipse(x, y, w, h) {
+        this._pixiData.instance.drawEllipse(x, y, w, h);
+        return super.drawEllipse(x, y, w, h);
+    }
+    drawPolyStar(x, y, radius, sides, pointSize, angle) {
+        this._pixiData.instance.drawRegularPolygon(x, y, radius, sides, angle * DEG_TO_RAD$1);
+        return super.drawPolyStar(x, y, radius, sides, pointSize, angle);
+    }
+    get pixi() {
+        return this._pixiData.instance;
+    }
+    updateForPixi(e) {
+        return true;
+    }
 }
-
-appendDisplayObjectDescriptor(CreatejsGraphics);
-
+// alias
 Object.defineProperties(CreatejsGraphics.prototype, {
-	curveTo: {
-		value: CreatejsGraphics.prototype.quadraticCurveTo
-	},
-	
-	drawRect: {
-		value: CreatejsGraphics.prototype.rect
-	},
-	
-	mt: {
-		value: CreatejsGraphics.prototype.moveTo
-	},
-	
-	lt: {
-		value: CreatejsGraphics.prototype.lineTo
-	},
-	
-	at: {
-		value: CreatejsGraphics.prototype.arcTo
-	},
-	
-	bt: {
-		value: CreatejsGraphics.prototype.bezierCurveTo
-	},
-	
-	qt: {
-		value: CreatejsGraphics.prototype.quadraticCurveTo
-	},
-	
-	a: {
-		value: CreatejsGraphics.prototype.arc
-	},
-	
-	r: {
-		value: CreatejsGraphics.prototype.rect
-	},
-	
-	cp: {
-		value: CreatejsGraphics.prototype.closePath
-	},
-	
-	c: {
-		value: CreatejsGraphics.prototype.clear
-	},
-	
-	f: {
-		value: CreatejsGraphics.prototype.beginFill
-	},
-	
-	ef: {
-		value: CreatejsGraphics.prototype.endFill
-	},
-	
-	ss: {
-		value: CreatejsGraphics.prototype.setStrokeStyle
-	},
-	
-	s: {
-		value: CreatejsGraphics.prototype.beginStroke
-	},
-	
-	dr: {
-		value: CreatejsGraphics.prototype.drawRect
-	},
-	
-	rr: {
-		value: CreatejsGraphics.prototype.drawRoundRect
-	},
-	
-	dc: {
-		value: CreatejsGraphics.prototype.drawCircle
-	},
-	
-	de: {
-		value: CreatejsGraphics.prototype.drawEllipse
-	},
-	
-	dp: {
-		value: CreatejsGraphics.prototype.drawPolyStar
-	}
+    curveTo: {
+        value: CreatejsGraphics.prototype.quadraticCurveTo
+    },
+    drawRect: {
+        value: CreatejsGraphics.prototype.rect
+    },
+    mt: {
+        value: CreatejsGraphics.prototype.moveTo
+    },
+    lt: {
+        value: CreatejsGraphics.prototype.lineTo
+    },
+    at: {
+        value: CreatejsGraphics.prototype.arcTo
+    },
+    bt: {
+        value: CreatejsGraphics.prototype.bezierCurveTo
+    },
+    qt: {
+        value: CreatejsGraphics.prototype.quadraticCurveTo
+    },
+    a: {
+        value: CreatejsGraphics.prototype.arc
+    },
+    r: {
+        value: CreatejsGraphics.prototype.rect
+    },
+    cp: {
+        value: CreatejsGraphics.prototype.closePath
+    },
+    c: {
+        value: CreatejsGraphics.prototype.clear
+    },
+    f: {
+        value: CreatejsGraphics.prototype.beginFill
+    },
+    ef: {
+        value: CreatejsGraphics.prototype.endFill
+    },
+    ss: {
+        value: CreatejsGraphics.prototype.setStrokeStyle
+    },
+    s: {
+        value: CreatejsGraphics.prototype.beginStroke
+    },
+    dr: {
+        value: CreatejsGraphics.prototype.drawRect
+    },
+    rr: {
+        value: CreatejsGraphics.prototype.drawRoundRect
+    },
+    dc: {
+        value: CreatejsGraphics.prototype.drawCircle
+    },
+    de: {
+        value: CreatejsGraphics.prototype.drawEllipse
+    },
+    dp: {
+        value: CreatejsGraphics.prototype.drawPolyStar
+    }
+});
+appendDisplayObjectDescriptor(CreatejsGraphics);
+// temporary prototype
+Object.defineProperties(CreatejsGraphics.prototype, {
+    _originParams: {
+        value: createOriginParams(),
+        writable: true
+    },
+    _pixiData: {
+        value: createGraphicsPixiData({}),
+        writable: true
+    }
 });
 
 /**
- * @ignore
+ * @see http://pixijs.download/release/docs/PIXI.Text.html
+ * @private
  */
 class PixiText extends Text {
 }
-
 /**
- * @ignore
+ * @see http://pixijs.download/release/docs/PIXI.Container.html
+ * @private
  */
 class PixiTextContainer extends Container {
-	constructor(cjs, text) {
-		super();
-		
-		this._createjs = cjs;
-		this._text = text;
-	}
-	
-	get createjs() {
-		return this._createjs;
-	}
-	
-	get text() {
-		return this._text;
-	}
+    constructor(cjs, text) {
+        super();
+        this._createjs = cjs;
+        this._text = text;
+    }
+    get createjs() {
+        return this._createjs;
+    }
+    get text() {
+        return this._text;
+    }
 }
-
 /**
  * @ignore
  */
 function createTextOriginParam(text, font, color) {
-	return Object.assign(createOriginParams(), {
-		text: text,
-		font: font,
-		color: color,
-		textAlign: 'left',
-		lineHeight: 0,
-		lineWidth: 0
-	});
+    return Object.assign(createOriginParams(), {
+        text: text,
+        font: font,
+        color: color,
+        textAlign: 'left',
+        lineHeight: 0,
+        lineWidth: 0
+    });
 }
-
 /**
  * @ignore
  */
 function createTextPixiData(cjs, text) {
-	const pixi = new PixiTextContainer(cjs, text);
-	
-	return Object.assign(createPixiData(pixi.pivot), {
-		instance: pixi
-	});
+    const pixi = new PixiTextContainer(cjs, text);
+    return Object.assign(createPixiData(pixi.pivot), {
+        instance: pixi
+    });
 }
-
 /**
  * @ignore
+ */
+const CreatejsTextTemp = window.createjs.Text;
+/**
+ * @see https://createjs.com/docs/easeljs/classes/Text.html
  */
 class CreatejsText extends window.createjs.Text {
-	constructor(text, font, color) {
-		this._originParams = createTextOriginParam(text, font, color);
-		
-		const _font = this._parseFont(font);
-		
-		const t = new PixiText(text, {
-			fontSize: _font.fontSize,
-			fontFamily: _font.fontFamily,
-			fill: this._parseColor(color),
-			wordWrap: true
-		});
-		
-		this._pixiData = createTextPixiData(this, t);
-		this._pixiData.instance.addChild(t);
-		
-		super(...arguments);
-	}
-	
-	get text() {
-		return this._originParams.text;
-	}
-	
-	set text(text) {
-		this._pixiData.instance.text.text = text;
-		this._align(this.textAlign);
-		
-		this._originParams.text = text;
-	}
-	
-	_parseFont(font) {
-		const p = font.split(' ');
-		
-		return {
-			fontSize: Number((p.shift() || '0px').replace('px', '')),
-			fontFamily: p.join(' ').replace(/'/g, '') //'
-		};
-	}
-	
-	get font() {
-		return this._originParams.font;
-	}
-	
-	set font(font) {
-		const _font = this._parseFont(font);
-		this._pixiData.instance.text.style.fontSize = _font.fontSize;
-		this._pixiData.instance.text.style.fontFamily = _font.fontFamily;
-		
-		this._originParams.font = font;
-	}
-	
-	_parseColor(color) {
-		return parseInt(color.slice(1), 16);
-	}
-	
-	get color() {
-		return this._originParams.color;
-	}
-	
-	set color(color) {
-		this._pixiData.instance.text.style.fill = this._parseColor(color);
-		
-		this._originParams.color = color;
-	}
-	
-	_align(align) {
-		if (align === 'left') {
-			this._pixiData.instance.text.x = 0;
-			return;
-		}
-		
-		if (align === 'center') {
-			this._pixiData.instance.text.x = -this.lineWidth / 2;
-			return;
-		}
-		
-		if (align === 'right') {
-			this._pixiData.instance.text.x =  -this.lineWidth;
-			return;
-		}
-	}
-	
-	get textAlign() {
-		return this._originParams.textAlign;
-	}
-	
-	set textAlign(align) {
-		this._pixiData.instance.text.style.align = align;
-		this._align(align);
-		
-		this._originParams.textAlign = align;
-	}
-	
-	get lineHeight() {
-		return this._originParams.lineHeight;
-	}
-	
-	set lineHeight(height) {
-		this._pixiData.instance.text.style.lineHeight = height;
-		
-		this._originParams.lineHeight = height;
-	}
-	
-	get lineWidth() {
-		return this._originParams.lineWidth;
-	}
-	
-	set lineWidth(width) {
-		this._pixiData.instance.text.style.wordWrapWidth = width;
-		
-		this._originParams.lineWidth = width;
-	}
-	
-	get pixi() {
-		return this._pixiData.instance;
-	}
-	
-	updateForPixi() {
-		return true;
-	}
+    constructor(text, font, color) {
+        super(...arguments);
+        this._originParams = createTextOriginParam(text, font, color);
+        const _font = this._parseFont(font);
+        const t = new PixiText(text, {
+            fontSize: _font.fontSize,
+            fontFamily: _font.fontFamily,
+            fill: this._parseColor(color),
+            wordWrap: true
+        });
+        this._pixiData = createTextPixiData(this, t);
+        this._pixiData.instance.addChild(t);
+        CreatejsTextTemp.apply(this, arguments);
+    }
+    get text() {
+        return this._originParams.text;
+    }
+    set text(text) {
+        this._pixiData.instance.text.text = text;
+        this._align(this.textAlign);
+        this._originParams.text = text;
+    }
+    _parseFont(font) {
+        const p = font.split(' ');
+        return {
+            fontSize: Number((p.shift() || '0px').replace('px', '')),
+            fontFamily: p.join(' ').replace(/'/g, '') //'
+        };
+    }
+    get font() {
+        return this._originParams.font;
+    }
+    set font(font) {
+        const _font = this._parseFont(font);
+        this._pixiData.instance.text.style.fontSize = _font.fontSize;
+        this._pixiData.instance.text.style.fontFamily = _font.fontFamily;
+        this._originParams.font = font;
+    }
+    _parseColor(color) {
+        return parseInt(color.slice(1), 16);
+    }
+    get color() {
+        return this._originParams.color;
+    }
+    set color(color) {
+        this._pixiData.instance.text.style.fill = this._parseColor(color);
+        this._originParams.color = color;
+    }
+    _align(align) {
+        if (align === 'left') {
+            this._pixiData.instance.text.x = 0;
+            return;
+        }
+        if (align === 'center') {
+            this._pixiData.instance.text.x = -this.lineWidth / 2;
+            return;
+        }
+        if (align === 'right') {
+            this._pixiData.instance.text.x = -this.lineWidth;
+            return;
+        }
+    }
+    get textAlign() {
+        return this._originParams.textAlign;
+    }
+    set textAlign(align) {
+        this._pixiData.instance.text.style.align = align;
+        this._align(align);
+        this._originParams.textAlign = align;
+    }
+    get lineHeight() {
+        return this._originParams.lineHeight;
+    }
+    set lineHeight(height) {
+        this._pixiData.instance.text.style.lineHeight = height;
+        this._originParams.lineHeight = height;
+    }
+    get lineWidth() {
+        return this._originParams.lineWidth;
+    }
+    set lineWidth(width) {
+        this._pixiData.instance.text.style.wordWrapWidth = width;
+        this._originParams.lineWidth = width;
+    }
+    get pixi() {
+        return this._pixiData.instance;
+    }
+    updateForPixi(e) {
+        return true;
+    }
 }
-
 appendDisplayObjectDescriptor(CreatejsText);
+// temporary prototype
+Object.defineProperties(CreatejsText.prototype, {
+    _originParams: {
+        value: createOriginParams(),
+        writable: true
+    },
+    _pixiData: {
+        value: createTextPixiData({}, new PixiText('')),
+        writable: true
+    }
+});
 
 /**
- * @ignore
- */
-class PixiButtonHelper extends Container {
-	constructor(cjs) {
-		super();
-		
-		this._createjs = cjs;
-	}
-	
-	get createjs() {
-		return this._createjs;
-	}
-}
-
-/**
- * @ignore
- */
-function createButtonHelperPixiData(cjs) {
-	const pixi = new PixiButtonHelper(cjs);
-	
-	return Object.assign(createPixiData(pixi.pivot), {
-		instance: pixi
-	});
-}
-
-/**
- * @ignore
+ * @see https://createjs.com/docs/easeljs/classes/ButtonHelper.html
  */
 class CreatejsButtonHelper extends window.createjs.ButtonHelper {
-	constructor() {
-		this._originParams = createOriginParams();
-		this._pixiData = createButtonHelperPixiData(this);
-		
-		super(...arguments);
-		
-		const createjs = arguments[0];
-		const pixi = createjs._pixiData.instance;
-		
-		const baseFrame = arguments[1];
-		const overFrame = arguments[2];
-		const downFrame = arguments[3];
-		const hit = arguments[5];
-		const hitFrame = arguments[6];
-		
-		hit.gotoAndStop(hitFrame);
-		const hitPixi = pixi.addChild(hit._pixiData.instance);
-		hitPixi.alpha = 0.00001;
-		
-		let isOver = false;
-		let isDown = false;
-		
-		hitPixi.on('pointerover', function() {
-			isOver = true;
-			if (isDown) {
-				createjs.gotoAndStop(downFrame);
-			} else {
-				createjs.gotoAndStop(overFrame);
-			}
-		});
-		
-		hitPixi.on('pointerout', function() {
-			isOver = false;
-			
-			if (isDown) {
-				createjs.gotoAndStop(overFrame);
-			} else {
-				createjs.gotoAndStop(baseFrame);
-			}
-		});
-		
-		hitPixi.on('pointerdown', function() {
-			isDown = true;
-			createjs.gotoAndStop(downFrame);
-		});
-		
-		hitPixi.on('pointerup', function() {
-			isDown = false;
-			if (isOver) {
-				createjs.gotoAndStop(overFrame);
-			} else {
-				createjs.gotoAndStop(baseFrame);
-			}
-		});
-		
-		hitPixi.on('pointerupoutside', function() {
-			isDown = false;
-			if (isOver) {
-				createjs.gotoAndStop(overFrame);
-			} else {
-				createjs.gotoAndStop(baseFrame);
-			}
-		});
-		
-		hitPixi.interactive = true;
-		hitPixi.cursor = 'pointer';
-	}
-	
-	get pixi() {
-		return this._pixiData.instance;
-	}
+    constructor() {
+        super(...arguments);
+        const createjs = arguments[0];
+        const pixi = createjs.pixi;
+        const baseFrame = arguments[1];
+        const overFrame = arguments[2];
+        const downFrame = arguments[3];
+        const hit = arguments[5];
+        const hitFrame = arguments[6];
+        hit.gotoAndStop(hitFrame);
+        const hitPixi = pixi.addChild(hit.pixi);
+        hitPixi.alpha = 0.00001;
+        let isOver = false;
+        let isDown = false;
+        hitPixi.on('pointerover', function () {
+            isOver = true;
+            if (isDown) {
+                createjs.gotoAndStop(downFrame);
+            }
+            else {
+                createjs.gotoAndStop(overFrame);
+            }
+        });
+        hitPixi.on('pointerout', function () {
+            isOver = false;
+            if (isDown) {
+                createjs.gotoAndStop(overFrame);
+            }
+            else {
+                createjs.gotoAndStop(baseFrame);
+            }
+        });
+        hitPixi.on('pointerdown', function () {
+            isDown = true;
+            createjs.gotoAndStop(downFrame);
+        });
+        hitPixi.on('pointerup', function () {
+            isDown = false;
+            if (isOver) {
+                createjs.gotoAndStop(overFrame);
+            }
+            else {
+                createjs.gotoAndStop(baseFrame);
+            }
+        });
+        hitPixi.on('pointerupoutside', function () {
+            isDown = false;
+            if (isOver) {
+                createjs.gotoAndStop(overFrame);
+            }
+            else {
+                createjs.gotoAndStop(baseFrame);
+            }
+        });
+        hitPixi.interactive = true;
+        hitPixi.cursor = 'pointer';
+    }
 }
-
-appendDisplayObjectDescriptor(CreatejsButtonHelper);
 
 /**
  * Prepare createjs content published with Adobe Animate.
@@ -1403,7 +1351,7 @@ function initializeAnimate(obj = {}) {
     window.createjs.MovieClip = CreatejsMovieClip;
     window.createjs.Sprite = CreatejsSprite;
     window.createjs.Shape = CreatejsShape;
-    //window.createjs.Bitmap = createjs.CreatejsBitmap;
+    window.createjs.Bitmap = CreatejsBitmap;
     window.createjs.Graphics = CreatejsGraphics;
     window.createjs.Text = CreatejsText;
     window.createjs.ButtonHelper = CreatejsButtonHelper;
@@ -1421,5 +1369,5 @@ function handleFileLoad(evt, comp) {
     }
 }
 
-export { CreatejsButtonHelper, CreatejsGraphics, CreatejsMovieClip, CreatejsShape, CreatejsSprite, CreatejsStageGL, CreatejsText, PixiButtonHelper, PixiGraphics, PixiMovieClip, PixiShape, PixiSprite, PixiText, PixiTextContainer, initializeAnimate, prepareAnimateAsync, updateDisplayObjectChildren };
+export { CreatejsBitmap, CreatejsButtonHelper, CreatejsGraphics, CreatejsMovieClip, CreatejsShape, CreatejsSprite, CreatejsStageGL, CreatejsText, PixiBitmap, PixiGraphics, PixiMovieClip, PixiShape, PixiSprite, PixiText, PixiTextContainer, initializeAnimate, prepareAnimateAsync, updateDisplayObjectChildren };
 //# sourceMappingURL=pixi-animate-core.esm.js.map
