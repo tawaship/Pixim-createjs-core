@@ -68,6 +68,9 @@ export function createPixiData(regObj: PixiPoint): TPixiData {
 	};
 }
 
+/**
+ * @since 1.0.9
+ */
 export type TTickerData = { delta: number };
 
 export function updateDisplayObjectChildren(self: CreatejsDisplayObject, e: TTickerData) {
