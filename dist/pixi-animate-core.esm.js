@@ -1,5 +1,5 @@
 /*!
- * @tawaship/pixi-animate-core - v1.0.10
+ * @tawaship/pixi-animate-core - v1.0.11
  * 
  * @require pixi.js v5.3.2
  * @author tawaship (makazu.mori@gmail.com)
@@ -1314,7 +1314,10 @@ function prepareAnimateAsync(id, basepath, options = {}) {
         if (lib.properties.manifest.length === 0) {
             resolve({});
         }
-        const loader = new window.createjs.LoadQueue(false);
+        if (basepath) {
+            basepath = (basepath + '/').replace(/([^\:])\/\//, "$1/");
+        }
+        const loader = new window.createjs.LoadQueue(false, basepath);
         loader.installPlugin(window.createjs.Sound);
         loader.addEventListener('fileload', function (evt) {
             handleFileLoad(evt, comp);
@@ -1322,11 +1325,19 @@ function prepareAnimateAsync(id, basepath, options = {}) {
         loader.addEventListener('complete', function (evt) {
             resolve(evt);
         });
+        /*
         if (basepath) {
             basepath = (basepath + '/').replace(/([^\:])\/\//, "$1/");
             const m = lib.properties.manifest;
             for (let i = 0; i < m.length; i++) {
                 m[i].src = basepath + m[i].src;
+            }
+        }
+        */
+        if (options.crossOrigin) {
+            const m = lib.properties.manifest;
+            for (let i = 0; i < m.length; i++) {
+                m[i].crossOrigin = true;
             }
         }
         loader.loadManifest(lib.properties.manifest);

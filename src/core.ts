@@ -14,7 +14,12 @@ export type TPlayerOption = {
 	/**
 	 * Whether synchronous playback of movie clips is enabled.
 	 */
-	useSynchedTimeline?: boolean
+	useSynchedTimeline?: boolean,
+	
+	/**
+	 * Whether to use assets on a server in another domain.
+	 */
+	crossOrigin?: boolean
 };
 
 /**
@@ -45,7 +50,11 @@ export function prepareAnimateAsync(id: string, basepath: string, options: TPlay
 			resolve({});
 		}
 		
-		const loader = new window.createjs.LoadQueue(false);
+		if (basepath) {
+			basepath = (basepath + '/').replace(/([^\:])\/\//, "$1/");
+		}
+		
+		const loader = new window.createjs.LoadQueue(false, basepath);
 		
 		loader.installPlugin(window.createjs.Sound);
 		
@@ -57,11 +66,20 @@ export function prepareAnimateAsync(id: string, basepath: string, options: TPlay
 			resolve(evt);
 		});
 		
+		/*
 		if (basepath) {
 			basepath = (basepath + '/').replace(/([^\:])\/\//, "$1/");
 			const m = lib.properties.manifest;
 			for (let i = 0; i < m.length; i++) {
 				m[i].src = basepath + m[i].src;
+			}
+		}
+		*/
+		
+		if (options.crossOrigin) {
+			const m = lib.properties.manifest;
+			for (let i = 0; i < m.length; i++) {
+				m[i].crossOrigin = true;
 			}
 		}
 		
