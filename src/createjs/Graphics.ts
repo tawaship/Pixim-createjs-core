@@ -94,11 +94,11 @@ export class CreatejsGraphics extends window.createjs.Graphics {
 		this._originParams = createOriginParams();
 		this._pixiData = createGraphicsPixiData(this);
 		
+		CreatejsGraphicsTemp.apply(this, arguments);
+		
 		this._pixiData.instance.beginFill(0xFFEEEE, 1);
 		this._pixiData.strokeFill = 0;
 		this._pixiData.strokeAlpha = 1;
-		
-		CreatejsGraphicsTemp.apply(this, arguments);
 	}
 	
 	moveTo(x, y) {

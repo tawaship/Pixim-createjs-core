@@ -1,5 +1,5 @@
 /*!
- * @tawaship/pixi-animate-core - v1.0.11
+ * @tawaship/pixi-animate-core - v1.0.12
  * 
  * @require pixi.js v5.3.2
  * @author tawaship (makazu.mori@gmail.com)
@@ -880,10 +880,10 @@ class CreatejsGraphics extends window.createjs.Graphics {
         super(...arguments);
         this._originParams = createOriginParams();
         this._pixiData = createGraphicsPixiData(this);
+        CreatejsGraphicsTemp.apply(this, arguments);
         this._pixiData.instance.beginFill(0xFFEEEE, 1);
         this._pixiData.strokeFill = 0;
         this._pixiData.strokeAlpha = 1;
-        CreatejsGraphicsTemp.apply(this, arguments);
     }
     moveTo(x, y) {
         if (this._pixiData.instance.clone().endFill().containsPoint({ x: x, y: y })) {
