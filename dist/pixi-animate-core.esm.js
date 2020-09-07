@@ -1,5 +1,5 @@
 /*!
- * @tawaship/pixi-animate-core - v1.0.13
+ * @tawaship/pixi-animate-core - v1.0.14
  * 
  * @require pixi.js v5.3.2
  * @author tawaship (makazu.mori@gmail.com)
@@ -1128,6 +1128,7 @@ class CreatejsText extends window.createjs.Text {
         this._originParams = createTextOriginParam(text, font, color);
         const _font = this._parseFont(font);
         const t = new PixiText(text, {
+            fontWeight: _font.fontWeight,
             fontSize: _font.fontSize,
             fontFamily: _font.fontFamily,
             fill: this._parseColor(color),
@@ -1147,8 +1148,15 @@ class CreatejsText extends window.createjs.Text {
     }
     _parseFont(font) {
         const p = font.split(' ');
+        let w = 'normal';
+        let s = p.shift();
+        if (s.indexOf('px') === -1) {
+            w = s;
+            s = p.shift();
+        }
         return {
-            fontSize: Number((p.shift() || '0px').replace('px', '')),
+            fontWeight: w,
+            fontSize: Number((s || '0px').replace('px', '')),
             fontFamily: p.join(' ').replace(/'/g, '') //'
         };
     }
@@ -1177,11 +1185,11 @@ class CreatejsText extends window.createjs.Text {
             return;
         }
         if (align === 'center') {
-            this._pixiData.instance.text.x = -this.lineWidth / 2;
+            this._pixiData.instance.text.x = -this._pixiData.instance.text.width / 2;
             return;
         }
         if (align === 'right') {
-            this._pixiData.instance.text.x = -this.lineWidth;
+            this._pixiData.instance.text.x = -this._pixiData.instance.text.width;
             return;
         }
     }
@@ -1205,6 +1213,7 @@ class CreatejsText extends window.createjs.Text {
     }
     set lineWidth(width) {
         this._pixiData.instance.text.style.wordWrapWidth = width;
+        this._align(this.textAlign);
         this._originParams.lineWidth = width;
     }
     get pixi() {

@@ -78,6 +78,15 @@ function createTextPixiData(cjs: CreatejsText | {}, text: PixiText): TTextPixiDa
 const CreatejsTextTemp = window.createjs.Text;
 
 /**
+ * @private
+ */
+type TParsedText = {
+	fontSize: number,
+	fontFamily: string,
+	fontWeight?: string | number
+}
+
+/**
  * @see https://createjs.com/docs/easeljs/classes/Text.html
  */
 export class CreatejsText extends window.createjs.Text {
@@ -92,6 +101,7 @@ export class CreatejsText extends window.createjs.Text {
 		const _font = this._parseFont(font);
 		
 		const t = new PixiText(text, {
+			fontWeight: _font.fontWeight,
 			fontSize: _font.fontSize,
 			fontFamily: _font.fontFamily,
 			fill: this._parseColor(color),
@@ -118,8 +128,17 @@ export class CreatejsText extends window.createjs.Text {
 	_parseFont(font) {
 		const p = font.split(' ');
 		
+		let w = 'normal';
+		let s = p.shift();
+		
+		if (s.indexOf('px') === -1) {
+			w = s;
+			s = p.shift();
+		}
+		
 		return {
-			fontSize: Number((p.shift() || '0px').replace('px', '')),
+			fontWeight: w,
+			fontSize: Number((s || '0px').replace('px', '')),
 			fontFamily: p.join(' ').replace(/'/g, '') //'
 		};
 	}
@@ -157,12 +176,12 @@ export class CreatejsText extends window.createjs.Text {
 		}
 		
 		if (align === 'center') {
-			this._pixiData.instance.text.x = -this.lineWidth / 2;
+			this._pixiData.instance.text.x = -this._pixiData.instance.text.width / 2;
 			return;
 		}
 		
 		if (align === 'right') {
-			this._pixiData.instance.text.x =  -this.lineWidth;
+			this._pixiData.instance.text.x =  -this._pixiData.instance.text.width;
 			return;
 		}
 	}
@@ -194,6 +213,7 @@ export class CreatejsText extends window.createjs.Text {
 	
 	set lineWidth(width) {
 		this._pixiData.instance.text.style.wordWrapWidth = width;
+		this._align(this.textAlign);
 		
 		this._originParams.lineWidth = width;
 	}
