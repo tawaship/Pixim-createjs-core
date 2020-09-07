@@ -1,5 +1,5 @@
 /*!
- * @tawaship/pixi-animate-core - v1.0.12
+ * @tawaship/pixi-animate-core - v1.0.13
  * 
  * @require pixi.js v5.3.2
  * @author tawaship (makazu.mori@gmail.com)
@@ -1127,7 +1127,7 @@ const CreatejsTextTemp = window.createjs.Text;
  * @see https://createjs.com/docs/easeljs/classes/Text.html
  */
 class CreatejsText extends window.createjs.Text {
-    constructor(text, font, color) {
+    constructor(text, font, color = '#000000') {
         super(...arguments);
         this._originParams = createTextOriginParam(text, font, color);
         const _font = this._parseFont(font);

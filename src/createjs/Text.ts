@@ -84,7 +84,7 @@ export class CreatejsText extends window.createjs.Text {
 	private _originParams: TTextOriginParam;
 	private _pixiData: TTextPixiData;
 	
-	constructor(text: string, font: string, color: string) {
+	constructor(text: string, font: string, color: string = '#000000') {
 		super(...arguments);
 		
 		this._originParams = createTextOriginParam(text, font, color);
