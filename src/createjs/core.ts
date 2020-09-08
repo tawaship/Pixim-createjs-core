@@ -2,9 +2,6 @@ import * as PIXI from 'pixi.js';
 import { CreatejsDisplayObject } from './DisplayObject';
 import { CreatejsColorFilter } from './ColorFilter';
 
-/**
- * @private
- */
 export type TOriginParam = {
 	x: number,
 	y: number,
@@ -22,9 +19,6 @@ export type TOriginParam = {
 	filters: CreatejsColorFilter[] | null
 };
 
-/**
- * @private
- */
 export function createOriginParams(): TOriginParam {
 	return {
 		x: 0,
@@ -46,21 +40,14 @@ export function createOriginParams(): TOriginParam {
 
 /**
  * @see http://pixijs.download/release/docs/PIXI.Point.html
- * @private
  */
-declare class PixiPoint extends PIXI.Point {}
+export declare class PixiPoint extends PIXI.Point {}
 
-/**
- * @private
- */
 export type TPixiData = {
 	regObj: PixiPoint,
 	events: { [name: string]: Function[] }
 };
 
-/**
- * @private
- */
 export function createPixiData(regObj: PixiPoint): TPixiData {
 	return {
 		regObj,

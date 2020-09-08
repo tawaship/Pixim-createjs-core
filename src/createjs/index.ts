@@ -1,3 +1,4 @@
+export * from './core';
 export * from './StageGL';
 export * from './MovieClip';
 export * from './Sprite';

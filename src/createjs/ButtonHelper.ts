@@ -7,7 +7,7 @@ declare const window: any;
  * @see https://createjs.com/docs/easeljs/classes/ButtonHelper.html
  */
 export class CreatejsButtonHelper extends window.createjs.ButtonHelper {
-	constructor() {
+	constructor(...args: any[]) {
 		super(...arguments);
 		
 		const createjs = arguments[0];

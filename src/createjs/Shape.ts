@@ -10,7 +10,6 @@ declare const window: any;
 
 /**
  * @see http://pixijs.download/release/docs/PIXI.Container.html
- * @private
  */
 export class PixiShape extends PIXI.Container {
 	private _createjs: CreatejsShape | {};
@@ -27,9 +26,23 @@ export class PixiShape extends PIXI.Container {
 }
 
 /**
- * @private
+ * @ignore
  */
-type TShapePixiData = TPixiData & { instance: PixiShape, masked: PIXI.DisplayObject[] };
+function createShapeOriginParam(graphics: CreatejsGraphics | null): TShapeOriginParam {
+	return Object.assign(createOriginParams(), {
+		graphics: graphics
+	});
+}
+
+/**
+ * @since 1.1.0
+ */
+export type TShapeOriginParam = TOriginParam & { graphics: CreatejsGraphics };
+
+/**
+ * @since 1.1.0
+ */
+export type TShapePixiData = TPixiData & { instance: PixiShape, masked: PIXI.DisplayObject[] };
 
 /**
  * @ignore
@@ -52,21 +65,27 @@ const CreatejsShapeTemp = window.createjs.Shape;
  * @see https://createjs.com/docs/easeljs/classes/Shape.html
  */
 export class CreatejsShape extends window.createjs.Shape {
-	private _originParams: TOriginParam;
-	private _pixiData: TShapePixiData;
-	private _graphics: CreatejsGraphics;
+	protected _originParams: TShapeOriginParam;
+	protected _pixiData: TShapePixiData;
 	
-	constructor() {
+	constructor(...args: any[]) {
 		super(...arguments);
 		
-		this._originParams = createOriginParams();
-		this._pixiData = createShapePixiData(this);
+		this._initForPixi();
 		
 		CreatejsShapeTemp.apply(this, arguments);
 	}
 	
+	/**
+	 * @since 1.1.0
+	 */
+	protected _initForPixi() {
+		this._originParams = createShapeOriginParam(null);
+		this._pixiData = createShapePixiData(this);
+	}
+	
 	get graphics() {
-		return this._graphics;
+		return this._originParams.graphics;
 	}
 	
 	set graphics(value) {
@@ -88,7 +107,7 @@ export class CreatejsShape extends window.createjs.Shape {
 			this._pixiData.instance.addChild(value.pixi);
 		}
 		
-		this._graphics = value;
+		this._originParams.graphics = value;
 	}
 	
 	get pixi() {
@@ -105,7 +124,7 @@ appendDisplayObjectDescriptor(CreatejsShape);
 // temporary prototype
 Object.defineProperties(CreatejsShape.prototype, {
 	_originParams: {
-		value: createOriginParams(),
+		value: createShapeOriginParam(null),
 		writable: true
 	},
 	_pixiData: {

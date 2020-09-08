@@ -1,5 +1,5 @@
 /*!
- * @tawaship/pixi-animate-core - v1.0.14
+ * @tawaship/pixi-animate-core - v1.1.0
  * 
  * @require pixi.js v5.3.2
  * @author tawaship (makazu.mori@gmail.com)
@@ -12,9 +12,6 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
 var PIXI$1 = require('pixi.js');
 
-/**
- * @private
- */
 function createOriginParams() {
     return {
         x: 0,
@@ -33,9 +30,6 @@ function createOriginParams() {
         filters: null
     };
 }
-/**
- * @private
- */
 function createPixiData(regObj) {
     return {
         regObj,
@@ -536,7 +530,6 @@ function appendDisplayObjectDescriptor(cls) {
 
 /**
  * @see http://pixijs.download/release/docs/PIXI.Container.html
- * @private
  */
 class PixiMovieClip extends PIXI$1.Container {
     constructor(cjs) {
@@ -565,15 +558,20 @@ const CreatejsMovieClipTemp = window.createjs.MovieClip;
  * @see https://createjs.com/docs/easeljs/classes/MovieClip.html
  */
 class CreatejsMovieClip extends window.createjs.MovieClip {
-    constructor() {
+    constructor(...args) {
         super(...arguments);
-        this._originParams = createOriginParams();
-        this._pixiData = createMovieClipPixiData(this);
+        this._initForPixi();
         CreatejsMovieClipTemp.apply(this, arguments);
     }
-    initialize() {
+    /**
+     * @since 1.1.0
+     */
+    _initForPixi() {
         this._originParams = createOriginParams();
         this._pixiData = createMovieClipPixiData(this);
+    }
+    initialize(...args) {
+        this._initForPixi();
         return super.initialize(...arguments);
     }
     addChild(child) {
@@ -619,7 +617,6 @@ Object.defineProperties(CreatejsMovieClip.prototype, {
 
 /**
  * @see http://pixijs.download/release/docs/PIXI.Sprite.html
- * @private
  */
 class PixiSprite extends PIXI$1.Sprite {
     constructor(cjs) {
@@ -647,18 +644,23 @@ const CreatejsSpriteTemp = window.createjs.Sprite;
  * @see https://createjs.com/docs/easeljs/classes/Sprite.html
  */
 class CreatejsSprite extends window.createjs.Sprite {
-    constructor() {
+    constructor(...args) {
         super(...arguments);
-        this._originParams = createOriginParams();
-        this._pixiData = createSpritePixiData(this);
+        this._initForPixi();
         CreatejsSpriteTemp.apply(this, arguments);
     }
-    initialize() {
+    /**
+     * @since 1.1.0
+     */
+    _initForPixi() {
         this._originParams = createOriginParams();
         this._pixiData = createSpritePixiData(this);
+    }
+    initialize(...args) {
+        this._initForPixi();
         return super.initialize(...arguments);
     }
-    gotoAndStop() {
+    gotoAndStop(...args) {
         super.gotoAndStop(...arguments);
         const frame = this.spriteSheet.getFrame(this.currentFrame);
         const baseTexture = PIXI$1.BaseTexture.from(frame.image);
@@ -687,7 +689,6 @@ Object.defineProperties(CreatejsSprite.prototype, {
 
 /**
  * @see http://pixijs.download/release/docs/PIXI.Container.html
- * @private
  */
 class PixiShape extends PIXI$1.Container {
     constructor(cjs) {
@@ -697,6 +698,14 @@ class PixiShape extends PIXI$1.Container {
     get createjs() {
         return this._createjs;
     }
+}
+/**
+ * @ignore
+ */
+function createShapeOriginParam(graphics) {
+    return Object.assign(createOriginParams(), {
+        graphics: graphics
+    });
 }
 /**
  * @ignore
@@ -716,14 +725,20 @@ const CreatejsShapeTemp = window.createjs.Shape;
  * @see https://createjs.com/docs/easeljs/classes/Shape.html
  */
 class CreatejsShape extends window.createjs.Shape {
-    constructor() {
+    constructor(...args) {
         super(...arguments);
-        this._originParams = createOriginParams();
-        this._pixiData = createShapePixiData(this);
+        this._initForPixi();
         CreatejsShapeTemp.apply(this, arguments);
     }
+    /**
+     * @since 1.1.0
+     */
+    _initForPixi() {
+        this._originParams = createShapeOriginParam(null);
+        this._pixiData = createShapePixiData(this);
+    }
     get graphics() {
-        return this._graphics;
+        return this._originParams.graphics;
     }
     set graphics(value) {
         if (this._pixiData.masked.length) {
@@ -742,7 +757,7 @@ class CreatejsShape extends window.createjs.Shape {
         if (value) {
             this._pixiData.instance.addChild(value.pixi);
         }
-        this._graphics = value;
+        this._originParams.graphics = value;
     }
     get pixi() {
         return this._pixiData.instance;
@@ -755,7 +770,7 @@ appendDisplayObjectDescriptor(CreatejsShape);
 // temporary prototype
 Object.defineProperties(CreatejsShape.prototype, {
     _originParams: {
-        value: createOriginParams(),
+        value: createShapeOriginParam(null),
         writable: true
     },
     _pixiData: {
@@ -766,7 +781,6 @@ Object.defineProperties(CreatejsShape.prototype, {
 
 /**
  * @see http://pixijs.download/release/docs/PIXI.Sprite.html
- * @private
  * @since 1.0.9
  */
 class PixiBitmap extends PIXI$1.Sprite {
@@ -788,11 +802,27 @@ function createBitmapPixiData(cjs) {
     });
 }
 /**
+ * @ignore
+ */
+const CreatejsBitmapTemp = window.createjs.Bitmap;
+/**
  * @see https://createjs.com/docs/easeljs/classes/Bitmap.html
  * @since 1.0.9
  */
 class CreatejsBitmap extends window.createjs.Bitmap {
-    initialize() {
+    constructor(...args) {
+        super(...arguments);
+        this._initForPixi();
+        CreatejsBitmapTemp.apply(this, arguments);
+    }
+    /**
+     * @since 1.1.0
+     */
+    _initForPixi() {
+        this._originParams = createOriginParams();
+        this._pixiData = createBitmapPixiData(this);
+    }
+    initialize(...args) {
         this._originParams = createOriginParams();
         this._pixiData = createBitmapPixiData(this);
         const res = super.initialize(...arguments);
@@ -822,7 +852,6 @@ Object.defineProperties(CreatejsBitmap.prototype, {
 
 /**
  * @see http://pixijs.download/release/docs/PIXI.Graphics.html
- * @private
  */
 class PixiGraphics extends PIXI$1.Graphics {
     constructor(cjs) {
@@ -880,14 +909,20 @@ const CreatejsGraphicsTemp = window.createjs.Graphics;
  * @see https://createjs.com/docs/easeljs/classes/Graphics.html
  */
 class CreatejsGraphics extends window.createjs.Graphics {
-    constructor() {
+    constructor(...args) {
         super(...arguments);
-        this._originParams = createOriginParams();
-        this._pixiData = createGraphicsPixiData(this);
+        this._initForPixi();
         CreatejsGraphicsTemp.apply(this, arguments);
         this._pixiData.instance.beginFill(0xFFEEEE, 1);
         this._pixiData.strokeFill = 0;
         this._pixiData.strokeAlpha = 1;
+    }
+    /**
+     * @since 1.1.0
+     */
+    _initForPixi() {
+        this._originParams = createOriginParams();
+        this._pixiData = createGraphicsPixiData(this);
     }
     moveTo(x, y) {
         if (this._pixiData.instance.clone().endFill().containsPoint({ x: x, y: y })) {
@@ -1076,13 +1111,11 @@ Object.defineProperties(CreatejsGraphics.prototype, {
 
 /**
  * @see http://pixijs.download/release/docs/PIXI.Text.html
- * @private
  */
 class PixiText extends PIXI$1.Text {
 }
 /**
  * @see http://pixijs.download/release/docs/PIXI.Container.html
- * @private
  */
 class PixiTextContainer extends PIXI$1.Container {
     constructor(cjs, text) {
@@ -1127,8 +1160,15 @@ const CreatejsTextTemp = window.createjs.Text;
  * @see https://createjs.com/docs/easeljs/classes/Text.html
  */
 class CreatejsText extends window.createjs.Text {
-    constructor(text, font, color = '#000000') {
+    constructor(text, font, color = '#000000', ...args) {
         super(...arguments);
+        this._initForPixi(text, font, color, ...args);
+        CreatejsTextTemp.apply(this, arguments);
+    }
+    /**
+     * @since 1.1.0
+     */
+    _initForPixi(text, font, color = '#000000', ...args) {
         this._originParams = createTextOriginParam(text, font, color);
         const _font = this._parseFont(font);
         const t = new PixiText(text, {
@@ -1140,7 +1180,6 @@ class CreatejsText extends window.createjs.Text {
         });
         this._pixiData = createTextPixiData(this, t);
         this._pixiData.instance.addChild(t);
-        CreatejsTextTemp.apply(this, arguments);
     }
     get text() {
         return this._originParams.text;
@@ -1244,7 +1283,7 @@ Object.defineProperties(CreatejsText.prototype, {
  * @see https://createjs.com/docs/easeljs/classes/ButtonHelper.html
  */
 class CreatejsButtonHelper extends window.createjs.ButtonHelper {
-    constructor() {
+    constructor(...args) {
         super(...arguments);
         const createjs = arguments[0];
         const pixi = createjs.pixi;
@@ -1408,6 +1447,8 @@ exports.PixiShape = PixiShape;
 exports.PixiSprite = PixiSprite;
 exports.PixiText = PixiText;
 exports.PixiTextContainer = PixiTextContainer;
+exports.createOriginParams = createOriginParams;
+exports.createPixiData = createPixiData;
 exports.initializeAnimate = initializeAnimate;
 exports.prepareAnimateAsync = prepareAnimateAsync;
 exports.updateDisplayObjectChildren = updateDisplayObjectChildren;

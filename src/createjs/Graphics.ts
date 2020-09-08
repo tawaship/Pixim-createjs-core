@@ -9,7 +9,6 @@ declare const window: any;
 
 /**
  * @see http://pixijs.download/release/docs/PIXI.Graphics.html
- * @private
  */
 export class PixiGraphics extends PIXI.Graphics {
 	private _createjs: CreatejsGraphics | {};
@@ -26,9 +25,14 @@ export class PixiGraphics extends PIXI.Graphics {
 }
 
 /**
- * @private
+ * @since 1.1.0
  */
-type TGraphicsPixiData = TPixiData & { instance: PixiGraphics, strokeFill: number, strokeAlpha: number };
+export type TGraphicsOriginParam = TOriginParam;
+
+/**
+ * @since 1.1.0
+ */
+export type TGraphicsPixiData = TPixiData & { instance: PixiGraphics, strokeFill: number, strokeAlpha: number };
 
 /**
  * @ignore
@@ -85,20 +89,27 @@ const CreatejsGraphicsTemp = window.createjs.Graphics;
  * @see https://createjs.com/docs/easeljs/classes/Graphics.html
  */
 export class CreatejsGraphics extends window.createjs.Graphics {
-	private _originParams: TOriginParam;
-	private _pixiData: TGraphicsPixiData;
+	protected _originParams: TGraphicsOriginParam;
+	protected _pixiData: TGraphicsPixiData;
 	
-	constructor() {
+	constructor(...args: any[]) {
 		super(...arguments);
 		
-		this._originParams = createOriginParams();
-		this._pixiData = createGraphicsPixiData(this);
+		this._initForPixi();
 		
 		CreatejsGraphicsTemp.apply(this, arguments);
 		
 		this._pixiData.instance.beginFill(0xFFEEEE, 1);
 		this._pixiData.strokeFill = 0;
 		this._pixiData.strokeAlpha = 1;
+	}
+	
+	/**
+	 * @since 1.1.0
+	 */
+	protected _initForPixi() {
+		this._originParams = createOriginParams();
+		this._pixiData = createGraphicsPixiData(this);
 	}
 	
 	moveTo(x, y) {

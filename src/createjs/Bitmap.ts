@@ -9,7 +9,6 @@ declare const window: any;
 
 /**
  * @see http://pixijs.download/release/docs/PIXI.Sprite.html
- * @private
  * @since 1.0.9
  */
 export class PixiBitmap extends PIXI.Sprite {
@@ -27,10 +26,14 @@ export class PixiBitmap extends PIXI.Sprite {
 }
 
 /**
- * @private
- * @since 1.0.9
+ * @since 1.1.0
  */
-type TBitmapPixiData = TPixiData & { instance: PixiBitmap };
+export type TBitmapOriginParam = TOriginParam;
+
+/**
+ * @since 1.1.0
+ */
+export type TBitmapPixiData = TPixiData & { instance: PixiBitmap };
 
 /**
  * @ignore
@@ -44,14 +47,35 @@ function createBitmapPixiData(cjs: CreatejsBitmap | {}): TBitmapPixiData {
 }
 
 /**
+ * @ignore
+ */
+const CreatejsBitmapTemp = window.createjs.Bitmap;
+
+/**
  * @see https://createjs.com/docs/easeljs/classes/Bitmap.html
  * @since 1.0.9
  */
 export class CreatejsBitmap extends window.createjs.Bitmap {
-	private _originParams: TOriginParam;
-	private _pixiData: TBitmapPixiData;
+	protected _originParams: TBitmapOriginParam;
+	protected _pixiData: TBitmapPixiData;
 	
-	initialize() {
+	constructor(...args: any[]) {
+		super(...arguments);
+		
+		this._initForPixi();
+		
+		CreatejsBitmapTemp.apply(this, arguments);
+	}
+	
+	/**
+	 * @since 1.1.0
+	 */
+	protected _initForPixi() {
+		this._originParams = createOriginParams();
+		this._pixiData = createBitmapPixiData(this);
+	}
+	
+	initialize(...args: any[]) {
 		this._originParams = createOriginParams();
 		this._pixiData = createBitmapPixiData(this);
 		

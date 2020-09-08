@@ -9,7 +9,6 @@ declare const window: any;
 
 /**
  * @see http://pixijs.download/release/docs/PIXI.Sprite.html
- * @private
  */
 export class PixiSprite extends PIXI.Sprite {
 	private _createjs: CreatejsSprite | {};
@@ -26,9 +25,14 @@ export class PixiSprite extends PIXI.Sprite {
 }
 
 /**
- * @private
+ * @since 1.1.0
  */
-type TSpritePixiData = TPixiData & { instance: PixiSprite };
+export type TSpriteOriginParam = TOriginParam;
+
+/**
+ * @since 1.1.0
+ */
+export type TSpritePixiData = TPixiData & { instance: PixiSprite };
 
 /**
  * @ignore
@@ -50,26 +54,32 @@ const CreatejsSpriteTemp = window.createjs.Sprite;
  * @see https://createjs.com/docs/easeljs/classes/Sprite.html
  */
 export class CreatejsSprite extends window.createjs.Sprite {
-	private _originParams: TOriginParam;
-	private _pixiData: TSpritePixiData;
+	protected _originParams: TSpriteOriginParam;
+	protected _pixiData: TSpritePixiData;
 	
-	constructor() {
+	constructor(...args: any[]) {
 		super(...arguments);
 		
-		this._originParams = createOriginParams();
-		this._pixiData = createSpritePixiData(this);
+		this._initForPixi();
 		
 		CreatejsSpriteTemp.apply(this, arguments);
 	}
 	
-	initialize() {
+	/**
+	 * @since 1.1.0
+	 */
+	protected _initForPixi() {
 		this._originParams = createOriginParams();
 		this._pixiData = createSpritePixiData(this);
+	}
+	
+	initialize(...args: any[]) {
+		this._initForPixi();
 		
 		return super.initialize(...arguments);
 	}
 	
-	gotoAndStop() {
+	gotoAndStop(...args: any[]) {
 		super.gotoAndStop(...arguments);
 		
 		const frame = this.spriteSheet.getFrame(this.currentFrame);

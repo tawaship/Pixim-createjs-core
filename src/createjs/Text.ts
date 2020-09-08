@@ -9,13 +9,11 @@ declare const window: any;
 
 /**
  * @see http://pixijs.download/release/docs/PIXI.Text.html
- * @private
  */
 export class PixiText extends PIXI.Text {}
 
 /**
  * @see http://pixijs.download/release/docs/PIXI.Container.html
- * @private
  */
 export class PixiTextContainer extends PIXI.Container {
 	private _createjs: CreatejsText | {};
@@ -52,14 +50,14 @@ function createTextOriginParam(text: string, font: string, color: string): TText
 }
 
 /**
- * @private
+ * @since 1.1.0
  */
-type TTextOriginParam = TOriginParam  & { text: string, font: string, color: string, textAlign: string, lineHeight: number, lineWidth: number };
+export type TTextOriginParam = TOriginParam  & { text: string, font: string, color: string, textAlign: string, lineHeight: number, lineWidth: number };
 
 /**
- * @private
+ * @since 1.1.0
  */
-type TTextPixiData = TPixiData & { instance: PixiTextContainer };
+export type TTextPixiData = TPixiData & { instance: PixiTextContainer };
 
 /**
  * @ignore
@@ -90,12 +88,21 @@ type TParsedText = {
  * @see https://createjs.com/docs/easeljs/classes/Text.html
  */
 export class CreatejsText extends window.createjs.Text {
-	private _originParams: TTextOriginParam;
-	private _pixiData: TTextPixiData;
+	protected _originParams: TTextOriginParam;
+	protected _pixiData: TTextPixiData;
 	
-	constructor(text: string, font: string, color: string = '#000000') {
+	constructor(text: string, font: string, color: string = '#000000', ...args: any[]) {
 		super(...arguments);
 		
+		this._initForPixi(text, font, color, ...args);
+		
+		CreatejsTextTemp.apply(this, arguments);
+	}
+	
+	/**
+	 * @since 1.1.0
+	 */
+	protected _initForPixi(text: string, font: string, color: string = '#000000', ...args: any[]) {
 		this._originParams = createTextOriginParam(text, font, color);
 		
 		const _font = this._parseFont(font);
@@ -110,8 +117,6 @@ export class CreatejsText extends window.createjs.Text {
 		
 		this._pixiData = createTextPixiData(this, t);
 		this._pixiData.instance.addChild(t);
-		
-		CreatejsTextTemp.apply(this, arguments);
 	}
 	
 	get text() {

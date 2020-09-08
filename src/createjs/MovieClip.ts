@@ -9,7 +9,6 @@ declare const window: any;
 
 /**
  * @see http://pixijs.download/release/docs/PIXI.Container.html
- * @private
  */
 export class PixiMovieClip extends PIXI.Container {
 	private _createjs: CreatejsMovieClip | {};
@@ -26,9 +25,14 @@ export class PixiMovieClip extends PIXI.Container {
 }
 
 /**
- * @private
+ * @since 1.1.0
  */
-type TMovieClipPixiData = TPixiData & { instance: PixiMovieClip, subInstance: PIXI.Container };
+export type TMovieClipOriginParam = TOriginParam;
+
+/**
+ * @since 1.1.0
+ */
+export type TMovieClipPixiData = TPixiData & { instance: PixiMovieClip, subInstance: PIXI.Container };
 
 /**
  * @ignore
@@ -51,21 +55,27 @@ const CreatejsMovieClipTemp = window.createjs.MovieClip;
  * @see https://createjs.com/docs/easeljs/classes/MovieClip.html
  */
 export class CreatejsMovieClip extends window.createjs.MovieClip {
-	private _originParams: TOriginParam;
-	private _pixiData: TMovieClipPixiData;
+	protected _originParams: TMovieClipOriginParam;
+	protected _pixiData: TMovieClipPixiData;
 	
-	constructor() {
+	constructor(...args: any[]) {
 		super(...arguments);
 		
-		this._originParams = createOriginParams();
-		this._pixiData = createMovieClipPixiData(this);
+		this._initForPixi();
 		
 		CreatejsMovieClipTemp.apply(this, arguments);
 	}
 	
-	initialize() {
+	/**
+	 * @since 1.1.0
+	 */
+	protected _initForPixi() {
 		this._originParams = createOriginParams();
 		this._pixiData = createMovieClipPixiData(this);
+	}
+	
+	initialize(...args: any[]) {
+		this._initForPixi();
 		
 		return super.initialize(...arguments);
 	}
