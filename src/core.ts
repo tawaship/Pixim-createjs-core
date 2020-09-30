@@ -16,6 +16,7 @@ export type TAnimateLibrary = {
 export interface IPrepareOption {
 	/**
 	 * Whether synchronous playback of movie clips is enabled.
+	 * If set to "false", the behavior will be a little faster.
 	 */
 	useSynchedTimeline?: boolean;
 	
@@ -60,15 +61,7 @@ export function prepareAnimate(options: IPrepareOption = {}) {
 		return;
 	}
 	
-	if (!options.useSynchedTimeline) {
-		Object.defineProperties(window.createjs.MovieClip.prototype, {
-			updateForPixi: {
-				value: function(e) {
-					return this._tick(e);
-				}
-			}
-		});
-	}
+	createjs.CreatejsMovieClip.selectUpdateFunc(options.useSynchedTimeline);
 	
 	if (options.useMotionGuide) {
 		window.createjs.MotionGuidePlugin.install();

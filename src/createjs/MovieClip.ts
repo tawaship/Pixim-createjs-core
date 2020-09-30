@@ -52,11 +52,17 @@ function createMovieClipPixiData(cjs: CreatejsMovieClip | {}): TMovieClipPixiDat
 const CreatejsMovieClipTemp = window.createjs.MovieClip;
 
 /**
+ * @ignore
+ */
+let _funcFlag = true;
+
+/**
  * @see https://createjs.com/docs/easeljs/classes/MovieClip.html
  */
 export class CreatejsMovieClip extends window.createjs.MovieClip {
 	protected _originParams: TMovieClipOriginParam;
 	protected _pixiData: TMovieClipPixiData;
+	public updateForPixi: (e: TTickerData) => boolean;
 	
 	constructor(...args: any[]) {
 		super();
@@ -72,6 +78,12 @@ export class CreatejsMovieClip extends window.createjs.MovieClip {
 	protected _initForPixi() {
 		this._originParams = createOriginParams();
 		this._pixiData = createMovieClipPixiData(this);
+		
+		if (!_funcFlag) {
+			this.updateForPixi = this._updateForPixiUnsynched;
+		} else {
+			this.updateForPixi = this._updateForPixiSynched;
+		}
 	}
 	
 	initialize(...args: any[]) {
@@ -114,10 +126,18 @@ export class CreatejsMovieClip extends window.createjs.MovieClip {
 		return this._pixiData.instance;
 	}
 	
-	updateForPixi(e: TTickerData) {
+	static selectUpdateFunc(flag: boolean) {
+		_funcFlag = flag;
+	}
+	
+	protected _updateForPixiSynched(e: TTickerData) {
 		this._updateState();
 		
 		return updateDisplayObjectChildren(this, e);
+	}
+	
+	protected _updateForPixiUnsynched(e: TTickerData) {
+		return this._tick(e);
 	}
 }
 

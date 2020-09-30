@@ -565,6 +565,10 @@ function createMovieClipPixiData(cjs) {
  */
 const CreatejsMovieClipTemp = window.createjs.MovieClip;
 /**
+ * @ignore
+ */
+let _funcFlag = true;
+/**
  * @see https://createjs.com/docs/easeljs/classes/MovieClip.html
  */
 class CreatejsMovieClip extends window.createjs.MovieClip {
@@ -579,6 +583,12 @@ class CreatejsMovieClip extends window.createjs.MovieClip {
     _initForPixi() {
         this._originParams = createOriginParams();
         this._pixiData = createMovieClipPixiData(this);
+        if (!_funcFlag) {
+            this.updateForPixi = this._updateForPixiUnsynched;
+        }
+        else {
+            this.updateForPixi = this._updateForPixiSynched;
+        }
     }
     initialize(...args) {
         this._initForPixi();
@@ -607,9 +617,15 @@ class CreatejsMovieClip extends window.createjs.MovieClip {
     get pixi() {
         return this._pixiData.instance;
     }
-    updateForPixi(e) {
+    static selectUpdateFunc(flag) {
+        _funcFlag = flag;
+    }
+    _updateForPixiSynched(e) {
         this._updateState();
         return updateDisplayObjectChildren(this, e);
+    }
+    _updateForPixiUnsynched(e) {
+        return this._tick(e);
     }
 }
 appendDisplayObjectDescriptor(CreatejsMovieClip);
@@ -1364,15 +1380,7 @@ function prepareAnimate(options = {}) {
     if (_isPrepare) {
         return;
     }
-    if (!options.useSynchedTimeline) {
-        Object.defineProperties(window.createjs.MovieClip.prototype, {
-            updateForPixi: {
-                value: function (e) {
-                    return this._tick(e);
-                }
-            }
-        });
-    }
+    CreatejsMovieClip.selectUpdateFunc(options.useSynchedTimeline);
     if (options.useMotionGuide) {
         window.createjs.MotionGuidePlugin.install();
     }
