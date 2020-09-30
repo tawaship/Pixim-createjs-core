@@ -1,5 +1,5 @@
 /*!
- * @tawaship/pixi-animate-core - v1.2.0
+ * @tawaship/pixi-animate-core - v2.0.0
  * 
  * @require pixi.js v5.3.2
  * @author tawaship (makazu.mori@gmail.com)
@@ -1353,16 +1353,17 @@ class CreatejsButtonHelper extends window.createjs.ButtonHelper {
 }
 
 /**
- * Prepare createjs content published with Adobe Animate.
- * @param id "lib.properties.id" in Animate content.
- * @param basepath Directory path of Animate content.
+ * @ignore
  */
-function prepareAnimateAsync(id, basepath, options = {}) {
-    const comp = window.AdobeAn.getComposition(id);
-    if (!comp) {
-        throw new Error('no composition');
+let _isPrepare = false;
+/**
+ * Prepare createjs content published with Adobe Animate.
+ * @since 2.0.0
+ */
+function prepareAnimate(options = {}) {
+    if (_isPrepare) {
+        return;
     }
-    const lib = comp.getLibrary();
     if (!options.useSynchedTimeline) {
         Object.defineProperties(window.createjs.MovieClip.prototype, {
             updateForPixi: {
@@ -1375,6 +1376,20 @@ function prepareAnimateAsync(id, basepath, options = {}) {
     if (options.useMotionGuide) {
         window.createjs.MotionGuidePlugin.install();
     }
+    _isPrepare = true;
+}
+/**
+ * Load assets of createjs content published with Adobe Animate.
+ * @param id "lib.properties.id" in Animate content.
+ * @param basepath Directory path of Animate content.
+ * @since 2.0.0
+ */
+function loadAssetAsync(id, basepath, options = {}) {
+    const comp = window.AdobeAn.getComposition(id);
+    if (!comp) {
+        throw new Error('no composition');
+    }
+    const lib = comp.getLibrary();
     return new Promise((resolve, reject) => {
         if (lib.properties.manifest.length === 0) {
             resolve({});
@@ -1390,15 +1405,6 @@ function prepareAnimateAsync(id, basepath, options = {}) {
         loader.addEventListener('complete', function (evt) {
             resolve(evt);
         });
-        /*
-        if (basepath) {
-            basepath = (basepath + '/').replace(/([^\:])\/\//, "$1/");
-            const m = lib.properties.manifest;
-            for (let i = 0; i < m.length; i++) {
-                m[i].src = basepath + m[i].src;
-            }
-        }
-        */
         if (options.crossOrigin) {
             const m = lib.properties.manifest;
             for (let i = 0; i < m.length; i++) {
@@ -1421,6 +1427,16 @@ function prepareAnimateAsync(id, basepath, options = {}) {
         }
         return lib;
     });
+}
+/**
+ * Prepare createjs content published with Adobe Animate.
+ * @param id "lib.properties.id" in Animate content.
+ * @param basepath Directory path of Animate content.
+ * @deprecated 2.0.0
+ */
+function prepareAnimateAsync(id, basepath, options = {}) {
+    prepareAnimate(options);
+    return loadAssetAsync(id, basepath, { crossOrigin: options.crossOrigin });
 }
 function initializeAnimate(obj = {}) {
     window.createjs.Stage = CreatejsStage;
@@ -1446,5 +1462,5 @@ function handleFileLoad(evt, comp) {
     }
 }
 
-export { CreatejsBitmap, CreatejsButtonHelper, CreatejsGraphics, CreatejsMovieClip, CreatejsShape, CreatejsSprite, CreatejsStage, CreatejsStageGL, CreatejsText, PixiBitmap, PixiGraphics, PixiMovieClip, PixiShape, PixiSprite, PixiText, PixiTextContainer, createOriginParams, createPixiData, initializeAnimate, prepareAnimateAsync, updateDisplayObjectChildren };
+export { CreatejsBitmap, CreatejsButtonHelper, CreatejsGraphics, CreatejsMovieClip, CreatejsShape, CreatejsSprite, CreatejsStage, CreatejsStageGL, CreatejsText, PixiBitmap, PixiGraphics, PixiMovieClip, PixiShape, PixiSprite, PixiText, PixiTextContainer, createOriginParams, createPixiData, initializeAnimate, loadAssetAsync, prepareAnimate, prepareAnimateAsync, updateDisplayObjectChildren };
 //# sourceMappingURL=pixi-animate-core.esm.js.map

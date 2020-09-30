@@ -21,6 +21,7 @@ export interface IPrepareOption {
 	
 	/**
 	 * Whether to use assets on a server in another domain.
+	 * @deprecated 2.0.0
 	 */
 	crossOrigin?: boolean;
 	
@@ -31,22 +32,33 @@ export interface IPrepareOption {
 };
 
 /**
+ * @since 2.0.0
+ */
+export interface ILoadAssetOption {
+	/**
+	 * Whether to use assets on a server in another domain.
+	 */
+	crossOrigin?: boolean;
+};
+
+/**
  * @deprecated 1.1.1
  */
 export type TPlayerOption = IPrepareOption;
 
 /**
- * Prepare createjs content published with Adobe Animate.
- * @param id "lib.properties.id" in Animate content.
- * @param basepath Directory path of Animate content.
+ * @ignore
  */
-export function prepareAnimateAsync(id: string, basepath: string, options: IPrepareOption = {}) {
-	const comp = window.AdobeAn.getComposition(id);
-	if (!comp) {
-		throw new Error('no composition');
+let _isPrepare = false;
+
+/**
+ * Prepare createjs content published with Adobe Animate.
+ * @since 2.0.0
+ */
+export function prepareAnimate(options: IPrepareOption = {}) {
+	if (_isPrepare) {
+		return;
 	}
-	
-	const lib: TAnimateLibrary = comp.getLibrary();
 	
 	if (!options.useSynchedTimeline) {
 		Object.defineProperties(window.createjs.MovieClip.prototype, {
@@ -61,6 +73,23 @@ export function prepareAnimateAsync(id: string, basepath: string, options: IPrep
 	if (options.useMotionGuide) {
 		window.createjs.MotionGuidePlugin.install();
 	}
+	
+	_isPrepare = true;
+}
+
+/**
+ * Load assets of createjs content published with Adobe Animate.
+ * @param id "lib.properties.id" in Animate content.
+ * @param basepath Directory path of Animate content.
+ * @since 2.0.0
+ */
+export function loadAssetAsync(id: string, basepath: string, options: ILoadAssetOption = {}) {
+	const comp = window.AdobeAn.getComposition(id);
+	if (!comp) {
+		throw new Error('no composition');
+	}
+	
+	const lib: TAnimateLibrary = comp.getLibrary();
 	
 	return new Promise((resolve, reject) => {
 		if (lib.properties.manifest.length === 0) {
@@ -82,16 +111,6 @@ export function prepareAnimateAsync(id: string, basepath: string, options: IPrep
 		loader.addEventListener('complete', function(evt: any) {
 			resolve(evt);
 		});
-		
-		/*
-		if (basepath) {
-			basepath = (basepath + '/').replace(/([^\:])\/\//, "$1/");
-			const m = lib.properties.manifest;
-			for (let i = 0; i < m.length; i++) {
-				m[i].src = basepath + m[i].src;
-			}
-		}
-		*/
 		
 		if (options.crossOrigin) {
 			const m = lib.properties.manifest;
@@ -118,6 +137,17 @@ export function prepareAnimateAsync(id: string, basepath: string, options: IPrep
 		
 		return lib;
 	});
+}
+
+/**
+ * Prepare createjs content published with Adobe Animate.
+ * @param id "lib.properties.id" in Animate content.
+ * @param basepath Directory path of Animate content.
+ * @deprecated 2.0.0
+ */
+export function prepareAnimateAsync(id: string, basepath: string, options: IPrepareOption = {}) {
+	prepareAnimate(options);
+	return loadAssetAsync(id, basepath, { crossOrigin: options.crossOrigin });
 }
 
 export function initializeAnimate(obj: { [name: string]: any } = {}) {
