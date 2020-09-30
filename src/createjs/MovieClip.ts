@@ -59,7 +59,7 @@ export class CreatejsMovieClip extends window.createjs.MovieClip {
 	protected _pixiData: TMovieClipPixiData;
 	
 	constructor(...args: any[]) {
-		super(...arguments);
+		super();
 		
 		this._initForPixi();
 		

@@ -121,6 +121,7 @@ export function prepareAnimateAsync(id: string, basepath: string, options: IPrep
 }
 
 export function initializeAnimate(obj: { [name: string]: any } = {}) {
+	window.createjs.Stage = createjs.CreatejsStage;
 	window.createjs.StageGL = createjs.CreatejsStageGL;
 	window.createjs.MovieClip = createjs.CreatejsMovieClip;
 	window.createjs.Sprite = createjs.CreatejsSprite;

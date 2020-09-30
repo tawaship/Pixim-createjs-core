@@ -24,7 +24,7 @@ A module for processing the content published by Adobe Animate with "[pixi.js](h
 
 ## Supported versions
 
-- A complete set of content published with Adobe Animate version 20.02
+- A complete set of content published with Adobe Animate version 20.02 / 20.5.1
 - pixi.js 5.3.2
 
 I have not confirmed the operation on other versions.
@@ -62,6 +62,14 @@ npm install --save @tawaship/pixi-animate-core
 ### 1.1.1
 
 - Supports motion guide
+
+### 1.2.0
+
+- Supports Animate 20.5.1
+- Overrides
+|name|class|
+|:--|:--|
+|createjs.Stage|[CreatejsStage](https://tawaship.github.io/pixi-animate-core/classes/createjsstage.html)|
 
 ## Unimplemented
 

@@ -58,7 +58,7 @@ export class CreatejsSprite extends window.createjs.Sprite {
 	protected _pixiData: TSpritePixiData;
 	
 	constructor(...args: any[]) {
-		super(...arguments);
+		super();
 		
 		this._initForPixi();
 		

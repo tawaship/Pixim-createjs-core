@@ -1,5 +1,5 @@
 /*!
- * @tawaship/pixi-animate-core - v1.1.1
+ * @tawaship/pixi-animate-core - v1.2.0
  * 
  * @require pixi.js v5.3.2
  * @author tawaship (makazu.mori@gmail.com)
@@ -47,6 +47,20 @@ function updateDisplayObjectChildren(self, e) {
         child.updateForPixi(e);
     }
     return true;
+}
+
+/**
+ * @see https://createjs.com/docs/easeljs/classes/Stage.html
+ */
+class CreatejsStage extends window.createjs.Stage {
+    updateForPixi(props) {
+        if (this.tickOnUpdate) {
+            this.tick(props);
+        }
+        this.dispatchEvent("drawstart");
+        updateDisplayObjectChildren(this, props);
+        this.dispatchEvent("drawend");
+    }
 }
 
 /**
@@ -559,7 +573,7 @@ const CreatejsMovieClipTemp = window.createjs.MovieClip;
  */
 class CreatejsMovieClip extends window.createjs.MovieClip {
     constructor(...args) {
-        super(...arguments);
+        super();
         this._initForPixi();
         CreatejsMovieClipTemp.apply(this, arguments);
     }
@@ -645,7 +659,7 @@ const CreatejsSpriteTemp = window.createjs.Sprite;
  */
 class CreatejsSprite extends window.createjs.Sprite {
     constructor(...args) {
-        super(...arguments);
+        super();
         this._initForPixi();
         CreatejsSpriteTemp.apply(this, arguments);
     }
@@ -1413,6 +1427,7 @@ function prepareAnimateAsync(id, basepath, options = {}) {
     });
 }
 function initializeAnimate(obj = {}) {
+    window.createjs.Stage = CreatejsStage;
     window.createjs.StageGL = CreatejsStageGL;
     window.createjs.MovieClip = CreatejsMovieClip;
     window.createjs.Sprite = CreatejsSprite;
@@ -1441,6 +1456,7 @@ exports.CreatejsGraphics = CreatejsGraphics;
 exports.CreatejsMovieClip = CreatejsMovieClip;
 exports.CreatejsShape = CreatejsShape;
 exports.CreatejsSprite = CreatejsSprite;
+exports.CreatejsStage = CreatejsStage;
 exports.CreatejsStageGL = CreatejsStageGL;
 exports.CreatejsText = CreatejsText;
 exports.PixiBitmap = PixiBitmap;
