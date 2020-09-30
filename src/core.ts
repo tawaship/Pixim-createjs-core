@@ -10,24 +10,37 @@ export type TAnimateLibrary = {
 	[ name: string ]: any;
 }
 
-export type TPlayerOption = {
+/**
+ * @since 1.1.1
+ */
+export interface IPrepareOption {
 	/**
 	 * Whether synchronous playback of movie clips is enabled.
 	 */
-	useSynchedTimeline?: boolean,
+	useSynchedTimeline?: boolean;
 	
 	/**
 	 * Whether to use assets on a server in another domain.
 	 */
-	crossOrigin?: boolean
+	crossOrigin?: boolean;
+	
+	/**
+	 * Whether to use motion guides.
+	 */
+	useMotionGuide?: boolean;
 };
+
+/**
+ * @deprecated 1.1.1
+ */
+export type TPlayerOption = IPrepareOption;
 
 /**
  * Prepare createjs content published with Adobe Animate.
  * @param id "lib.properties.id" in Animate content.
  * @param basepath Directory path of Animate content.
  */
-export function prepareAnimateAsync(id: string, basepath: string, options: TPlayerOption = {}) {
+export function prepareAnimateAsync(id: string, basepath: string, options: IPrepareOption = {}) {
 	const comp = window.AdobeAn.getComposition(id);
 	if (!comp) {
 		throw new Error('no composition');
@@ -43,6 +56,10 @@ export function prepareAnimateAsync(id: string, basepath: string, options: TPlay
 				}
 			}
 		});
+	}
+	
+	if (options.useMotionGuide) {
+		window.createjs.MotionGuidePlugin.install();
 	}
 	
 	return new Promise((resolve, reject) => {

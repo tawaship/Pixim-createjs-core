@@ -1,5 +1,5 @@
 /*!
- * @tawaship/pixi-animate-core - v1.1.0
+ * @tawaship/pixi-animate-core - v1.1.1
  * 
  * @require pixi.js v5.3.2
  * @author tawaship (makazu.mori@gmail.com)
@@ -1361,6 +1361,9 @@ function prepareAnimateAsync(id, basepath, options = {}) {
                 }
             }
         });
+    }
+    if (options.useMotionGuide) {
+        window.createjs.MotionGuidePlugin.install();
     }
     return new Promise((resolve, reject) => {
         if (lib.properties.manifest.length === 0) {

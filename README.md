@@ -35,20 +35,33 @@ I have not confirmed the operation on other versions.
 npm install --save @tawaship/pixi-animate-core
 ```
 
-## Overrides
+## Change log
 
-### since 1.0.0
-- createjs.StageGL = [CreatejsStageGL](https://tawaship.github.io/pixi-animate-core/classes/createjsstagegl.html)
-- createjs.MovieClip = [CreatejsMovieClip](https://tawaship.github.io/pixi-animate-core/classes/createjsmovieclip.html)
-- createjs.Sprite = [CreatejsSprite](https://tawaship.github.io/pixi-animate-core/classes/createjssprite.html)
-- createjs.Shape = [CreatejsShape](https://tawaship.github.io/pixi-animate-core/classes/createjsshape.html)
-- createjs.Graphics = [CreatejsGraphics](https://tawaship.github.io/pixi-animate-core/classes/createjsgraphics.html)
-- createjs.Text = [CreatejsText](https://tawaship.github.io/pixi-animate-core/classes/createjstext.html)
-- createjs.ButtonHelper = [CreatejsButtonHelper](https://tawaship.github.io/pixi-animate-core/classes/createjsbuttonhelper.html)
+### 1.0.0
 
-### since 1.0.9
+- Overrides
 
-- createjs.Bitmap = [CreatejsBitmap](https://tawaship.github.io/pixi-animate-core/classes/createjsbitmap.html)
+|name|class|
+|:--|:--|
+|createjs.StageGL|[CreatejsStageGL](https://tawaship.github.io/pixi-animate-core/classes/createjsstagegl.html)|
+|createjs.MovieClip|[CreatejsMovieClip](https://tawaship.github.io/pixi-animate-core/classes/createjsmovieclip.html)|
+|createjs.Sprite|[CreatejsSprite](https://tawaship.github.io/pixi-animate-core/classes/createjssprite.html)|
+|createjs.Shape|[CreatejsShape](https://tawaship.github.io/pixi-animate-core/classes/createjsshape.html)|
+|createjs.Graphics|[CreatejsGraphics](https://tawaship.github.io/pixi-animate-core/classes/createjsgraphics.html)|
+|createjs.Text|[CreatejsText](https://tawaship.github.io/pixi-animate-core/classes/createjstext.html)|
+|createjs.ButtonHelper|[CreatejsButtonHelper](https://tawaship.github.io/pixi-animate-core/classes/createjsbuttonhelper.html)
+
+### 1.0.9
+
+- Overrides
+
+|name|class|
+|:--|:--|
+|createjs.Bitmap|[CreatejsBitmap](https://tawaship.github.io/pixi-animate-core/classes/createjsbitmap.html)|
+
+### 1.1.1
+
+- Supports motion guide
 
 ## Unimplemented
 
