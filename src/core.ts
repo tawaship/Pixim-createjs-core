@@ -21,12 +21,6 @@ export interface IPrepareOption {
 	useSynchedTimeline?: boolean;
 	
 	/**
-	 * Whether to use assets on a server in another domain.
-	 * @deprecated 2.0.0
-	 */
-	crossOrigin?: boolean;
-	
-	/**
 	 * Whether to use motion guides.
 	 */
 	useMotionGuide?: boolean;
@@ -41,11 +35,6 @@ export interface ILoadAssetOption {
 	 */
 	crossOrigin?: boolean;
 };
-
-/**
- * @deprecated 1.1.1
- */
-export type TPlayerOption = IPrepareOption;
 
 /**
  * @ignore
@@ -130,17 +119,6 @@ export function loadAssetAsync(id: string, basepath: string, options: ILoadAsset
 		
 		return lib;
 	});
-}
-
-/**
- * Prepare createjs content published with Adobe Animate.
- * @param id "lib.properties.id" in Animate content.
- * @param basepath Directory path of Animate content.
- * @deprecated 2.0.0
- */
-export function prepareAnimateAsync(id: string, basepath: string, options: IPrepareOption = {}) {
-	prepareAnimate(options);
-	return loadAssetAsync(id, basepath, { crossOrigin: options.crossOrigin });
 }
 
 export function initializeAnimate(obj: { [name: string]: any } = {}) {

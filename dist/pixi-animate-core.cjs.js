@@ -1,5 +1,5 @@
 /*!
- * @tawaship/pixi-animate-core - v2.0.0
+ * @tawaship/pixi-animate-core - v2.0.1
  * 
  * @require pixi.js v5.3.2
  * @author tawaship (makazu.mori@gmail.com)
@@ -1440,16 +1440,6 @@ function loadAssetAsync(id, basepath, options = {}) {
         return lib;
     });
 }
-/**
- * Prepare createjs content published with Adobe Animate.
- * @param id "lib.properties.id" in Animate content.
- * @param basepath Directory path of Animate content.
- * @deprecated 2.0.0
- */
-function prepareAnimateAsync(id, basepath, options = {}) {
-    prepareAnimate(options);
-    return loadAssetAsync(id, basepath, { crossOrigin: options.crossOrigin });
-}
 function initializeAnimate(obj = {}) {
     window.createjs.Stage = CreatejsStage;
     window.createjs.StageGL = CreatejsStageGL;
@@ -1495,6 +1485,5 @@ exports.createPixiData = createPixiData;
 exports.initializeAnimate = initializeAnimate;
 exports.loadAssetAsync = loadAssetAsync;
 exports.prepareAnimate = prepareAnimate;
-exports.prepareAnimateAsync = prepareAnimateAsync;
 exports.updateDisplayObjectChildren = updateDisplayObjectChildren;
 //# sourceMappingURL=pixi-animate-core.cjs.js.map
