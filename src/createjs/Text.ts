@@ -92,11 +92,11 @@ export class CreatejsText extends window.createjs.Text {
 	protected _pixiData: TTextPixiData;
 	
 	constructor(text: string, font: string, color: string = '#000000', ...args: any[]) {
-		super(...arguments);
+		super(text, font, color, ...args);
 		
 		this._initForPixi(text, font, color, ...args);
 		
-		CreatejsTextTemp.apply(this, arguments);
+		CreatejsTextTemp.call(this, text, font, color, ...args);
 	}
 	
 	/**

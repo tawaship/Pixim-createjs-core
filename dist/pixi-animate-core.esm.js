@@ -1,5 +1,5 @@
 /*!
- * @tawaship/pixi-animate-core - v2.0.1
+ * @tawaship/pixi-animate-core - v2.0.2
  * 
  * @require pixi.js v5.3.2
  * @author tawaship (makazu.mori@gmail.com)
@@ -1187,9 +1187,9 @@ const CreatejsTextTemp = window.createjs.Text;
  */
 class CreatejsText extends window.createjs.Text {
     constructor(text, font, color = '#000000', ...args) {
-        super(...arguments);
+        super(text, font, color, ...args);
         this._initForPixi(text, font, color, ...args);
-        CreatejsTextTemp.apply(this, arguments);
+        CreatejsTextTemp.call(this, text, font, color, ...args);
     }
     /**
      * @since 1.1.0
