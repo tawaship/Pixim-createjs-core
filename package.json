@@ -23,7 +23,7 @@
     "type": "git",
     "url": "git+https://github.com/tawaship/pixi-animate-core.git"
   },
-  "author": "tawashi@",
+  "author": "tawaship",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/tawaship/pixi-animate-core/issues"
