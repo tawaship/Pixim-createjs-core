@@ -1,6 +1,24 @@
 import * as PIXI from 'pixi.js';
-import { CreatejsDisplayObject } from './DisplayObject';
 import { CreatejsColorFilter } from './ColorFilter';
+
+import { CreatejsStage } from './Stage';
+import { CreatejsStageGL } from './StageGL';
+import { CreatejsMovieClip } from './MovieClip';
+import { CreatejsSprite } from './Sprite';
+import { CreatejsShape } from './Shape';
+import { CreatejsBitmap } from './Bitmap';
+import { CreatejsGraphics } from './Graphics';
+import { CreatejsText } from './Text';
+
+export type TCreatejsObject =
+	  CreatejsStage
+	| CreatejsStageGL
+	| CreatejsMovieClip
+	| CreatejsSprite
+	| CreatejsShape
+	| CreatejsBitmap
+	| CreatejsGraphics
+	| CreatejsText;
 
 export type TOriginParam = {
 	x: number,
@@ -15,7 +33,7 @@ export type TOriginParam = {
 	visible: boolean,
 	alpha: number,
 	_off: boolean,
-	mask: CreatejsDisplayObject | null,
+	mask: TCreatejsObject | null,
 	filters: CreatejsColorFilter[] | null
 };
 
@@ -60,7 +78,7 @@ export function createPixiData(regObj: PixiPoint): TPixiData {
  */
 export type TTickerData = { delta: number };
 
-export function updateDisplayObjectChildren(self: CreatejsDisplayObject, e: TTickerData) {
+export function updateDisplayObjectChildren(self: TCreatejsObject, e: TTickerData) {
 	const list = self.children.slice();
 	for (let i = 0,l = list.length; i < l; i++) {
 		const child = list[i];
