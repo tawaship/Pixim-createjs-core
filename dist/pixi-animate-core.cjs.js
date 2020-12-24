@@ -1,5 +1,5 @@
 /*!
- * @tawaship/pixi-animate-core - v2.1.0
+ * @tawaship/pixi-animate-core - v2.1.1
  * 
  * @require pixi.js v5.3.2
  * @author tawaship (makazu.mori@gmail.com)
@@ -570,7 +570,7 @@ const CreatejsMovieClipTemp = window.createjs.MovieClip;
  */
 let _funcFlag = true;
 /**
- * @see https://createjs.com/docs/easeljs/classes/MovieClip.html
+ * [[https://createjs.com/docs/easeljs/classes/MovieClip.html | createjs.MovieClip]]
  */
 class CreatejsMovieClip extends window.createjs.MovieClip {
     constructor(...args) {

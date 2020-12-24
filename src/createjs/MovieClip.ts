@@ -53,7 +53,7 @@ const CreatejsMovieClipTemp = window.createjs.MovieClip;
 let _funcFlag = true;
 
 /**
- * @see https://createjs.com/docs/easeljs/classes/MovieClip.html
+ * [[https://createjs.com/docs/easeljs/classes/MovieClip.html | createjs.MovieClip]]
  */
 export class CreatejsMovieClip extends window.createjs.MovieClip {
 	protected _originParams: IMovieClipOriginParam;
