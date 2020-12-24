@@ -39,7 +39,7 @@ npm install --save @tawaship/pixi-animate-core
 
 ### 1.0.0
 
-- Overrides
+- Overrides  
 |name|class|
 |:--|:--|
 |createjs.StageGL|[CreatejsStageGL](https://tawaship.github.io/pixi-animate-core/classes/createjsstagegl.html)|
@@ -52,7 +52,7 @@ npm install --save @tawaship/pixi-animate-core
 
 ### 1.0.9
 
-- Overrides
+- Overrides  
 |name|class|
 |:--|:--|
 |createjs.Bitmap|[CreatejsBitmap](https://tawaship.github.io/pixi-animate-core/classes/createjsbitmap.html)|
@@ -64,7 +64,7 @@ npm install --save @tawaship/pixi-animate-core
 ### 1.2.0
 
 - Supports Animate 20.5.1
-- Overrides
+- Overrides  
 |name|class|
 |:--|:--|
 |createjs.Stage|[CreatejsStage](https://tawaship.github.io/pixi-animate-core/classes/createjsstage.html)|
