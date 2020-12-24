@@ -4,6 +4,6 @@
 declare const window: any;
 
 /**
- * @see https://createjs.com/docs/easeljs/classes/ColorFilter.html
+ * [[https://createjs.com/docs/easeljs/classes/ColorFilter.html | createjs.ColorFilter]]
  */
 export declare class CreatejsColorFilter extends window.createjs.ColorFilter {}

@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import { createPixiData, createOriginParams, TPixiData, TOriginParam, TTickerData } from './core';
+import { createPixiData, createOriginParams, IPixiData, IOriginParam, ITickerData } from './core';
 import { appendDisplayObjectDescriptor } from './append';
 
 /**
@@ -8,7 +8,7 @@ import { appendDisplayObjectDescriptor } from './append';
 declare const window: any;
 
 /**
- * @see http://pixijs.download/release/docs/PIXI.Sprite.html
+ * [[http://pixijs.download/release/docs/PIXI.Sprite.html | PIXI.Sprite]]
  */
 export class PixiSprite extends PIXI.Sprite {
 	private _createjs: CreatejsSprite | {};
@@ -24,20 +24,18 @@ export class PixiSprite extends PIXI.Sprite {
 	}
 }
 
-/**
- * @since 1.1.0
- */
-export type TSpriteOriginParam = TOriginParam;
+export interface ISpriteOriginParam extends IOriginParam {
 
-/**
- * @since 1.1.0
- */
-export type TSpritePixiData = TPixiData & { instance: PixiSprite };
+}
+
+export interface ISpritePixiData extends IPixiData {
+	instance: PixiSprite;
+}
 
 /**
  * @ignore
  */
-function createSpritePixiData(cjs: CreatejsSprite | {}): TSpritePixiData {
+function createSpritePixiData(cjs: CreatejsSprite | {}): ISpritePixiData {
 	const pixi = new PixiSprite(cjs);
 	
 	return Object.assign(createPixiData(pixi.anchor), {
@@ -51,11 +49,11 @@ function createSpritePixiData(cjs: CreatejsSprite | {}): TSpritePixiData {
 const CreatejsSpriteTemp = window.createjs.Sprite;
 
 /**
- * @see https://createjs.com/docs/easeljs/classes/Sprite.html
+ * [[https://createjs.com/docs/easeljs/classes/Sprite.html | createjs.Sprite]]
  */
 export class CreatejsSprite extends window.createjs.Sprite {
-	protected _originParams: TSpriteOriginParam;
-	protected _pixiData: TSpritePixiData;
+	protected _originParams: ISpriteOriginParam;
+	protected _pixiData: ISpritePixiData;
 	
 	constructor(...args: any[]) {
 		super();
@@ -65,9 +63,6 @@ export class CreatejsSprite extends window.createjs.Sprite {
 		CreatejsSpriteTemp.apply(this, arguments);
 	}
 	
-	/**
-	 * @since 1.1.0
-	 */
 	protected _initForPixi() {
 		this._originParams = createOriginParams();
 		this._pixiData = createSpritePixiData(this);
@@ -93,7 +88,7 @@ export class CreatejsSprite extends window.createjs.Sprite {
 		return this._pixiData.instance;
 	}
 	
-	updateForPixi(e: TTickerData) {
+	updateForPixi(e: ITickerData) {
 		return true;
 	}
 }

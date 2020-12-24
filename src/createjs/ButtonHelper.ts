@@ -4,7 +4,7 @@
 declare const window: any;
 
 /**
- * @see https://createjs.com/docs/easeljs/classes/ButtonHelper.html
+ * [[https://createjs.com/docs/easeljs/classes/ButtonHelper.html | createjs.ButtonHelper]]
  */
 export class CreatejsButtonHelper extends window.createjs.ButtonHelper {
 	constructor(...args: any[]) {

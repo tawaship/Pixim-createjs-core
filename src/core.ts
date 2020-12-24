@@ -6,13 +6,10 @@ import * as createjs from './createjs/index';
  */
 declare const window: any;
 
-export type TAnimateLibrary = {
+export interface IAnimateLibrary {
 	[ name: string ]: any;
 }
 
-/**
- * @since 1.1.1
- */
 export interface IPrepareOption {
 	/**
 	 * Whether synchronous playback of movie clips is enabled.
@@ -26,9 +23,6 @@ export interface IPrepareOption {
 	useMotionGuide?: boolean;
 };
 
-/**
- * @since 2.0.0
- */
 export interface ILoadAssetOption {
 	/**
 	 * Whether to use assets on a server in another domain.
@@ -43,7 +37,6 @@ let _isPrepare = false;
 
 /**
  * Prepare createjs content published with Adobe Animate.
- * @since 2.0.0
  */
 export function prepareAnimate(options: IPrepareOption = {}) {
 	if (_isPrepare) {
@@ -61,9 +54,9 @@ export function prepareAnimate(options: IPrepareOption = {}) {
 
 /**
  * Load assets of createjs content published with Adobe Animate.
+ * 
  * @param id "lib.properties.id" in Animate content.
  * @param basepath Directory path of Animate content.
- * @since 2.0.0
  */
 export function loadAssetAsync(id: string, basepath: string, options: ILoadAssetOption = {}) {
 	const comp = window.AdobeAn.getComposition(id);
@@ -71,7 +64,7 @@ export function loadAssetAsync(id: string, basepath: string, options: ILoadAsset
 		throw new Error('no composition');
 	}
 	
-	const lib: TAnimateLibrary = comp.getLibrary();
+	const lib: IAnimateLibrary = comp.getLibrary();
 	
 	return new Promise((resolve, reject) => {
 		if (lib.properties.manifest.length === 0) {

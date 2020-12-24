@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import { createPixiData, createOriginParams, TPixiData, TOriginParam, updateDisplayObjectChildren, TTickerData } from './core';
+import { createPixiData, createOriginParams, IPixiData, IOriginParam, updateDisplayObjectChildren, ITickerData } from './core';
 import { appendDisplayObjectDescriptor } from './append';
 
 /**
@@ -8,7 +8,7 @@ import { appendDisplayObjectDescriptor } from './append';
 declare const window: any;
 
 /**
- * @see http://pixijs.download/release/docs/PIXI.Container.html
+ * [[http://pixijs.download/release/docs/PIXI.Container.html | PIXI.Container]]
  */
 export class PixiMovieClip extends PIXI.Container {
 	private _createjs: CreatejsMovieClip | {};
@@ -24,20 +24,16 @@ export class PixiMovieClip extends PIXI.Container {
 	}
 }
 
-/**
- * @since 1.1.0
- */
-export type TMovieClipOriginParam = TOriginParam;
+export interface IMovieClipOriginParam extends IOriginParam {
 
-/**
- * @since 1.1.0
- */
-export type TMovieClipPixiData = TPixiData & { instance: PixiMovieClip, subInstance: PIXI.Container };
+}
 
-/**
- * @ignore
- */
-function createMovieClipPixiData(cjs: CreatejsMovieClip | {}): TMovieClipPixiData {
+export interface IMovieClipPixiData extends IPixiData {
+	instance: PixiMovieClip;
+	subInstance: PIXI.Container;
+}
+
+function createMovieClipPixiData(cjs: CreatejsMovieClip | {}): IMovieClipPixiData {
 	const pixi = new PixiMovieClip(cjs);
 	
 	return Object.assign(createPixiData(pixi.pivot), {
@@ -60,9 +56,9 @@ let _funcFlag = true;
  * @see https://createjs.com/docs/easeljs/classes/MovieClip.html
  */
 export class CreatejsMovieClip extends window.createjs.MovieClip {
-	protected _originParams: TMovieClipOriginParam;
-	protected _pixiData: TMovieClipPixiData;
-	public updateForPixi: (e: TTickerData) => boolean;
+	protected _originParams: IMovieClipOriginParam;
+	protected _pixiData: IMovieClipPixiData;
+	public updateForPixi: (e: ITickerData) => boolean;
 	
 	constructor(...args: any[]) {
 		super();
@@ -130,13 +126,13 @@ export class CreatejsMovieClip extends window.createjs.MovieClip {
 		_funcFlag = flag;
 	}
 	
-	protected _updateForPixiSynched(e: TTickerData) {
+	protected _updateForPixiSynched(e: ITickerData) {
 		this._updateState();
 		
 		return updateDisplayObjectChildren(this, e);
 	}
 	
-	protected _updateForPixiUnsynched(e: TTickerData) {
+	protected _updateForPixiUnsynched(e: ITickerData) {
 		return this._tick(e);
 	}
 }

@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>IPrepareOption | @tawaship/pixi-animate-core - v2.1.0</title>
+	<title>IGraphicsPixiData | @tawaship/pixi-animate-core - v2.1.0</title>
 	<meta name="description" content="Documentation for @tawaship/pixi-animate-core - v2.1.0">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,10 +56,10 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="iprepareoption.html">IPrepareOption</a>
+					<a href="igraphicspixidata.html">IGraphicsPixiData</a>
 				</li>
 			</ul>
-			<h1>Interface IPrepareOption</h1>
+			<h1>Interface IGraphicsPixiData</h1>
 		</div>
 	</div>
 </header>
@@ -70,7 +70,12 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">IPrepareOption</span>
+						<a href="ipixidata.html" class="tsd-signature-type">IPixiData</a>
+						<ul class="tsd-hierarchy">
+							<li>
+								<span class="target">IGraphicsPixiData</span>
+							</li>
+						</ul>
 					</li>
 				</ul>
 			</section>
@@ -81,8 +86,11 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="iprepareoption.html#usemotionguide" class="tsd-kind-icon">use<wbr>Motion<wbr>Guide</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="iprepareoption.html#usesynchedtimeline" class="tsd-kind-icon">use<wbr>Synched<wbr>Timeline</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="igraphicspixidata.html#events" class="tsd-kind-icon">events</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="igraphicspixidata.html#instance" class="tsd-kind-icon">instance</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="igraphicspixidata.html#regobj" class="tsd-kind-icon">reg<wbr>Obj</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="igraphicspixidata.html#strokealpha" class="tsd-kind-icon">stroke<wbr>Alpha</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="igraphicspixidata.html#strokefill" class="tsd-kind-icon">stroke<wbr>Fill</a></li>
 							</ul>
 						</section>
 					</div>
@@ -90,36 +98,65 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="usemotionguide" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> use<wbr>Motion<wbr>Guide</h3>
-					<div class="tsd-signature tsd-kind-icon">use<wbr>Motion<wbr>Guide<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+					<a name="events" class="tsd-anchor"></a>
+					<h3>events</h3>
+					<div class="tsd-signature tsd-kind-icon">events<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{}</span></div>
 					<aside class="tsd-sources">
+						<p>Inherited from <a href="imovieclippixidata.html">IMovieClipPixiData</a>.<a href="imovieclippixidata.html#events">events</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/core.ts#L23">src/core.ts:23</a></li>
+							<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/createjs/core.ts#L65">src/createjs/core.ts:65</a></li>
 						</ul>
 					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Whether to use motion guides.</p>
-						</div>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-index-signature">
+								<h5><span class="tsd-signature-symbol">[</span>name: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]: </span><span class="tsd-signature-type">Function</span><span class="tsd-signature-symbol">[]</span></h5>
+							</li>
+						</ul>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="usesynchedtimeline" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> use<wbr>Synched<wbr>Timeline</h3>
-					<div class="tsd-signature tsd-kind-icon">use<wbr>Synched<wbr>Timeline<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<a name="instance" class="tsd-anchor"></a>
+					<h3>instance</h3>
+					<div class="tsd-signature tsd-kind-icon">instance<span class="tsd-signature-symbol">:</span> <a href="../classes/pixigraphics.html" class="tsd-signature-type">PixiGraphics</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/core.ts#L18">src/core.ts:18</a></li>
+							<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/createjs/Graphics.ts#L32">src/createjs/Graphics.ts:32</a></li>
 						</ul>
 					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Whether synchronous playback of movie clips is enabled.
-							If set to &quot;false&quot;, the behavior will be a little faster.</p>
-						</div>
-					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+					<a name="regobj" class="tsd-anchor"></a>
+					<h3>reg<wbr>Obj</h3>
+					<div class="tsd-signature tsd-kind-icon">reg<wbr>Obj<span class="tsd-signature-symbol">:</span> <a href="ipixipoint.html" class="tsd-signature-type">IPixiPoint</a></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="imovieclippixidata.html">IMovieClipPixiData</a>.<a href="imovieclippixidata.html#regobj">regObj</a></p>
+						<ul>
+							<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/createjs/core.ts#L64">src/createjs/core.ts:64</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="strokealpha" class="tsd-anchor"></a>
+					<h3>stroke<wbr>Alpha</h3>
+					<div class="tsd-signature tsd-kind-icon">stroke<wbr>Alpha<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/createjs/Graphics.ts#L34">src/createjs/Graphics.ts:34</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="strokefill" class="tsd-anchor"></a>
+					<h3>stroke<wbr>Fill</h3>
+					<div class="tsd-signature tsd-kind-icon">stroke<wbr>Fill<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/createjs/Graphics.ts#L33">src/createjs/Graphics.ts:33</a></li>
+						</ul>
+					</aside>
 				</section>
 			</section>
 		</div>
@@ -136,13 +173,22 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface">
-						<a href="iprepareoption.html" class="tsd-kind-icon">IPrepare<wbr>Option</a>
+						<a href="igraphicspixidata.html" class="tsd-kind-icon">IGraphics<wbr>Pixi<wbr>Data</a>
 						<ul>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="iprepareoption.html#usemotionguide" class="tsd-kind-icon">use<wbr>Motion<wbr>Guide</a>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="igraphicspixidata.html#events" class="tsd-kind-icon">events</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="iprepareoption.html#usesynchedtimeline" class="tsd-kind-icon">use<wbr>Synched<wbr>Timeline</a>
+								<a href="igraphicspixidata.html#instance" class="tsd-kind-icon">instance</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="igraphicspixidata.html#regobj" class="tsd-kind-icon">reg<wbr>Obj</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="igraphicspixidata.html#strokealpha" class="tsd-kind-icon">stroke<wbr>Alpha</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="igraphicspixidata.html#strokefill" class="tsd-kind-icon">stroke<wbr>Fill</a>
 							</li>
 						</ul>
 					</li>

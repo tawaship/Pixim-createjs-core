@@ -1,6 +1,6 @@
 {
   "name": "@tawaship/pixi-animate-core",
-  "version": "2.0.3",
+  "version": "2.1.0",
   "description": "A module for processing the content published by Adobe Animate with pixi.js.",
   "main": "dist/pixi-animate-core.cjs.js",
   "module": "dist/pixi-animate-core.esm.js",

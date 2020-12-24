@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import { createPixiData, createOriginParams, TPixiData, TOriginParam, TTickerData } from './core';
+import { createPixiData, createOriginParams, IPixiData, IOriginParam, ITickerData } from './core';
 import { appendDisplayObjectDescriptor } from './append';
 
 /**
@@ -8,12 +8,12 @@ import { appendDisplayObjectDescriptor } from './append';
 declare const window: any;
 
 /**
- * @see http://pixijs.download/release/docs/PIXI.Text.html
+ * [[http://pixijs.download/release/docs/PIXI.Text.html | PIXI.Text]]
  */
 export class PixiText extends PIXI.Text {}
 
 /**
- * @see http://pixijs.download/release/docs/PIXI.Container.html
+ * [[http://pixijs.download/release/docs/PIXI.Container.html | PIXI.Container]]
  */
 export class PixiTextContainer extends PIXI.Container {
 	private _createjs: CreatejsText | {};
@@ -38,7 +38,7 @@ export class PixiTextContainer extends PIXI.Container {
 /**
  * @ignore
  */
-function createTextOriginParam(text: string, font: string, color: string): TTextOriginParam {
+function createTextOriginParam(text: string, font: string, color: string): ITextOriginParam {
 	return Object.assign(createOriginParams(), {
 		text: text,
 		font: font,
@@ -49,20 +49,23 @@ function createTextOriginParam(text: string, font: string, color: string): TText
 	});
 }
 
-/**
- * @since 1.1.0
- */
-export type TTextOriginParam = TOriginParam  & { text: string, font: string, color: string, textAlign: string, lineHeight: number, lineWidth: number };
+export interface ITextOriginParam extends IOriginParam {
+	text: string;
+	font: string;
+	color: string;
+	textAlign: string;
+	lineHeight: number;
+	lineWidth: number;
+}
 
-/**
- * @since 1.1.0
- */
-export type TTextPixiData = TPixiData & { instance: PixiTextContainer };
+export interface ITextPixiData extends IPixiData {
+	instance: PixiTextContainer;
+}
 
 /**
  * @ignore
  */
-function createTextPixiData(cjs: CreatejsText | {}, text: PixiText): TTextPixiData {
+function createTextPixiData(cjs: CreatejsText | {}, text: PixiText): ITextPixiData {
 	const pixi = new PixiTextContainer(cjs, text);
 	
 	return Object.assign(createPixiData(pixi.pivot), {
@@ -75,21 +78,18 @@ function createTextPixiData(cjs: CreatejsText | {}, text: PixiText): TTextPixiDa
  */
 const CreatejsTextTemp = window.createjs.Text;
 
-/**
- * @private
- */
-type TParsedText = {
-	fontSize: number,
-	fontFamily: string,
-	fontWeight?: string | number
+export interface IParsedText {
+	fontSize: number;
+	fontFamily: string;
+	fontWeight?: string | number;
 }
 
 /**
- * @see https://createjs.com/docs/easeljs/classes/Text.html
+ * [[https://createjs.com/docs/easeljs/classes/Text.html | createjs.Text]]
  */
 export class CreatejsText extends window.createjs.Text {
-	protected _originParams: TTextOriginParam;
-	protected _pixiData: TTextPixiData;
+	protected _originParams: ITextOriginParam;
+	protected _pixiData: ITextPixiData;
 	
 	constructor(text: string, font: string, color: string = '#000000', ...args: any[]) {
 		super(text, font, color, ...args);
@@ -99,9 +99,6 @@ export class CreatejsText extends window.createjs.Text {
 		CreatejsTextTemp.call(this, text, font, color, ...args);
 	}
 	
-	/**
-	 * @since 1.1.0
-	 */
 	protected _initForPixi(text: string, font: string, color: string = '#000000', ...args: any[]) {
 		this._originParams = createTextOriginParam(text, font, color);
 		
@@ -130,7 +127,7 @@ export class CreatejsText extends window.createjs.Text {
 		this._originParams.text = text;
 	}
 	
-	_parseFont(font) {
+	_parseFont(font): IParsedText {
 		const p = font.split(' ');
 		
 		let w = 'normal';
@@ -227,7 +224,7 @@ export class CreatejsText extends window.createjs.Text {
 		return this._pixiData.instance;
 	}
 	
-	updateForPixi(e: TTickerData) {
+	updateForPixi(e: ITickerData) {
 		return true;
 	}
 }

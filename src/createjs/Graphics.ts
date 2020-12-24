@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import { createPixiData, createOriginParams, TPixiData, TOriginParam, TTickerData } from './core';
+import { createPixiData, createOriginParams, IPixiData, IOriginParam, ITickerData } from './core';
 import { appendDisplayObjectDescriptor } from './append';
 
 /**
@@ -8,7 +8,7 @@ import { appendDisplayObjectDescriptor } from './append';
 declare const window: any;
 
 /**
- * @see http://pixijs.download/release/docs/PIXI.Graphics.html
+ * [[http://pixijs.download/release/docs/PIXI.Graphics.html | PIXI.Graphics]]
  */
 export class PixiGraphics extends PIXI.Graphics {
 	private _createjs: CreatejsGraphics | {};
@@ -24,20 +24,20 @@ export class PixiGraphics extends PIXI.Graphics {
 	}
 }
 
-/**
- * @since 1.1.0
- */
-export type TGraphicsOriginParam = TOriginParam;
+export interface IGraphicsOriginParam extends IOriginParam {
 
-/**
- * @since 1.1.0
- */
-export type TGraphicsPixiData = TPixiData & { instance: PixiGraphics, strokeFill: number, strokeAlpha: number };
+}
+
+export interface IGraphicsPixiData extends IPixiData {
+	instance: PixiGraphics;
+	strokeFill: number;
+	strokeAlpha: number;
+}
 
 /**
  * @ignore
  */
-function createGraphicsPixiData(cjs: CreatejsGraphics | {}): TGraphicsPixiData {
+function createGraphicsPixiData(cjs: CreatejsGraphics | {}): IGraphicsPixiData {
 	const pixi = new PixiGraphics(cjs);
 	
 	return Object.assign(createPixiData(pixi.pivot), {
@@ -86,11 +86,11 @@ const DEG_TO_RAD = Math.PI / 180;
 const CreatejsGraphicsTemp = window.createjs.Graphics;
 
 /**
- * @see https://createjs.com/docs/easeljs/classes/Graphics.html
+ * [[https://createjs.com/docs/easeljs/classes/Graphics.html | createjs.Graphics]]
  */
 export class CreatejsGraphics extends window.createjs.Graphics {
-	protected _originParams: TGraphicsOriginParam;
-	protected _pixiData: TGraphicsPixiData;
+	protected _originParams: IGraphicsOriginParam;
+	protected _pixiData: IGraphicsPixiData;
 	
 	constructor(...args: any[]) {
 		super(...arguments);
@@ -104,9 +104,6 @@ export class CreatejsGraphics extends window.createjs.Graphics {
 		this._pixiData.strokeAlpha = 1;
 	}
 	
-	/**
-	 * @since 1.1.0
-	 */
 	protected _initForPixi() {
 		this._originParams = createOriginParams();
 		this._pixiData = createGraphicsPixiData(this);
@@ -258,7 +255,7 @@ export class CreatejsGraphics extends window.createjs.Graphics {
 		return this._pixiData.instance;
 	}
 	
-	updateForPixi(e: TTickerData) {
+	updateForPixi(e: ITickerData) {
 		return true;
 	}
 }

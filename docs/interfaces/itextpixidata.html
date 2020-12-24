@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>CreatejsStageGL | @tawaship/pixi-animate-core - v2.1.0</title>
+	<title>ITextPixiData | @tawaship/pixi-animate-core - v2.1.0</title>
 	<meta name="description" content="Documentation for @tawaship/pixi-animate-core - v2.1.0">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,31 +56,24 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="createjsstagegl.html">CreatejsStageGL</a>
+					<a href="itextpixidata.html">ITextPixiData</a>
 				</li>
 			</ul>
-			<h1>Class CreatejsStageGL</h1>
+			<h1>Interface ITextPixiData</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
-			<section class="tsd-panel tsd-comment">
-				<div class="tsd-comment tsd-typography">
-					<div class="lead">
-						<p><a href="https://createjs.com/docs/easeljs/classes/StageGL.html" class="external">createjs.StageGL</a></p>
-					</div>
-				</div>
-			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="tsd-signature-type">any</span>
+						<a href="ipixidata.html" class="tsd-signature-type">IPixiData</a>
 						<ul class="tsd-hierarchy">
 							<li>
-								<span class="target">CreatejsStageGL</span>
+								<span class="target">ITextPixiData</span>
 							</li>
 						</ul>
 					</li>
@@ -91,38 +84,57 @@
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
-							<h3>Methods</h3>
+							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="createjsstagegl.html#updateforpixi" class="tsd-kind-icon">update<wbr>For<wbr>Pixi</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="itextpixidata.html#events" class="tsd-kind-icon">events</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="itextpixidata.html#instance" class="tsd-kind-icon">instance</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="itextpixidata.html#regobj" class="tsd-kind-icon">reg<wbr>Obj</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Methods</h2>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="updateforpixi" class="tsd-anchor"></a>
-					<h3>update<wbr>For<wbr>Pixi</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">update<wbr>For<wbr>Pixi<span class="tsd-signature-symbol">(</span>props<span class="tsd-signature-symbol">: </span><a href="../interfaces/itickerdata.html" class="tsd-signature-type">ITickerData</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/createjs/StageGL.ts#L12">src/createjs/StageGL.ts:12</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>props: <a href="../interfaces/itickerdata.html" class="tsd-signature-type">ITickerData</a></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-						</li>
-					</ul>
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+					<a name="events" class="tsd-anchor"></a>
+					<h3>events</h3>
+					<div class="tsd-signature tsd-kind-icon">events<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{}</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="imovieclippixidata.html">IMovieClipPixiData</a>.<a href="imovieclippixidata.html#events">events</a></p>
+						<ul>
+							<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/createjs/core.ts#L65">src/createjs/core.ts:65</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-index-signature">
+								<h5><span class="tsd-signature-symbol">[</span>name: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]: </span><span class="tsd-signature-type">Function</span><span class="tsd-signature-symbol">[]</span></h5>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="instance" class="tsd-anchor"></a>
+					<h3>instance</h3>
+					<div class="tsd-signature tsd-kind-icon">instance<span class="tsd-signature-symbol">:</span> <a href="../classes/pixitextcontainer.html" class="tsd-signature-type">PixiTextContainer</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/createjs/Text.ts#L62">src/createjs/Text.ts:62</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+					<a name="regobj" class="tsd-anchor"></a>
+					<h3>reg<wbr>Obj</h3>
+					<div class="tsd-signature tsd-kind-icon">reg<wbr>Obj<span class="tsd-signature-symbol">:</span> <a href="ipixipoint.html" class="tsd-signature-type">IPixiPoint</a></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="imovieclippixidata.html">IMovieClipPixiData</a>.<a href="imovieclippixidata.html#regobj">regObj</a></p>
+						<ul>
+							<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/createjs/core.ts#L64">src/createjs/core.ts:64</a></li>
+						</ul>
+					</aside>
 				</section>
 			</section>
 		</div>
@@ -138,11 +150,17 @@
 				<ul class="before-current">
 				</ul>
 				<ul class="current">
-					<li class="current tsd-kind-class">
-						<a href="createjsstagegl.html" class="tsd-kind-icon">Createjs<wbr>StageGL</a>
+					<li class="current tsd-kind-interface">
+						<a href="itextpixidata.html" class="tsd-kind-icon">IText<wbr>Pixi<wbr>Data</a>
 						<ul>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="createjsstagegl.html#updateforpixi" class="tsd-kind-icon">update<wbr>For<wbr>Pixi</a>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="itextpixidata.html#events" class="tsd-kind-icon">events</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="itextpixidata.html#instance" class="tsd-kind-icon">instance</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="itextpixidata.html#regobj" class="tsd-kind-icon">reg<wbr>Obj</a>
 							</li>
 						</ul>
 					</li>
