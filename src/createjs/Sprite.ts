@@ -2,6 +2,7 @@ import * as PIXI from 'pixi.js';
 import { createjs } from './alias';
 import { createPixiData, createCreatejsParams, IPixiData, ICreatejsParam, ITickerData, mixinPixiContainer, mixinCreatejsDisplayObject } from './core';
 import { appendDisplayObjectDescriptor } from './append';
+import { createObject } from './utils';
 
 /**
  * [[http://pixijs.download/release/docs/PIXI.Sprite.html | PIXI.Sprite]]
@@ -94,7 +95,7 @@ Object.defineProperties(CreatejsSprite.prototype, {
 		writable: true
 	},
 	_pixiData: {
-		value: createPixiSpriteData({}),
+		value: createPixiSpriteData(createObject<CreatejsSprite>(CreatejsSprite.prototype)),
 		writable: true
 	}
 });

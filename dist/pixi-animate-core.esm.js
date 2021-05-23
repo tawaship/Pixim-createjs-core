@@ -433,6 +433,10 @@ class CreatejsStageGL extends createjs.StageGL {
     }
 }
 
+function createObject(proto) {
+    return Object.create(proto);
+}
+
 /**
  * [[http://pixijs.download/release/docs/PIXI.Container.html | PIXI.Container]]
  */
@@ -604,7 +608,7 @@ Object.defineProperties(CreatejsMovieClip.prototype, {
         writable: true
     },
     _pixiData: {
-        value: createPixiMovieClipData({}),
+        value: createPixiMovieClipData(createObject(CreatejsMovieClip.prototype)),
         writable: true
     }
 });
@@ -670,7 +674,7 @@ Object.defineProperties(CreatejsSprite.prototype, {
         writable: true
     },
     _pixiData: {
-        value: createPixiSpriteData({}),
+        value: createPixiSpriteData(createObject(CreatejsSprite.prototype)),
         writable: true
     }
 });
@@ -760,7 +764,7 @@ Object.defineProperties(CreatejsShape.prototype, {
         writable: true
     },
     _pixiData: {
-        value: createPixiSpaheData({}),
+        value: createPixiSpaheData(createObject(CreatejsShape.prototype)),
         writable: true
     }
 });
@@ -822,7 +826,7 @@ Object.defineProperties(CreatejsBitmap.prototype, {
         writable: true
     },
     _pixiData: {
-        value: createPixiBitmapData({}),
+        value: createPixiBitmapData(createObject(CreatejsBitmap.prototype)),
         writable: true
     }
 });
@@ -1076,7 +1080,7 @@ Object.defineProperties(CreatejsGraphics.prototype, {
         writable: true
     },
     _pixiData: {
-        value: createGraphicsPixiData({}),
+        value: createGraphicsPixiData(createObject(CreatejsGraphics.prototype)),
         writable: true
     }
 });
@@ -1240,7 +1244,7 @@ Object.defineProperties(CreatejsText.prototype, {
         writable: true
     },
     _pixiData: {
-        value: createPixiTextData({}, new PixiText('')),
+        value: createPixiTextData(createObject(CreatejsText.prototype), new PixiText('')),
         writable: true
     }
 });

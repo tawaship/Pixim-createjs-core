@@ -3,14 +3,15 @@ import { createjs } from './alias';
 import { createPixiData, createCreatejsParams, IPixiData, ICreatejsParam, ITickerData, mixinPixiContainer, mixinCreatejsDisplayObject } from './core';
 import { appendDisplayObjectDescriptor } from './append';
 import { CreatejsGraphics } from './Graphics';
+import { createObject } from './utils';
 
 /**
  * [[http://pixijs.download/release/docs/PIXI.Container.html | PIXI.Container]]
  */
 export class PixiShape extends mixinPixiContainer(PIXI.Container) {
-	private _createjs: CreatejsShape | {};
+	private _createjs: CreatejsShape;
 	
-	constructor(cjs: CreatejsShape | {}) {
+	constructor(cjs: CreatejsShape) {
 		super();
 		
 		this._createjs = cjs;
@@ -44,7 +45,7 @@ export interface IPixiShapeData extends IPixiData<PixiShape> {
 /**
  * @ignore
  */
-function createPixiSpaheData(cjs: CreatejsShape | {}): IPixiShapeData {
+function createPixiSpaheData(cjs: CreatejsShape): IPixiShapeData {
 	const pixi = new PixiShape(cjs);
 	
 	return Object.assign(createPixiData(pixi, pixi.pivot), {
@@ -123,7 +124,7 @@ Object.defineProperties(CreatejsShape.prototype, {
 		writable: true
 	},
 	_pixiData: {
-		value: createPixiSpaheData({}),
+		value: createPixiSpaheData(createObject<CreatejsShape>(CreatejsShape.prototype)),
 		writable: true
 	}
 });

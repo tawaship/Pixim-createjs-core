@@ -2,14 +2,15 @@ import * as PIXI from 'pixi.js';
 import { createjs } from './alias';
 import { createPixiData, createCreatejsParams, IPixiData, ICreatejsParam, ITickerData, mixinPixiContainer, mixinCreatejsDisplayObject } from './core';
 import { appendDisplayObjectDescriptor } from './append';
+import { createObject } from './utils';
 
 /**
  * [[http://pixijs.download/release/docs/PIXI.Sprite.html | PIXI.Sprite]]
  */
 export class PixiBitmap extends mixinPixiContainer(PIXI.Sprite) {
-	private _createjs: CreatejsBitmap | {};
+	private _createjs: CreatejsBitmap;
 	
-	constructor(cjs: CreatejsBitmap | {}) {
+	constructor(cjs: CreatejsBitmap) {
 		super();
 		
 		this._createjs = cjs;
@@ -32,7 +33,7 @@ export interface IPixiBitmapData extends IPixiData<PixiBitmap> {
 /**
  * @ignore
  */
-function createPixiBitmapData(cjs: CreatejsBitmap | {}): IPixiBitmapData {
+function createPixiBitmapData(cjs: CreatejsBitmap): IPixiBitmapData {
 	const pixi = new PixiBitmap(cjs);
 	
 	return createPixiData<PixiBitmap>(pixi, pixi.anchor);
@@ -87,7 +88,7 @@ Object.defineProperties(CreatejsBitmap.prototype, {
 		writable: true
 	},
 	_pixiData: {
-		value: createPixiBitmapData({}),
+		value: createPixiBitmapData(createObject<CreatejsBitmap>(CreatejsBitmap.prototype)),
 		writable: true
 	}
 });

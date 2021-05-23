@@ -2,6 +2,7 @@ import * as PIXI from 'pixi.js';
 import { createjs } from './alias';
 import { createPixiData, createCreatejsParams, IPixiData, ICreatejsParam, ITickerData, mixinPixiContainer, mixinCreatejsDisplayObject } from './core';
 import { appendDisplayObjectDescriptor } from './append';
+import { createObject } from './utils';
 
 /**
  * [[http://pixijs.download/release/docs/PIXI.Text.html | PIXI.Text]]
@@ -12,10 +13,10 @@ export class PixiText extends PIXI.Text {}
  * [[http://pixijs.download/release/docs/PIXI.Container.html | PIXI.Container]]
  */
 export class PixiTextContainer extends mixinPixiContainer(PIXI.Container) {
-	private _createjs: CreatejsText | {};
+	private _createjs: CreatejsText;
 	private _text: PixiText;
 	
-	constructor(cjs: CreatejsText | {}, text: PixiText) {
+	constructor(cjs: CreatejsText, text: PixiText) {
 		super();
 		
 		this._createjs = cjs;
@@ -61,7 +62,7 @@ export interface IPiximTextData extends IPixiData<PixiTextContainer> {
 /**
  * @ignore
  */
-function createPixiTextData(cjs: CreatejsText | {}, text: PixiText): IPiximTextData {
+function createPixiTextData(cjs: CreatejsText, text: PixiText): IPiximTextData {
 	const pixi = new PixiTextContainer(cjs, text);
 	
 	return createPixiData(pixi, pixi.pivot);
@@ -230,7 +231,7 @@ Object.defineProperties(CreatejsText.prototype, {
 		writable: true
 	},
 	_pixiData: {
-		value: createPixiTextData({}, new PixiText('')),
+		value: createPixiTextData(createObject<CreatejsText>(CreatejsText.prototype), new PixiText('')),
 		writable: true
 	}
 });

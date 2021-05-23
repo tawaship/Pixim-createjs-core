@@ -3,15 +3,16 @@ import { createjs } from './alias';
 import { CreatejsColorFilter } from './ColorFilter';
 import { createPixiData, createCreatejsParams, IPixiData, ICreatejsParam, updateDisplayObjectChildren, ITickerData, mixinCreatejsDisplayObject, mixinPixiContainer } from './core';
 import { appendDisplayObjectDescriptor } from './append';
+import { createObject } from './utils';
 
 /**
  * [[http://pixijs.download/release/docs/PIXI.Container.html | PIXI.Container]]
  */
 export class PixiMovieClip extends mixinPixiContainer(Container) {
-	private _createjs: CreatejsMovieClip | {};
+	private _createjs: CreatejsMovieClip;
 	private _filterContainer: Container | null;
 	
-	constructor(cjs: CreatejsMovieClip | {}) {
+	constructor(cjs: CreatejsMovieClip) {
 		super();
 		
 		this._createjs = cjs;
@@ -38,7 +39,7 @@ export interface IPixiMoveClipData extends IPixiData<PixiMovieClip> {
 	subInstance: Container;
 }
 
-function createPixiMovieClipData(cjs: CreatejsMovieClip | {}): IPixiMoveClipData {
+function createPixiMovieClipData(cjs: CreatejsMovieClip): IPixiMoveClipData {
 	const pixi = new PixiMovieClip(cjs);
 	
 	return Object.assign(createPixiData(pixi, pixi.pivot), {
@@ -238,7 +239,8 @@ Object.defineProperties(CreatejsMovieClip.prototype, {
 		writable: true
 	},
 	_pixiData: {
-		value: createPixiMovieClipData({}),
+		value: createPixiMovieClipData(createObject<CreatejsMovieClip>(CreatejsMovieClip.prototype)),
 		writable: true
 	}
 });
+
