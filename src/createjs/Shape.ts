@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js';
-import { createPixiData, createOriginParams, IPixiData, IOriginParam, ITickerData } from './core';
+import { createjs } from './alias';
+import { createPixiData, createCreatejsParams, IPixiData, ICreatejsParam, ITickerData, mixinPixiContainer, mixinCreatejsDisplayObject } from './core';
 import { appendDisplayObjectDescriptor } from './append';
 import { CreatejsGraphics } from './Graphics';
 
@@ -11,7 +12,7 @@ declare const window: any;
 /**
  * [[http://pixijs.download/release/docs/PIXI.Container.html | PIXI.Container]]
  */
-export class PixiShape extends PIXI.Container {
+export class PixiShape extends mixinPixiContainer(PIXI.Container) {
 	private _createjs: CreatejsShape | {};
 	
 	constructor(cjs: CreatejsShape | {}) {
@@ -28,18 +29,17 @@ export class PixiShape extends PIXI.Container {
 /**
  * @ignore
  */
-function createShapeOriginParam(graphics: CreatejsGraphics | null): IShapeOriginParam {
-	return Object.assign(createOriginParams(), {
+function createCreatejsShapeParam(graphics: CreatejsGraphics | null): ICreatejsShapeParam {
+	return Object.assign(createCreatejsParams(), {
 		graphics: graphics
 	});
 }
 
-export interface IShapeOriginParam extends IOriginParam {
+export interface ICreatejsShapeParam extends ICreatejsParam {
 	graphics: CreatejsGraphics;
 }
 
-export interface IShapePixiData extends IPixiData {
-	instance: PixiShape;
+export interface IPixiShapeData extends IPixiData<PixiShape> {
 	/**
 	 * [[http://pixijs.download/release/docs/PIXI.DisplayObject.html | PIXI.DisplayObject]]
 	 */
@@ -49,11 +49,10 @@ export interface IShapePixiData extends IPixiData {
 /**
  * @ignore
  */
-function createShapePixiData(cjs: CreatejsShape | {}): IShapePixiData {
+function createPixiSpaheData(cjs: CreatejsShape | {}): IPixiShapeData {
 	const pixi = new PixiShape(cjs);
 	
-	return Object.assign(createPixiData(pixi.pivot), {
-		instance: pixi,
+	return Object.assign(createPixiData(pixi, pixi.pivot), {
 		masked: []
 	});
 }
@@ -61,30 +60,30 @@ function createShapePixiData(cjs: CreatejsShape | {}): IShapePixiData {
 /**
  * @ignore
  */
-const CreatejsShapeTemp = window.createjs.Shape;
+const P = createjs.Shape;
 
 /**
  * [[https://createjs.com/docs/easeljs/classes/Shape.html | createjs.Shape]]
  */
-export class CreatejsShape extends window.createjs.Shape {
-	protected _originParams: IShapeOriginParam;
-	protected _pixiData: IShapePixiData;
+export class CreatejsShape extends mixinCreatejsDisplayObject<PixiShape, ICreatejsShapeParam>(createjs.Shape) {
+	protected _createjsParams: ICreatejsShapeParam;
+	protected _pixiData: IPixiShapeData;
 	
 	constructor(...args: any[]) {
-		super(...arguments);
+		super(...args);
 		
 		this._initForPixi();
 		
-		CreatejsShapeTemp.apply(this, arguments);
+		P.apply(this, args);
 	}
 	
 	protected _initForPixi() {
-		this._originParams = createShapeOriginParam(null);
-		this._pixiData = createShapePixiData(this);
+		this._createjsParams = createCreatejsShapeParam(null);
+		this._pixiData = createPixiSpaheData(this);
 	}
 	
 	get graphics() {
-		return this._originParams.graphics;
+		return this._createjsParams.graphics;
 	}
 	
 	set graphics(value) {
@@ -106,11 +105,15 @@ export class CreatejsShape extends window.createjs.Shape {
 			this._pixiData.instance.addChild(value.pixi);
 		}
 		
-		this._originParams.graphics = value;
+		this._createjsParams.graphics = value;
 	}
 	
 	get pixi() {
 		return this._pixiData.instance;
+	}
+	
+	get masked() {
+		return this._pixiData.masked;
 	}
 	
 	updateForPixi(e: ITickerData) {
@@ -118,16 +121,14 @@ export class CreatejsShape extends window.createjs.Shape {
 	}
 }
 
-appendDisplayObjectDescriptor(CreatejsShape);
-
 // temporary prototype
 Object.defineProperties(CreatejsShape.prototype, {
-	_originParams: {
-		value: createShapeOriginParam(null),
+	_createjsParams: {
+		value: createCreatejsShapeParam(null),
 		writable: true
 	},
 	_pixiData: {
-		value: createShapePixiData({}),
+		value: createPixiSpaheData({}),
 		writable: true
 	}
 });

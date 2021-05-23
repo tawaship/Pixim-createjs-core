@@ -1,4 +1,4 @@
-
+import { createjs } from './core';
 /**
  * @ignore
  */
@@ -136,124 +136,124 @@ const DEG_TO_RAD = Math.PI / 180;
 const appendixDescriptor = {
 	x: {
 		get: function() {
-			return this._originParams.x;
+			return this._createjsParams.x;
 		},
 		
 		set: function(value) {
 			this._pixiData.instance.x = value;
-			return this._originParams.x = value;
+			return this._createjsParams.x = value;
 		}
 	},
 	y: {
 		get: function() {
-			return this._originParams.y;
+			return this._createjsParams.y;
 		},
 		
 		set: function(value) {
 			this._pixiData.instance.y = value;
-			return this._originParams.y = value;
+			return this._createjsParams.y = value;
 		}
 	},
 	scaleX: {
 		get: function() {
-			return this._originParams.scaleX;
+			return this._createjsParams.scaleX;
 		},
 		
 		set: function(value) {
 			this._pixiData.instance.scale.x = value;
-			return this._originParams.scaleX = value;
+			return this._createjsParams.scaleX = value;
 		}
 	},
 	scaleY: {
 		get: function() {
-			return this._originParams.scaleY;
+			return this._createjsParams.scaleY;
 		},
 		
 		set: function(value) {
 			this._pixiData.instance.scale.y = value;
-			return this._originParams.scaleY = value;
+			return this._createjsParams.scaleY = value;
 		}
 	},
 	skewX: {
 		get: function() {
-			return this._originParams.skewX;
+			return this._createjsParams.skewX;
 		},
 		
 		set: function(value) {
 			this._pixiData.instance.skew.x = -value * DEG_TO_RAD;
-			return this._originParams.skewX = value;
+			return this._createjsParams.skewX = value;
 		}
 	},
 	skewY: {
 		get: function() {
-			return this._originParams.skewY;
+			return this._createjsParams.skewY;
 		},
 		
 		set: function(value) {
 			this._pixiData.instance.skew.y = value * DEG_TO_RAD;
-			return this._originParams.skewY = value;
+			return this._createjsParams.skewY = value;
 		}
 	
 	},
 	regX: {
 		get: function() {
-			return this._originParams.regX;
+			return this._createjsParams.regX;
 		},
 		
 		set: function(value) {
 			this._pixiData.regObj.x = value;
-			return this._originParams.regX = value;
+			return this._createjsParams.regX = value;
 		}
 	},
 	regY: {
 		get: function() {
-			return this._originParams.regY;
+			return this._createjsParams.regY;
 		},
 		
 		set: function(value) {
 			this._pixiData.regObj.y = value;
-			return this._originParams.regY = value;
+			return this._createjsParams.regY = value;
 		}
 	},
 	rotation: {
 		get: function() {
-			return this._originParams.rotation;
+			return this._createjsParams.rotation;
 		},
 		
 		set: function(value) {
 			this._pixiData.instance.rotation = value * DEG_TO_RAD;
-			return this._originParams.rotation = value;
+			return this._createjsParams.rotation = value;
 		}
 	},
 	visible: {
 		get: function() {
-			return this._originParams.visible;
+			return this._createjsParams.visible;
 		},
 		
 		set: function(value) {
 			value = !!value;
 			this._pixiData.instance.visible = value;
-			return this._originParams.visible = value;
+			return this._createjsParams.visible = value;
 		}
 	},
 	alpha: {
 		get: function() {
-			return this._originParams.alpha;
+			return this._createjsParams.alpha;
 		},
 		
 		set: function(value) {
 			this._pixiData.instance.alpha = value;
-			return this._originParams.alpha = value;
+			return this._createjsParams.alpha = value;
 		}
 	},
 	_off: {
 		get: function() {
-			return this._originParams._off;
+			return this._createjsParams._off;
 		},
 		
 		set: function(value) {
 			this._pixiData.instance.renderable = !value;
-			return this._originParams._off = value;
+			return this._createjsParams._off = value;
 		}
 	},
 	/*
@@ -263,7 +263,7 @@ const appendixDescriptor = {
 			
 			this._pixiData.instance.emit(type, eventObj);
 			
-			return window.createjs.DisplayObject.prototype.dispatchEvent.apply(this, arguments);
+			return createjs.DisplayObject.prototype.dispatchEvent.apply(this, arguments);
 		}
 	},
 	*/
@@ -292,7 +292,7 @@ const appendixDescriptor = {
 				this._pixiData.instance.interactive = true;
 			}
 			
-			return window.createjs.DisplayObject.prototype.addEventListener.apply(this, arguments);
+			return createjs.DisplayObject.prototype.addEventListener.apply(this, arguments);
 		}
 	},
 	removeEventListener: {
@@ -324,7 +324,7 @@ const appendixDescriptor = {
 				}
 			}
 			
-			const res = window.createjs.DisplayObject.prototype.removeEventListener.apply(this, arguments);
+			const res = createjs.DisplayObject.prototype.removeEventListener.apply(this, arguments);
 			
 			const listeners = this._listeners;
 			if (!listeners) {
@@ -353,12 +353,12 @@ const appendixDescriptor = {
 			this._pixi.instance.interactive = false;
 			this._pixiData.events = {};
 			
-			return window.createjs.DisplayObject.prototype.removeAllEventListeners.apply(this, arguments);
+			return createjs.DisplayObject.prototype.removeAllEventListeners.apply(this, arguments);
 		}
 	},
 	mask: {
 		get: function() {
-			return this._originParams.mask;
+			return this._createjsParams.mask;
 		},
 		
 		set: function(value) {
@@ -373,12 +373,12 @@ const appendixDescriptor = {
 				this._pixiData.instance.mask = null;
 			}
 			
-			return this._originParams.mask = value;
+			return this._createjsParams.mask = value;
 		}
 	},
 	filters: {
 		get: function() {
-			return this._originParams.filters;
+			return this._createjsParams.filters;
 		},
 		
 		set: function(value) {
@@ -460,7 +460,7 @@ const appendixDescriptor = {
 				}
 			}
 			
-			return this._originParams.filters = value;
+			return this._createjsParams.filters = value;
 		}
 	}
 };

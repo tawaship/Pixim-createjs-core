@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js';
-import { createPixiData, createOriginParams, IPixiData, IOriginParam, ITickerData } from './core';
+import { createjs } from './alias';
+import { createPixiData, createCreatejsParams, IPixiData, ICreatejsParam, ITickerData, mixinPixiContainer, mixinCreatejsDisplayObject } from './core';
 import { appendDisplayObjectDescriptor } from './append';
 
 /**
@@ -15,7 +16,7 @@ export class PixiText extends PIXI.Text {}
 /**
  * [[http://pixijs.download/release/docs/PIXI.Container.html | PIXI.Container]]
  */
-export class PixiTextContainer extends PIXI.Container {
+export class PixiTextContainer extends mixinPixiContainer(PIXI.Container) {
 	private _createjs: CreatejsText | {};
 	private _text: PixiText;
 	
@@ -38,8 +39,8 @@ export class PixiTextContainer extends PIXI.Container {
 /**
  * @ignore
  */
-function createTextOriginParam(text: string, font: string, color: string): ITextOriginParam {
-	return Object.assign(createOriginParams(), {
+function createTextOriginParam(text: string, font: string, color: string): ICreatejsTextParam {
+	return Object.assign(createCreatejsParams(), {
 		text: text,
 		font: font,
 		color: color,
@@ -49,7 +50,7 @@ function createTextOriginParam(text: string, font: string, color: string): IText
 	});
 }
 
-export interface ITextOriginParam extends IOriginParam {
+export interface ICreatejsTextParam extends ICreatejsParam {
 	text: string;
 	font: string;
 	color: string;
@@ -58,25 +59,18 @@ export interface ITextOriginParam extends IOriginParam {
 	lineWidth: number;
 }
 
-export interface ITextPixiData extends IPixiData {
-	instance: PixiTextContainer;
+export interface IPiximTextData extends IPixiData<PixiTextContainer> {
+
 }
 
 /**
  * @ignore
  */
-function createTextPixiData(cjs: CreatejsText | {}, text: PixiText): ITextPixiData {
+function createPixiTextData(cjs: CreatejsText | {}, text: PixiText): IPiximTextData {
 	const pixi = new PixiTextContainer(cjs, text);
 	
-	return Object.assign(createPixiData(pixi.pivot), {
-		instance: pixi
-	});
+	return createPixiData(pixi, pixi.pivot);
 }
-
-/**
- * @ignore
- */
-const CreatejsTextTemp = window.createjs.Text;
 
 export interface IParsedText {
 	fontSize: number;
@@ -85,22 +79,27 @@ export interface IParsedText {
 }
 
 /**
+ * @ignore
+ */
+const P = createjs.Text;
+
+/**
  * [[https://createjs.com/docs/easeljs/classes/Text.html | createjs.Text]]
  */
-export class CreatejsText extends window.createjs.Text {
-	protected _originParams: ITextOriginParam;
-	protected _pixiData: ITextPixiData;
+export class CreatejsText extends mixinCreatejsDisplayObject<PixiTextContainer, ICreatejsTextParam>(createjs.Text) {
+	protected _createjsParams: ICreatejsTextParam;
+	protected _pixiData: IPiximTextData;
 	
 	constructor(text: string, font: string, color: string = '#000000', ...args: any[]) {
 		super(text, font, color, ...args);
 		
 		this._initForPixi(text, font, color, ...args);
 		
-		CreatejsTextTemp.call(this, text, font, color, ...args);
+		P.call(this, text, font, color, ...args);
 	}
 	
 	protected _initForPixi(text: string, font: string, color: string = '#000000', ...args: any[]) {
-		this._originParams = createTextOriginParam(text, font, color);
+		this._createjsParams = createTextOriginParam(text, font, color);
 		
 		const _font = this._parseFont(font);
 		
@@ -112,19 +111,19 @@ export class CreatejsText extends window.createjs.Text {
 			wordWrap: true
 		});
 		
-		this._pixiData = createTextPixiData(this, t);
+		this._pixiData = createPixiTextData(this, t);
 		this._pixiData.instance.addChild(t);
 	}
 	
 	get text() {
-		return this._originParams.text;
+		return this._createjsParams.text;
 	}
 	
 	set text(text) {
 		this._pixiData.instance.text.text = text;
 		this._align(this.textAlign);
 		
-		this._originParams.text = text;
+		this._createjsParams.text = text;
 	}
 	
 	_parseFont(font): IParsedText {
@@ -146,7 +145,7 @@ export class CreatejsText extends window.createjs.Text {
 	}
 	
 	get font() {
-		return this._originParams.font;
+		return this._createjsParams.font;
 	}
 	
 	set font(font) {
@@ -154,7 +153,7 @@ export class CreatejsText extends window.createjs.Text {
 		this._pixiData.instance.text.style.fontSize = _font.fontSize;
 		this._pixiData.instance.text.style.fontFamily = _font.fontFamily;
 		
-		this._originParams.font = font;
+		this._createjsParams.font = font;
 	}
 	
 	_parseColor(color) {
@@ -162,13 +161,13 @@ export class CreatejsText extends window.createjs.Text {
 	}
 	
 	get color() {
-		return this._originParams.color;
+		return this._createjsParams.color;
 	}
 	
 	set color(color) {
 		this._pixiData.instance.text.style.fill = this._parseColor(color);
 		
-		this._originParams.color = color;
+		this._createjsParams.color = color;
 	}
 	
 	_align(align) {
@@ -189,35 +188,35 @@ export class CreatejsText extends window.createjs.Text {
 	}
 	
 	get textAlign() {
-		return this._originParams.textAlign;
+		return this._createjsParams.textAlign;
 	}
 	
 	set textAlign(align) {
 		this._pixiData.instance.text.style.align = align;
 		this._align(align);
 		
-		this._originParams.textAlign = align;
+		this._createjsParams.textAlign = align;
 	}
 	
 	get lineHeight() {
-		return this._originParams.lineHeight;
+		return this._createjsParams.lineHeight;
 	}
 	
 	set lineHeight(height) {
 		this._pixiData.instance.text.style.lineHeight = height;
 		
-		this._originParams.lineHeight = height;
+		this._createjsParams.lineHeight = height;
 	}
 	
 	get lineWidth() {
-		return this._originParams.lineWidth;
+		return this._createjsParams.lineWidth;
 	}
 	
 	set lineWidth(width) {
 		this._pixiData.instance.text.style.wordWrapWidth = width;
 		this._align(this.textAlign);
 		
-		this._originParams.lineWidth = width;
+		this._createjsParams.lineWidth = width;
 	}
 	
 	get pixi() {
@@ -229,16 +228,14 @@ export class CreatejsText extends window.createjs.Text {
 	}
 }
 
-appendDisplayObjectDescriptor(CreatejsText);
-
 // temporary prototype
 Object.defineProperties(CreatejsText.prototype, {
-	_originParams: {
-		value: createOriginParams(),
+	_createjsParams: {
+		value: createCreatejsParams(),
 		writable: true
 	},
 	_pixiData: {
-		value: createTextPixiData({}, new PixiText('')),
+		value: createPixiTextData({}, new PixiText('')),
 		writable: true
 	}
 });

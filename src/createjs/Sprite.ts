@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js';
-import { createPixiData, createOriginParams, IPixiData, IOriginParam, ITickerData } from './core';
+import { createjs } from './alias';
+import { createPixiData, createCreatejsParams, IPixiData, ICreatejsParam, ITickerData, mixinPixiContainer, mixinCreatejsDisplayObject } from './core';
 import { appendDisplayObjectDescriptor } from './append';
 
 /**
@@ -10,7 +11,7 @@ declare const window: any;
 /**
  * [[http://pixijs.download/release/docs/PIXI.Sprite.html | PIXI.Sprite]]
  */
-export class PixiSprite extends PIXI.Sprite {
+export class PixiSprite extends mixinPixiContainer(PIXI.Sprite) {
 	private _createjs: CreatejsSprite | {};
 	
 	constructor(cjs: CreatejsSprite | {}) {
@@ -24,58 +25,56 @@ export class PixiSprite extends PIXI.Sprite {
 	}
 }
 
-export interface ISpriteOriginParam extends IOriginParam {
+export interface ICreatejsSpriteParam extends ICreatejsParam {
 
 }
 
-export interface ISpritePixiData extends IPixiData {
-	instance: PixiSprite;
+export interface IPixiSpriteData extends IPixiData<PixiSprite> {
+
 }
 
 /**
  * @ignore
  */
-function createSpritePixiData(cjs: CreatejsSprite | {}): ISpritePixiData {
+function createPixiSpriteData(cjs: CreatejsSprite | {}): IPixiSpriteData {
 	const pixi = new PixiSprite(cjs);
 	
-	return Object.assign(createPixiData(pixi.anchor), {
-		instance: pixi
-	});
+	return createPixiData(pixi, pixi.anchor)
 }
 
 /**
  * @ignore
  */
-const CreatejsSpriteTemp = window.createjs.Sprite;
+const P = createjs.Sprite;
 
 /**
  * [[https://createjs.com/docs/easeljs/classes/Sprite.html | createjs.Sprite]]
  */
-export class CreatejsSprite extends window.createjs.Sprite {
-	protected _originParams: ISpriteOriginParam;
-	protected _pixiData: ISpritePixiData;
+export class CreatejsSprite extends mixinCreatejsDisplayObject<PixiSprite, ICreatejsSpriteParam>(createjs.Sprite) {
+	protected _createjsParams: ICreatejsSpriteParam;
+	protected _pixiData: IPixiSpriteData;
 	
 	constructor(...args: any[]) {
-		super();
+		super(...args);
 		
 		this._initForPixi();
 		
-		CreatejsSpriteTemp.apply(this, arguments);
+		P.apply(this, args);
 	}
 	
 	protected _initForPixi() {
-		this._originParams = createOriginParams();
-		this._pixiData = createSpritePixiData(this);
+		this._createjsParams = createCreatejsParams();
+		this._pixiData = createPixiSpriteData(this);
 	}
 	
 	initialize(...args: any[]) {
 		this._initForPixi();
 		
-		return super.initialize(...arguments);
+		return super.initialize(...args);
 	}
 	
 	gotoAndStop(...args: any[]) {
-		super.gotoAndStop(...arguments);
+		super.gotoAndStop(...args);
 		
 		const frame = this.spriteSheet.getFrame(this.currentFrame);
 		const baseTexture = PIXI.BaseTexture.from(frame.image);
@@ -93,16 +92,14 @@ export class CreatejsSprite extends window.createjs.Sprite {
 	}
 }
 
-appendDisplayObjectDescriptor(CreatejsSprite);
-
 // temporary prototype
 Object.defineProperties(CreatejsSprite.prototype, {
-	_originParams: {
-		value: createOriginParams(),
+	_createjsParams: {
+		value: createCreatejsParams(),
 		writable: true
 	},
 	_pixiData: {
-		value: createSpritePixiData({}),
+		value: createPixiSpriteData({}),
 		writable: true
 	}
 });

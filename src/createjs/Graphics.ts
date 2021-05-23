@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js';
-import { createPixiData, createOriginParams, IPixiData, IOriginParam, ITickerData } from './core';
+import { createjs } from './alias';
+import { createPixiData, createCreatejsParams, IPixiData, ICreatejsParam,  ITickerData, mixinPixiContainer, mixinCreatejsDisplayObject } from './core';
 import { appendDisplayObjectDescriptor } from './append';
 
 /**
@@ -10,7 +11,7 @@ declare const window: any;
 /**
  * [[http://pixijs.download/release/docs/PIXI.Graphics.html | PIXI.Graphics]]
  */
-export class PixiGraphics extends PIXI.Graphics {
+export class PixiGraphics extends mixinPixiContainer(PIXI.Graphics) {
 	private _createjs: CreatejsGraphics | {};
 	
 	constructor(cjs: CreatejsGraphics | {}) {
@@ -24,12 +25,11 @@ export class PixiGraphics extends PIXI.Graphics {
 	}
 }
 
-export interface IGraphicsOriginParam extends IOriginParam {
+export interface ICreatejsGraphicsParam extends ICreatejsParam {
 
 }
 
-export interface IGraphicsPixiData extends IPixiData {
-	instance: PixiGraphics;
+export interface IPixiGraphicsData extends IPixiData<PixiGraphics> {
 	strokeFill: number;
 	strokeAlpha: number;
 }
@@ -37,11 +37,10 @@ export interface IGraphicsPixiData extends IPixiData {
 /**
  * @ignore
  */
-function createGraphicsPixiData(cjs: CreatejsGraphics | {}): IGraphicsPixiData {
+function createGraphicsPixiData(cjs: CreatejsGraphics | {}): IPixiGraphicsData {
 	const pixi = new PixiGraphics(cjs);
 	
-	return Object.assign(createPixiData(pixi.pivot), {
-		instance: pixi,
+	return Object.assign(createPixiData(pixi, pixi.pivot), {
 		strokeFill: 0,
 		strokeAlpha: 1
 	});
@@ -83,21 +82,21 @@ const DEG_TO_RAD = Math.PI / 180;
 /**
  * @ignore
  */
-const CreatejsGraphicsTemp = window.createjs.Graphics;
+const P = createjs.Graphics;
 
 /**
  * [[https://createjs.com/docs/easeljs/classes/Graphics.html | createjs.Graphics]]
  */
-export class CreatejsGraphics extends window.createjs.Graphics {
-	protected _originParams: IGraphicsOriginParam;
-	protected _pixiData: IGraphicsPixiData;
+export class CreatejsGraphics extends mixinCreatejsDisplayObject<PixiGraphics, ICreatejsGraphicsParam>(createjs.Graphics) {
+	protected _createjsParams: ICreatejsGraphicsParam;
+	protected _pixiData: IPixiGraphicsData;
 	
 	constructor(...args: any[]) {
-		super(...arguments);
+		super(...args);
 		
 		this._initForPixi();
 		
-		CreatejsGraphicsTemp.apply(this, arguments);
+		P.apply(this, args);
 		
 		this._pixiData.instance.beginFill(0xFFEEEE, 1);
 		this._pixiData.strokeFill = 0;
@@ -105,7 +104,7 @@ export class CreatejsGraphics extends window.createjs.Graphics {
 	}
 	
 	protected _initForPixi() {
-		this._originParams = createOriginParams();
+		this._createjsParams = createCreatejsParams();
 		this._pixiData = createGraphicsPixiData(this);
 	}
 	
@@ -343,12 +342,10 @@ Object.defineProperties(CreatejsGraphics.prototype, {
 	}
 });
 
-appendDisplayObjectDescriptor(CreatejsGraphics);
-
 // temporary prototype
 Object.defineProperties(CreatejsGraphics.prototype, {
-	_originParams: {
-		value: createOriginParams(),
+	_createjsParams: {
+		value: createCreatejsParams(),
 		writable: true
 	},
 	_pixiData: {

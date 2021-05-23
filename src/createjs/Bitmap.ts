@@ -1,16 +1,12 @@
 import * as PIXI from 'pixi.js';
-import { createPixiData, createOriginParams, IPixiData, IOriginParam, ITickerData } from './core';
+import { createjs } from './alias';
+import { createPixiData, createCreatejsParams, IPixiData, ICreatejsParam, ITickerData, mixinPixiContainer, mixinCreatejsDisplayObject } from './core';
 import { appendDisplayObjectDescriptor } from './append';
-
-/**
- * @ignore
- */
-declare const window: any;
 
 /**
  * [[http://pixijs.download/release/docs/PIXI.Sprite.html | PIXI.Sprite]]
  */
-export class PixiBitmap extends PIXI.Sprite {
+export class PixiBitmap extends mixinPixiContainer(PIXI.Sprite) {
 	private _createjs: CreatejsBitmap | {};
 	
 	constructor(cjs: CreatejsBitmap | {}) {
@@ -24,55 +20,57 @@ export class PixiBitmap extends PIXI.Sprite {
 	}
 }
 
-export interface IBitmapOriginParam extends IOriginParam {
+export interface ICreatejsBitmapParam extends ICreatejsParam {
 
 }
 
-export interface IBitmapPixiData extends IPixiData {
-	instance: PixiBitmap;
+
+export interface IPixiBitmapData extends IPixiData<PixiBitmap> {
+
 }
 
 /**
  * @ignore
  */
-function createBitmapPixiData(cjs: CreatejsBitmap | {}): IBitmapPixiData {
+function createPixiBitmapData(cjs: CreatejsBitmap | {}): IPixiBitmapData {
 	const pixi = new PixiBitmap(cjs);
 	
-	return Object.assign(createPixiData(pixi.anchor), {
-		instance: pixi
-	});
+	return createPixiData<PixiBitmap>(pixi, pixi.anchor);
 }
 
 /**
  * @ignore
  */
-const CreatejsBitmapTemp = window.createjs.Bitmap;
+function createCreatejsBitmapParams(): ICreatejsBitmapParam {
+	return createCreatejsParams();
+}
+
+/**
+ * @ignore
+ */
+const P = createjs.Bitmap;
 
 /**
  * [[https://createjs.com/docs/easeljs/classes/Bitmap.html | createjs.Bitmap]]
  */
-export class CreatejsBitmap extends window.createjs.Bitmap {
-	protected _originParams: IBitmapOriginParam;
-	protected _pixiData: IBitmapPixiData;
-	
+export class CreatejsBitmap extends mixinCreatejsDisplayObject<PixiBitmap, ICreatejsBitmapParam>(createjs.Bitmap) {
 	constructor(...args: any[]) {
-		super(...arguments);
+		super(...args);
 		
 		this._initForPixi();
 		
-		CreatejsBitmapTemp.apply(this, arguments);
+		P.apply(this, args);
 	}
 	
-	protected _initForPixi() {
-		this._originParams = createOriginParams();
-		this._pixiData = createBitmapPixiData(this);
+	private _initForPixi() {
+		this._pixiData = createPixiBitmapData(this);
+		this._createjsParams = createCreatejsBitmapParams();
 	}
 	
 	initialize(...args: any[]) {
-		this._originParams = createOriginParams();
-		this._pixiData = createBitmapPixiData(this);
+		this._initForPixi();
 		
-		const res = super.initialize(...arguments);
+		const res = super.initialize(...args);
 		
 		const texture = PIXI.Texture.from(this.image);
 		
@@ -80,26 +78,16 @@ export class CreatejsBitmap extends window.createjs.Bitmap {
 		
 		return res;
 	}
-	
-	get pixi() {
-		return this._pixiData.instance;
-	}
-	
-	updateForPixi(e: ITickerData) {
-		return true;
-	}
 }
-
-appendDisplayObjectDescriptor(CreatejsBitmap);
 
 // temporary prototype
 Object.defineProperties(CreatejsBitmap.prototype, {
-	_originParams: {
-		value: createOriginParams(),
+	_createjsParams: {
+		value: createCreatejsParams(),
 		writable: true
 	},
 	_pixiData: {
-		value: createBitmapPixiData({}),
+		value: createPixiBitmapData({}),
 		writable: true
 	}
 });
