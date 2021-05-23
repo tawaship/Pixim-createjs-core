@@ -4,11 +4,6 @@ import { createPixiData, createCreatejsParams, IPixiData, ICreatejsParam, ITicke
 import { appendDisplayObjectDescriptor } from './append';
 
 /**
- * @ignore
- */
-declare const window: any;
-
-/**
  * [[http://pixijs.download/release/docs/PIXI.Text.html | PIXI.Text]]
  */
 export class PixiText extends PIXI.Text {}

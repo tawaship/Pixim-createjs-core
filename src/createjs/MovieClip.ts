@@ -5,11 +5,6 @@ import { createPixiData, createCreatejsParams, IPixiData, ICreatejsParam, update
 import { appendDisplayObjectDescriptor } from './append';
 
 /**
- * @ignore
- */
-declare const window: any;
-
-/**
  * [[http://pixijs.download/release/docs/PIXI.Container.html | PIXI.Container]]
  */
 export class PixiMovieClip extends mixinPixiContainer(Container) {

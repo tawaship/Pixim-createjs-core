@@ -4,11 +4,6 @@ import { createPixiData, createCreatejsParams, IPixiData, ICreatejsParam,  ITick
 import { appendDisplayObjectDescriptor } from './append';
 
 /**
- * @ignore
- */
-declare const window: any;
-
-/**
  * [[http://pixijs.download/release/docs/PIXI.Graphics.html | PIXI.Graphics]]
  */
 export class PixiGraphics extends mixinPixiContainer(PIXI.Graphics) {

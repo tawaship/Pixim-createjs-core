@@ -5,11 +5,6 @@ import { appendDisplayObjectDescriptor } from './append';
 import { CreatejsGraphics } from './Graphics';
 
 /**
- * @ignore
- */
-declare const window: any;
-
-/**
  * [[http://pixijs.download/release/docs/PIXI.Container.html | PIXI.Container]]
  */
 export class PixiShape extends mixinPixiContainer(PIXI.Container) {

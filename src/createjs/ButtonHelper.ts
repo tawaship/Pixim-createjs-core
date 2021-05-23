@@ -1,11 +1,6 @@
 import { createjs } from './alias';
 
 /**
- * @ignore
- */
-declare const window: any;
-
-/**
  * [[https://createjs.com/docs/easeljs/classes/ButtonHelper.html | createjs.ButtonHelper]]
  */
 export class CreatejsButtonHelper extends createjs.ButtonHelper {

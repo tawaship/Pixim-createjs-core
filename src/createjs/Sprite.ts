@@ -4,11 +4,6 @@ import { createPixiData, createCreatejsParams, IPixiData, ICreatejsParam, ITicke
 import { appendDisplayObjectDescriptor } from './append';
 
 /**
- * @ignore
- */
-declare const window: any;
-
-/**
  * [[http://pixijs.download/release/docs/PIXI.Sprite.html | PIXI.Sprite]]
  */
 export class PixiSprite extends mixinPixiContainer(PIXI.Sprite) {

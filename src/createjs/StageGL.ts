@@ -2,11 +2,6 @@ import { createjs } from './alias';
 import { updateDisplayObjectChildren, ITickerData, mixinPixiContainer, mixinCreatejsDisplayObject } from './core';
 
 /**
- * @ognore
- */
-declare const window: any;
-
-/**
  * [[https://createjs.com/docs/easeljs/classes/StageGL.html | createjs.StageGL]]
  */
 export class CreatejsStageGL extends createjs.StageGL {
