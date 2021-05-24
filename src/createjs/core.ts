@@ -9,7 +9,6 @@ import { CreatejsShape } from './Shape';
 import { CreatejsBitmap } from './Bitmap';
 import { CreatejsGraphics } from './Graphics';
 import { CreatejsText } from './Text';
-import { createjs } from './alias';
 
 type TCreatejsDisplayObject = any/* createjs.DisplayObject */;
 
@@ -24,36 +23,22 @@ export interface ITickerData {
 	delta: number;
 }
 
-export interface IMixinPixiContainer extends Container {
-
-}
-
 export interface IPixiContainerClass<T = {}> {
 	new (...args: any[]): T;
 }
 
 export function mixinPixiContainer<TBase extends IPixiContainerClass>(Base: TBase) {
 	return class extends Base {
-		/*
-		private _filterContainer: IMixinPixiContainer | null;
 		
-		get filterContainer() {
-			return this._filterContainer;
-		}
-		
-		set filterContainer(value) {
-			this._filterContainer = value;
-		}
-		*/
 	}
 }
 
-export interface IPixiData<T extends IMixinPixiContainer> {
+export interface IPixiData<T extends Container> {
 	regObj: Point;
 	instance: T | null;
 }
 
-export function createPixiData<TPixiContainer extends IMixinPixiContainer>(pixi: TPixiContainer, regObj: Point): IPixiData<TPixiContainer> {
+export function createPixiData<TPixiContainer extends Container>(pixi: TPixiContainer, regObj: Point): IPixiData<TPixiContainer> {
 	return {
 		regObj,
 		instance: pixi

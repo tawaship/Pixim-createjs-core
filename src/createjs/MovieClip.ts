@@ -2,7 +2,6 @@ import { Container, filters } from 'pixi.js';
 import { createjs } from './alias';
 import { CreatejsColorFilter } from './ColorFilter';
 import { createPixiData, createCreatejsParams, IPixiData, ICreatejsParam, updateDisplayObjectChildren, ITickerData, mixinCreatejsDisplayObject, mixinPixiContainer } from './core';
-import { appendDisplayObjectDescriptor } from './append';
 import { createObject } from './utils';
 
 /**
@@ -35,10 +34,20 @@ export interface ICreatejsMovieClipParam extends ICreatejsParam {
 
 }
 
+/**
+ * @ignore
+ */
+function createCreatejsMovieClipParams(): ICreatejsMovieClipParam {
+	return createCreatejsParams();
+}
+
 export interface IPixiMoveClipData extends IPixiData<PixiMovieClip> {
 	subInstance: Container;
 }
 
+/**
+ * @ignore
+ */
 function createPixiMovieClipData(cjs: CreatejsMovieClip): IPixiMoveClipData {
 	const pixi = new PixiMovieClip(cjs);
 	
@@ -163,7 +172,7 @@ export class CreatejsMovieClip extends mixinCreatejsDisplayObject<PixiMovieClip,
 	}
 	
 	protected _initForPixi() {
-		this._createjsParams = createCreatejsParams();
+		this._createjsParams = createCreatejsMovieClipParams();
 		this._pixiData = createPixiMovieClipData(this);
 		
 		if (!_funcFlag) {
@@ -235,7 +244,7 @@ export class CreatejsMovieClip extends mixinCreatejsDisplayObject<PixiMovieClip,
 // temporary prototype
 Object.defineProperties(CreatejsMovieClip.prototype, {
 	_createjsParams: {
-		value: createCreatejsParams(),
+		value: createCreatejsMovieClipParams(),
 		writable: true
 	},
 	_pixiData: {

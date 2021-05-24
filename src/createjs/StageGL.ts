@@ -1,5 +1,5 @@
 import { createjs } from './alias';
-import { updateDisplayObjectChildren, ITickerData, mixinPixiContainer, mixinCreatejsDisplayObject } from './core';
+import { updateDisplayObjectChildren, ITickerData } from './core';
 
 /**
  * [[https://createjs.com/docs/easeljs/classes/StageGL.html | createjs.StageGL]]

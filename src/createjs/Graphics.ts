@@ -1,13 +1,12 @@
-import * as PIXI from 'pixi.js';
+import { Graphics, LINE_CAP, LINE_JOIN} from 'pixi.js';
 import { createjs } from './alias';
 import { createPixiData, createCreatejsParams, IPixiData, ICreatejsParam,  ITickerData, mixinPixiContainer, mixinCreatejsDisplayObject } from './core';
-import { appendDisplayObjectDescriptor } from './append';
 import { createObject } from './utils';
 
 /**
  * [[http://pixijs.download/release/docs/PIXI.Graphics.html | PIXI.Graphics]]
  */
-export class PixiGraphics extends mixinPixiContainer(PIXI.Graphics) {
+export class PixiGraphics extends mixinPixiContainer(Graphics) {
 	private _createjs: CreatejsGraphics;
 	
 	constructor(cjs: CreatejsGraphics) {
@@ -23,6 +22,13 @@ export class PixiGraphics extends mixinPixiContainer(PIXI.Graphics) {
 
 export interface ICreatejsGraphicsParam extends ICreatejsParam {
 
+}
+
+/**
+ * @ignore
+ */
+function createCreatejsGraphicsParams(): ICreatejsGraphicsParam {
+	return createCreatejsParams();
 }
 
 export interface IPixiGraphicsData extends IPixiData<PixiGraphics> {
@@ -56,18 +62,18 @@ const COLOR_GREEN = 16 * 16;
  * @ignore
  */
 const LineCap = {
-	0: PIXI.LINE_CAP.BUTT,
-	1: PIXI.LINE_CAP.ROUND,
-	2: PIXI.LINE_CAP.SQUARE
+	0: LINE_CAP.BUTT,
+	1: LINE_CAP.ROUND,
+	2: LINE_CAP.SQUARE
 };
 
 /**
  * @ignore
  */
 const LineJoin = {
-	0: PIXI.LINE_JOIN.MITER,
-	1: PIXI.LINE_JOIN.ROUND,
-	2: PIXI.LINE_JOIN.BEVEL
+	0: LINE_JOIN.MITER,
+	1: LINE_JOIN.ROUND,
+	2: LINE_JOIN.BEVEL
 };
 
 /**
@@ -100,7 +106,7 @@ export class CreatejsGraphics extends mixinCreatejsDisplayObject<PixiGraphics, I
 	}
 	
 	protected _initForPixi() {
-		this._createjsParams = createCreatejsParams();
+		this._createjsParams = createCreatejsGraphicsParams();
 		this._pixiData = createGraphicsPixiData(this);
 	}
 	
@@ -341,7 +347,7 @@ Object.defineProperties(CreatejsGraphics.prototype, {
 // temporary prototype
 Object.defineProperties(CreatejsGraphics.prototype, {
 	_createjsParams: {
-		value: createCreatejsParams(),
+		value: createCreatejsGraphicsParams(),
 		writable: true
 	},
 	_pixiData: {

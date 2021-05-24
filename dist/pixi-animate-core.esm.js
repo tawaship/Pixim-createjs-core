@@ -455,6 +455,15 @@ class PixiMovieClip extends mixinPixiContainer(Container) {
         return this._createjs;
     }
 }
+/**
+ * @ignore
+ */
+function createCreatejsMovieClipParams() {
+    return createCreatejsParams();
+}
+/**
+ * @ignore
+ */
 function createPixiMovieClipData(cjs) {
     const pixi = new PixiMovieClip(cjs);
     return Object.assign(createPixiData(pixi, pixi.pivot), {
@@ -550,7 +559,7 @@ class CreatejsMovieClip extends mixinCreatejsDisplayObject(createjs.MovieClip) {
         this._createjsParams.filters = value;
     }
     _initForPixi() {
-        this._createjsParams = createCreatejsParams();
+        this._createjsParams = createCreatejsMovieClipParams();
         this._pixiData = createPixiMovieClipData(this);
         if (!_funcFlag) {
             this.updateForPixi = this._updateForPixiUnsynched;
@@ -604,7 +613,7 @@ class CreatejsMovieClip extends mixinCreatejsDisplayObject(createjs.MovieClip) {
 // temporary prototype
 Object.defineProperties(CreatejsMovieClip.prototype, {
     _createjsParams: {
-        value: createCreatejsParams(),
+        value: createCreatejsMovieClipParams(),
         writable: true
     },
     _pixiData: {
@@ -628,6 +637,12 @@ class PixiSprite extends mixinPixiContainer(Sprite) {
 /**
  * @ignore
  */
+function createCreatejsSpriteParams() {
+    return createCreatejsParams();
+}
+/**
+ * @ignore
+ */
 function createPixiSpriteData(cjs) {
     const pixi = new PixiSprite(cjs);
     return createPixiData(pixi, pixi.anchor);
@@ -646,7 +661,7 @@ class CreatejsSprite extends mixinCreatejsDisplayObject(createjs.Sprite) {
         P$1.apply(this, args);
     }
     _initForPixi() {
-        this._createjsParams = createCreatejsParams();
+        this._createjsParams = createCreatejsSpriteParams();
         this._pixiData = createPixiSpriteData(this);
     }
     initialize(...args) {
@@ -670,7 +685,7 @@ class CreatejsSprite extends mixinCreatejsDisplayObject(createjs.Sprite) {
 // temporary prototype
 Object.defineProperties(CreatejsSprite.prototype, {
     _createjsParams: {
-        value: createCreatejsParams(),
+        value: createCreatejsSpriteParams(),
         writable: true
     },
     _pixiData: {
@@ -694,7 +709,7 @@ class PixiShape extends mixinPixiContainer(Container) {
 /**
  * @ignore
  */
-function createCreatejsShapeParam(graphics) {
+function createCreatejsShapeParams(graphics) {
     return Object.assign(createCreatejsParams(), {
         graphics: graphics
     });
@@ -722,7 +737,7 @@ class CreatejsShape extends mixinCreatejsDisplayObject(createjs.Shape) {
         P$2.apply(this, args);
     }
     _initForPixi() {
-        this._createjsParams = createCreatejsShapeParam(null);
+        this._createjsParams = createCreatejsShapeParams(null);
         this._pixiData = createPixiSpaheData(this);
     }
     get graphics() {
@@ -760,7 +775,7 @@ class CreatejsShape extends mixinCreatejsDisplayObject(createjs.Shape) {
 // temporary prototype
 Object.defineProperties(CreatejsShape.prototype, {
     _createjsParams: {
-        value: createCreatejsShapeParam(null),
+        value: createCreatejsShapeParams(null),
         writable: true
     },
     _pixiData: {
@@ -784,15 +799,15 @@ class PixiBitmap extends mixinPixiContainer(Sprite) {
 /**
  * @ignore
  */
-function createPixiBitmapData(cjs) {
-    const pixi = new PixiBitmap(cjs);
-    return createPixiData(pixi, pixi.anchor);
+function createCreatejsBitmapParams() {
+    return createCreatejsParams();
 }
 /**
  * @ignore
  */
-function createCreatejsBitmapParams() {
-    return createCreatejsParams();
+function createPixiBitmapData(cjs) {
+    const pixi = new PixiBitmap(cjs);
+    return createPixiData(pixi, pixi.anchor);
 }
 /**
  * @ignore
@@ -822,7 +837,7 @@ class CreatejsBitmap extends mixinCreatejsDisplayObject(createjs.Bitmap) {
 // temporary prototype
 Object.defineProperties(CreatejsBitmap.prototype, {
     _createjsParams: {
-        value: createCreatejsParams(),
+        value: createCreatejsBitmapParams(),
         writable: true
     },
     _pixiData: {
@@ -842,6 +857,12 @@ class PixiGraphics extends mixinPixiContainer(Graphics) {
     get createjs() {
         return this._createjs;
     }
+}
+/**
+ * @ignore
+ */
+function createCreatejsGraphicsParams() {
+    return createCreatejsParams();
 }
 /**
  * @ignore
@@ -898,7 +919,7 @@ class CreatejsGraphics extends mixinCreatejsDisplayObject(createjs.Graphics) {
         this._pixiData.strokeAlpha = 1;
     }
     _initForPixi() {
-        this._createjsParams = createCreatejsParams();
+        this._createjsParams = createCreatejsGraphicsParams();
         this._pixiData = createGraphicsPixiData(this);
     }
     moveTo(x, y) {
@@ -1076,7 +1097,7 @@ Object.defineProperties(CreatejsGraphics.prototype, {
 // temporary prototype
 Object.defineProperties(CreatejsGraphics.prototype, {
     _createjsParams: {
-        value: createCreatejsParams(),
+        value: createCreatejsGraphicsParams(),
         writable: true
     },
     _pixiData: {
@@ -1109,7 +1130,7 @@ class PixiTextContainer extends mixinPixiContainer(Container) {
 /**
  * @ignore
  */
-function createTextOriginParam(text, font, color) {
+function createCreatejsTextParams(text, font, color) {
     return Object.assign(createCreatejsParams(), {
         text: text,
         font: font,
@@ -1140,7 +1161,7 @@ class CreatejsText extends mixinCreatejsDisplayObject(createjs.Text) {
         P$5.call(this, text, font, color, ...args);
     }
     _initForPixi(text, font, color = '#000000', ...args) {
-        this._createjsParams = createTextOriginParam(text, font, color);
+        this._createjsParams = createCreatejsTextParams(text, font, color);
         const _font = this._parseFont(font);
         const t = new PixiText(text, {
             fontWeight: _font.fontWeight,
@@ -1240,13 +1261,24 @@ class CreatejsText extends mixinCreatejsDisplayObject(createjs.Text) {
 // temporary prototype
 Object.defineProperties(CreatejsText.prototype, {
     _createjsParams: {
-        value: createCreatejsParams(),
+        value: createCreatejsTextParams('', '', ''),
         writable: true
     },
     _pixiData: {
         value: createPixiTextData(createObject(CreatejsText.prototype), new PixiText('')),
         writable: true
     }
+});
+
+const createjs$1 = Object.assign(createjs, {
+    Stage: CreatejsStage,
+    StageGL: CreatejsStageGL,
+    MovieClip: CreatejsMovieClip,
+    Sprite: CreatejsSprite,
+    Shape: CreatejsShape,
+    Bitmap: CreatejsBitmap,
+    Graphics: CreatejsGraphics,
+    Text: CreatejsText
 });
 
 /**
@@ -1340,5 +1372,5 @@ function handleFileLoad(evt, comp) {
     }
 }
 
-export { CreatejsBitmap, CreatejsButtonHelper, CreatejsGraphics, CreatejsMovieClip, CreatejsShape, CreatejsSprite, CreatejsStage, CreatejsStageGL, CreatejsText, EventManager, PixiBitmap, PixiGraphics, PixiMovieClip, PixiShape, PixiSprite, PixiText, PixiTextContainer, createCreatejsParams, createPixiData, initializeAnimate, loadAssetAsync, mixinCreatejsDisplayObject, mixinPixiContainer, prepareAnimate, updateDisplayObjectChildren };
+export { CreatejsBitmap, CreatejsButtonHelper, CreatejsGraphics, CreatejsMovieClip, CreatejsShape, CreatejsSprite, CreatejsStage, CreatejsStageGL, CreatejsText, EventManager, PixiBitmap, PixiGraphics, PixiMovieClip, PixiShape, PixiSprite, PixiText, PixiTextContainer, createCreatejsParams, createPixiData, createjs$1 as createjs, initializeAnimate, loadAssetAsync, mixinCreatejsDisplayObject, mixinPixiContainer, prepareAnimate, updateDisplayObjectChildren };
 //# sourceMappingURL=pixi-animate-core.esm.js.map

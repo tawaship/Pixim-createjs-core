@@ -1,13 +1,12 @@
-import * as PIXI from 'pixi.js';
+import { Sprite, Texture, BaseTexture } from 'pixi.js';
 import { createjs } from './alias';
 import { createPixiData, createCreatejsParams, IPixiData, ICreatejsParam, ITickerData, mixinPixiContainer, mixinCreatejsDisplayObject } from './core';
-import { appendDisplayObjectDescriptor } from './append';
 import { createObject } from './utils';
 
 /**
  * [[http://pixijs.download/release/docs/PIXI.Sprite.html | PIXI.Sprite]]
  */
-export class PixiSprite extends mixinPixiContainer(PIXI.Sprite) {
+export class PixiSprite extends mixinPixiContainer(Sprite) {
 	private _createjs: CreatejsSprite | {};
 	
 	constructor(cjs: CreatejsSprite | {}) {
@@ -23,6 +22,13 @@ export class PixiSprite extends mixinPixiContainer(PIXI.Sprite) {
 
 export interface ICreatejsSpriteParam extends ICreatejsParam {
 
+}
+
+/**
+ * @ignore
+ */
+function createCreatejsSpriteParams(): ICreatejsSpriteParam {
+	return createCreatejsParams();
 }
 
 export interface IPixiSpriteData extends IPixiData<PixiSprite> {
@@ -59,7 +65,7 @@ export class CreatejsSprite extends mixinCreatejsDisplayObject<PixiSprite, ICrea
 	}
 	
 	protected _initForPixi() {
-		this._createjsParams = createCreatejsParams();
+		this._createjsParams = createCreatejsSpriteParams();
 		this._pixiData = createPixiSpriteData(this);
 	}
 	
@@ -73,8 +79,8 @@ export class CreatejsSprite extends mixinCreatejsDisplayObject<PixiSprite, ICrea
 		super.gotoAndStop(...args);
 		
 		const frame = this.spriteSheet.getFrame(this.currentFrame);
-		const baseTexture = PIXI.BaseTexture.from(frame.image);
-		const texture = new PIXI.Texture(baseTexture, frame.rect);
+		const baseTexture = BaseTexture.from(frame.image);
+		const texture = new Texture(baseTexture, frame.rect);
 		
 		this._pixiData.instance.texture = texture;
 	}
@@ -91,7 +97,7 @@ export class CreatejsSprite extends mixinCreatejsDisplayObject<PixiSprite, ICrea
 // temporary prototype
 Object.defineProperties(CreatejsSprite.prototype, {
 	_createjsParams: {
-		value: createCreatejsParams(),
+		value: createCreatejsSpriteParams(),
 		writable: true
 	},
 	_pixiData: {

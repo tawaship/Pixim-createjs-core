@@ -1,13 +1,12 @@
-import * as PIXI from 'pixi.js';
+import { Sprite, Texture } from 'pixi.js';
 import { createjs } from './alias';
 import { createPixiData, createCreatejsParams, IPixiData, ICreatejsParam, ITickerData, mixinPixiContainer, mixinCreatejsDisplayObject } from './core';
-import { appendDisplayObjectDescriptor } from './append';
 import { createObject } from './utils';
 
 /**
  * [[http://pixijs.download/release/docs/PIXI.Sprite.html | PIXI.Sprite]]
  */
-export class PixiBitmap extends mixinPixiContainer(PIXI.Sprite) {
+export class PixiBitmap extends mixinPixiContainer(Sprite) {
 	private _createjs: CreatejsBitmap;
 	
 	constructor(cjs: CreatejsBitmap) {
@@ -25,6 +24,12 @@ export interface ICreatejsBitmapParam extends ICreatejsParam {
 
 }
 
+/**
+ * @ignore
+ */
+function createCreatejsBitmapParams(): ICreatejsBitmapParam {
+	return createCreatejsParams();
+}
 
 export interface IPixiBitmapData extends IPixiData<PixiBitmap> {
 
@@ -37,13 +42,6 @@ function createPixiBitmapData(cjs: CreatejsBitmap): IPixiBitmapData {
 	const pixi = new PixiBitmap(cjs);
 	
 	return createPixiData<PixiBitmap>(pixi, pixi.anchor);
-}
-
-/**
- * @ignore
- */
-function createCreatejsBitmapParams(): ICreatejsBitmapParam {
-	return createCreatejsParams();
 }
 
 /**
@@ -73,7 +71,7 @@ export class CreatejsBitmap extends mixinCreatejsDisplayObject<PixiBitmap, ICrea
 		
 		const res = super.initialize(...args);
 		
-		const texture = PIXI.Texture.from(this.image);
+		const texture = Texture.from(this.image);
 		
 		this._pixiData.instance.texture = texture;
 		
@@ -84,7 +82,7 @@ export class CreatejsBitmap extends mixinCreatejsDisplayObject<PixiBitmap, ICrea
 // temporary prototype
 Object.defineProperties(CreatejsBitmap.prototype, {
 	_createjsParams: {
-		value: createCreatejsParams(),
+		value: createCreatejsBitmapParams(),
 		writable: true
 	},
 	_pixiData: {

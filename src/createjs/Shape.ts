@@ -1,14 +1,13 @@
-import * as PIXI from 'pixi.js';
+import { DisplayObject, Container } from 'pixi.js';
 import { createjs } from './alias';
 import { createPixiData, createCreatejsParams, IPixiData, ICreatejsParam, ITickerData, mixinPixiContainer, mixinCreatejsDisplayObject } from './core';
-import { appendDisplayObjectDescriptor } from './append';
 import { CreatejsGraphics } from './Graphics';
 import { createObject } from './utils';
 
 /**
  * [[http://pixijs.download/release/docs/PIXI.Container.html | PIXI.Container]]
  */
-export class PixiShape extends mixinPixiContainer(PIXI.Container) {
+export class PixiShape extends mixinPixiContainer(Container) {
 	private _createjs: CreatejsShape;
 	
 	constructor(cjs: CreatejsShape) {
@@ -22,24 +21,24 @@ export class PixiShape extends mixinPixiContainer(PIXI.Container) {
 	}
 }
 
+export interface ICreatejsShapeParam extends ICreatejsParam {
+	graphics: CreatejsGraphics;
+}
+
 /**
  * @ignore
  */
-function createCreatejsShapeParam(graphics: CreatejsGraphics | null): ICreatejsShapeParam {
+function createCreatejsShapeParams(graphics: CreatejsGraphics | null): ICreatejsShapeParam {
 	return Object.assign(createCreatejsParams(), {
 		graphics: graphics
 	});
-}
-
-export interface ICreatejsShapeParam extends ICreatejsParam {
-	graphics: CreatejsGraphics;
 }
 
 export interface IPixiShapeData extends IPixiData<PixiShape> {
 	/**
 	 * [[http://pixijs.download/release/docs/PIXI.DisplayObject.html | PIXI.DisplayObject]]
 	 */
-	masked: PIXI.DisplayObject[];
+	masked: DisplayObject[];
 };
 
 /**
@@ -74,7 +73,7 @@ export class CreatejsShape extends mixinCreatejsDisplayObject<PixiShape, ICreate
 	}
 	
 	protected _initForPixi() {
-		this._createjsParams = createCreatejsShapeParam(null);
+		this._createjsParams = createCreatejsShapeParams(null);
 		this._pixiData = createPixiSpaheData(this);
 	}
 	
@@ -120,7 +119,7 @@ export class CreatejsShape extends mixinCreatejsDisplayObject<PixiShape, ICreate
 // temporary prototype
 Object.defineProperties(CreatejsShape.prototype, {
 	_createjsParams: {
-		value: createCreatejsShapeParam(null),
+		value: createCreatejsShapeParams(null),
 		writable: true
 	},
 	_pixiData: {
