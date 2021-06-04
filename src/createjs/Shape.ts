@@ -72,7 +72,7 @@ export class CreatejsShape extends mixinCreatejsDisplayObject<PixiShape, ICreate
 		P.apply(this, args);
 	}
 	
-	protected _initForPixi() {
+	private _initForPixi() {
 		this._createjsParams = createCreatejsShapeParams(null);
 		this._pixiData = createPixiSpaheData(this);
 	}
@@ -103,16 +103,8 @@ export class CreatejsShape extends mixinCreatejsDisplayObject<PixiShape, ICreate
 		this._createjsParams.graphics = value;
 	}
 	
-	get pixi() {
-		return this._pixiData.instance;
-	}
-	
 	get masked() {
 		return this._pixiData.masked;
-	}
-	
-	updateForPixi(e: ITickerData) {
-		return true;
 	}
 }
 

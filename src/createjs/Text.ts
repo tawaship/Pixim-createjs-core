@@ -82,9 +82,6 @@ const P = createjs.Text;
  * [[https://createjs.com/docs/easeljs/classes/Text.html | createjs.Text]]
  */
 export class CreatejsText extends mixinCreatejsDisplayObject<PixiTextContainer, ICreatejsTextParam>(createjs.Text) {
-	protected _createjsParams: ICreatejsTextParam;
-	protected _pixiData: IPixiTextData;
-	
 	constructor(text: string, font: string, color: string = '#000000', ...args: any[]) {
 		super(text, font, color, ...args);
 		
@@ -93,7 +90,7 @@ export class CreatejsText extends mixinCreatejsDisplayObject<PixiTextContainer, 
 		P.call(this, text, font, color, ...args);
 	}
 	
-	protected _initForPixi(text: string, font: string, color: string = '#000000', ...args: any[]) {
+	private _initForPixi(text: string, font: string, color: string = '#000000', ...args: any[]) {
 		this._createjsParams = createCreatejsTextParams(text, font, color);
 		
 		const _font = this._parseFont(font);
@@ -212,14 +209,6 @@ export class CreatejsText extends mixinCreatejsDisplayObject<PixiTextContainer, 
 		this._align(this.textAlign);
 		
 		this._createjsParams.lineWidth = width;
-	}
-	
-	get pixi() {
-		return this._pixiData.instance;
-	}
-	
-	updateForPixi(e: ITickerData) {
-		return true;
 	}
 }
 

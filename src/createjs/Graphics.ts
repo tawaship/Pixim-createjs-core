@@ -90,9 +90,6 @@ const P = createjs.Graphics;
  * [[https://createjs.com/docs/easeljs/classes/Graphics.html | createjs.Graphics]]
  */
 export class CreatejsGraphics extends mixinCreatejsDisplayObject<PixiGraphics, ICreatejsGraphicsParam>(createjs.Graphics) {
-	protected _createjsParams: ICreatejsGraphicsParam;
-	protected _pixiData: IPixiGraphicsData;
-	
 	constructor(...args: any[]) {
 		super(...args);
 		
@@ -105,7 +102,7 @@ export class CreatejsGraphics extends mixinCreatejsDisplayObject<PixiGraphics, I
 		this._pixiData.strokeAlpha = 1;
 	}
 	
-	protected _initForPixi() {
+	private _initForPixi() {
 		this._createjsParams = createCreatejsGraphicsParams();
 		this._pixiData = createGraphicsPixiData(this);
 	}
@@ -250,14 +247,6 @@ export class CreatejsGraphics extends mixinCreatejsDisplayObject<PixiGraphics, I
 		this._pixiData.instance.drawRegularPolygon(x, y, radius, sides, angle * DEG_TO_RAD);
 		
 		return super.drawPolyStar(x, y, radius, sides, pointSize, angle);
-	}
-	
-	get pixi() {
-		return this._pixiData.instance;
-	}
-	
-	updateForPixi(e: ITickerData) {
-		return true;
 	}
 }
 

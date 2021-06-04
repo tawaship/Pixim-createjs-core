@@ -1,27 +1,14 @@
 import * as PIXI from 'pixi.js';
-import * as createjs from './createjs/index';
+import * as PA from './createjs/index';
 
 /**
  * @ignore
  */
-declare const window: any;
+declare const AdobeAn: any;
 
 export interface IAnimateLibrary {
 	[ name: string ]: any;
 }
-
-export interface IPrepareOption {
-	/**
-	 * Whether synchronous playback of movie clips is enabled.
-	 * If set to "false", the behavior will be a little faster.
-	 */
-	useSynchedTimeline?: boolean;
-	
-	/**
-	 * Whether to use motion guides.
-	 */
-	useMotionGuide?: boolean;
-};
 
 export interface ILoadAssetOption {
 	/**
@@ -31,35 +18,13 @@ export interface ILoadAssetOption {
 };
 
 /**
- * @ignore
- */
-let _isPrepare = false;
-
-/**
- * Prepare createjs content published with Adobe Animate.
- */
-export function prepareAnimate(options: IPrepareOption = {}) {
-	if (_isPrepare) {
-		return;
-	}
-	
-	createjs.CreatejsMovieClip.selectUpdateFunc(options.useSynchedTimeline);
-	
-	if (options.useMotionGuide) {
-		window.createjs.MotionGuidePlugin.install();
-	}
-	
-	_isPrepare = true;
-}
-
-/**
  * Load assets of createjs content published with Adobe Animate.
  * 
  * @param id "lib.properties.id" in Animate content.
  * @param basepath Directory path of Animate content.
  */
 export function loadAssetAsync(id: string, basepath: string, options: ILoadAssetOption = {}) {
-	const comp = window.AdobeAn.getComposition(id);
+	const comp = AdobeAn.getComposition(id);
 	if (!comp) {
 		throw new Error('no composition');
 	}
@@ -75,9 +40,9 @@ export function loadAssetAsync(id: string, basepath: string, options: ILoadAsset
 			basepath = (basepath + '/').replace(/([^\:])\/\//, "$1/");
 		}
 		
-		const loader = new window.createjs.LoadQueue(false, basepath);
+		const loader = new PA.createjs.LoadQueue(false, basepath);
 		
-		loader.installPlugin(window.createjs.Sound);
+		loader.installPlugin(PA.createjs.Sound);
 		
 		loader.addEventListener('fileload', function(evt: any) {
 			handleFileLoad(evt, comp);
@@ -102,7 +67,7 @@ export function loadAssetAsync(id: string, basepath: string, options: ILoadAsset
 		const ssMetadata = lib.ssMetadata;
 		
 		for (let i = 0; i < ssMetadata.length; i++) {
-			ss[ssMetadata[i].name] = new window.createjs.SpriteSheet({
+			ss[ssMetadata[i].name] = new PA.createjs.SpriteSheet({
 				images: [
 					queue.getResult(ssMetadata[i].name)
 				],
@@ -114,21 +79,19 @@ export function loadAssetAsync(id: string, basepath: string, options: ILoadAsset
 	});
 }
 
-export function initializeAnimate(obj: { [name: string]: any } = {}) {
-	window.createjs.Stage = createjs.CreatejsStage;
-	window.createjs.StageGL = createjs.CreatejsStageGL;
-	window.createjs.MovieClip = createjs.CreatejsMovieClip;
-	window.createjs.Sprite = createjs.CreatejsSprite;
-	window.createjs.Shape = createjs.CreatejsShape;
-	window.createjs.Bitmap = createjs.CreatejsBitmap;
-	window.createjs.Graphics = createjs.CreatejsGraphics;
-	window.createjs.Text = createjs.CreatejsText;
-	window.createjs.ButtonHelper = createjs.CreatejsButtonHelper;
-	
-	for (let i in obj) {
-		window.createjs[i] = obj[i];
-	}
-}
+// overrides
+PA.createjs.Stage = PA.CreatejsStage;
+PA.createjs.StageGL = PA.CreatejsStageGL;
+PA.createjs.MovieClip = PA.CreatejsMovieClip;
+PA.createjs.Sprite = PA.CreatejsSprite;
+PA.createjs.Shape = PA.CreatejsShape;
+PA.createjs.Bitmap = PA.CreatejsBitmap;
+PA.createjs.Graphics = PA.CreatejsGraphics;
+PA.createjs.Text = PA.CreatejsText;
+PA.createjs.ButtonHelper = PA.CreatejsButtonHelper;
+
+// install plugins
+PA.createjs.MotionGuidePlugin.install();
 
 /**
  * @ignore

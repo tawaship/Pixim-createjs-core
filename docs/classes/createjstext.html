@@ -7,6 +7,7 @@
 	<meta name="description" content="Documentation for @tawaship/pixi-animate-core - v2.1.2">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
+	<script async src="../assets/js/search.js" id="search-script"></script>
 </head>
 <body>
 <header>
@@ -40,8 +41,6 @@
 							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
 							<input type="checkbox" id="tsd-filter-externals" checked />
 							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
-							<input type="checkbox" id="tsd-filter-only-exported" />
-							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
 						</div>
 					</div>
 					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
@@ -53,7 +52,7 @@
 		<div class="container">
 			<ul class="tsd-breadcrumb">
 				<li>
-					<a href="../globals.html">Globals</a>
+					<a href="../modules.html">@tawaship/pixi-animate-core - v2.1.2</a>
 				</li>
 				<li>
 					<a href="createjstext.html">CreatejsText</a>
@@ -93,13 +92,13 @@
 						<section class="tsd-index-section ">
 							<h3>Constructors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="createjstext.html#constructor" class="tsd-kind-icon">constructor</a></li>
+								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite"><a href="createjstext.html#constructor" class="tsd-kind-icon">constructor</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section tsd-is-private-protected">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><a href="createjstext.html#_originparams" class="tsd-kind-icon">_origin<wbr>Params</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><a href="createjstext.html#_createjsparams" class="tsd-kind-icon">_createjs<wbr>Params</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><a href="createjstext.html#_pixidata" class="tsd-kind-icon">_pixi<wbr>Data</a></li>
 							</ul>
 						</section>
@@ -130,17 +129,18 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Constructors</h2>
-				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
-					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Createjs<wbr>Text<span class="tsd-signature-symbol">(</span>text<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, font<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, color<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span>, <span class="tsd-signature-symbol">...</span>args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="createjstext.html" class="tsd-signature-type">CreatejsText</a></li>
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Createjs<wbr>Text<span class="tsd-signature-symbol">(</span>text<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, font<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, color<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span>, <span class="tsd-signature-symbol">...</span>args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="createjstext.html" class="tsd-signature-type" data-tsd-kind="Class">CreatejsText</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
+								<p>Overrides mixinCreatejsDisplayObject&lt;PixiTextContainer, ICreatejsTextParam&gt;(createjs.Text).constructor</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/createjs/Text.ts#L92">src/createjs/Text.ts:92</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/createjs/Text.ts#L86">src/createjs/Text.ts:86</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -152,13 +152,13 @@
 									<h5>font: <span class="tsd-signature-type">string</span></h5>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> color: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = &quot;#000000&quot;</span></h5>
+									<h5>color: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = &#x27;#000000&#x27;</span></h5>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>args: <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="createjstext.html" class="tsd-signature-type">CreatejsText</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="createjstext.html" class="tsd-signature-type" data-tsd-kind="Class">CreatejsText</a></h4>
 						</li>
 					</ul>
 				</section>
@@ -166,22 +166,22 @@
 			<section class="tsd-panel-group tsd-member-group tsd-is-private-protected">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-protected">
-					<a name="_originparams" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagProtected">Protected</span> _origin<wbr>Params</h3>
-					<div class="tsd-signature tsd-kind-icon">_origin<wbr>Params<span class="tsd-signature-symbol">:</span> <a href="../interfaces/itextoriginparam.html" class="tsd-signature-type">ITextOriginParam</a></div>
+					<a name="_createjsparams" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> _createjs<wbr>Params</h3>
+					<div class="tsd-signature tsd-kind-icon">_createjs<wbr>Params<span class="tsd-signature-symbol">:</span> <a href="../interfaces/icreatejstextparam.html" class="tsd-signature-type" data-tsd-kind="Interface">ICreatejsTextParam</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/createjs/Text.ts#L91">src/createjs/Text.ts:91</a></li>
+							<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/createjs/Text.ts#L85">src/createjs/Text.ts:85</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-protected">
 					<a name="_pixidata" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagProtected">Protected</span> _pixi<wbr>Data</h3>
-					<div class="tsd-signature tsd-kind-icon">_pixi<wbr>Data<span class="tsd-signature-symbol">:</span> <a href="../interfaces/itextpixidata.html" class="tsd-signature-type">ITextPixiData</a></div>
+					<div class="tsd-signature tsd-kind-icon">_pixi<wbr>Data<span class="tsd-signature-symbol">:</span> <a href="../interfaces/ipixitextdata.html" class="tsd-signature-type" data-tsd-kind="Interface">IPixiTextData</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/createjs/Text.ts#L92">src/createjs/Text.ts:92</a></li>
+							<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/createjs/Text.ts#L86">src/createjs/Text.ts:86</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -199,7 +199,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/createjs/Text.ts#L164">src/createjs/Text.ts:164</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/createjs/Text.ts#L158">src/createjs/Text.ts:158</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
@@ -207,7 +207,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/createjs/Text.ts#L168">src/createjs/Text.ts:168</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/createjs/Text.ts#L162">src/createjs/Text.ts:162</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -231,7 +231,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/createjs/Text.ts#L148">src/createjs/Text.ts:148</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/createjs/Text.ts#L142">src/createjs/Text.ts:142</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
@@ -239,7 +239,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/createjs/Text.ts#L152">src/createjs/Text.ts:152</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/createjs/Text.ts#L146">src/createjs/Text.ts:146</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -263,7 +263,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/createjs/Text.ts#L202">src/createjs/Text.ts:202</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/createjs/Text.ts#L196">src/createjs/Text.ts:196</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -271,7 +271,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/createjs/Text.ts#L206">src/createjs/Text.ts:206</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/createjs/Text.ts#L200">src/createjs/Text.ts:200</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -295,7 +295,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/createjs/Text.ts#L212">src/createjs/Text.ts:212</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/createjs/Text.ts#L206">src/createjs/Text.ts:206</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -303,7 +303,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/createjs/Text.ts#L216">src/createjs/Text.ts:216</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/createjs/Text.ts#L210">src/createjs/Text.ts:210</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -320,16 +320,16 @@
 					<a name="pixi" class="tsd-anchor"></a>
 					<h3>pixi</h3>
 					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> pixi<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="pixitextcontainer.html" class="tsd-signature-type">PixiTextContainer</a></li>
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> pixi<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="pixitextcontainer.html" class="tsd-signature-type" data-tsd-kind="Class">PixiTextContainer</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/createjs/Text.ts#L223">src/createjs/Text.ts:223</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/createjs/Text.ts#L217">src/createjs/Text.ts:217</a></li>
 								</ul>
 							</aside>
-							<h4 class="tsd-returns-title">Returns <a href="pixitextcontainer.html" class="tsd-signature-type">PixiTextContainer</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="pixitextcontainer.html" class="tsd-signature-type" data-tsd-kind="Class">PixiTextContainer</a></h4>
 						</li>
 					</ul>
 				</section>
@@ -344,7 +344,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/createjs/Text.ts#L119">src/createjs/Text.ts:119</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/createjs/Text.ts#L113">src/createjs/Text.ts:113</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
@@ -352,7 +352,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/createjs/Text.ts#L123">src/createjs/Text.ts:123</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/createjs/Text.ts#L117">src/createjs/Text.ts:117</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -376,7 +376,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/createjs/Text.ts#L191">src/createjs/Text.ts:191</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/createjs/Text.ts#L185">src/createjs/Text.ts:185</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
@@ -384,7 +384,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/createjs/Text.ts#L195">src/createjs/Text.ts:195</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/createjs/Text.ts#L189">src/createjs/Text.ts:189</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -410,7 +410,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/createjs/Text.ts#L174">src/createjs/Text.ts:174</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/createjs/Text.ts#L168">src/createjs/Text.ts:168</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -433,7 +433,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/createjs/Text.ts#L102">src/createjs/Text.ts:102</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/createjs/Text.ts#L96">src/createjs/Text.ts:96</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -445,7 +445,7 @@
 									<h5>font: <span class="tsd-signature-type">string</span></h5>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> color: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = &quot;#000000&quot;</span></h5>
+									<h5>color: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = &#x27;#000000&#x27;</span></h5>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>args: <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></h5>
@@ -465,7 +465,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/createjs/Text.ts#L160">src/createjs/Text.ts:160</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/createjs/Text.ts#L154">src/createjs/Text.ts:154</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -482,13 +482,13 @@
 					<a name="_parsefont" class="tsd-anchor"></a>
 					<h3>_parse<wbr>Font</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">_parse<wbr>Font<span class="tsd-signature-symbol">(</span>font<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/iparsedtext.html" class="tsd-signature-type">IParsedText</a></li>
+						<li class="tsd-signature tsd-kind-icon">_parse<wbr>Font<span class="tsd-signature-symbol">(</span>font<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/iparsedtext.html" class="tsd-signature-type" data-tsd-kind="Interface">IParsedText</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/createjs/Text.ts#L130">src/createjs/Text.ts:130</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/createjs/Text.ts#L124">src/createjs/Text.ts:124</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -497,7 +497,7 @@
 									<h5>font: <span class="tsd-signature-type">any</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="../interfaces/iparsedtext.html" class="tsd-signature-type">IParsedText</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/iparsedtext.html" class="tsd-signature-type" data-tsd-kind="Interface">IParsedText</a></h4>
 						</li>
 					</ul>
 				</section>
@@ -505,19 +505,19 @@
 					<a name="updateforpixi" class="tsd-anchor"></a>
 					<h3>update<wbr>For<wbr>Pixi</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">update<wbr>For<wbr>Pixi<span class="tsd-signature-symbol">(</span>e<span class="tsd-signature-symbol">: </span><a href="../interfaces/itickerdata.html" class="tsd-signature-type">ITickerData</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+						<li class="tsd-signature tsd-kind-icon">update<wbr>For<wbr>Pixi<span class="tsd-signature-symbol">(</span>e<span class="tsd-signature-symbol">: </span><a href="../interfaces/itickerdata.html" class="tsd-signature-type" data-tsd-kind="Interface">ITickerData</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/createjs/Text.ts#L227">src/createjs/Text.ts:227</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/createjs/Text.ts#L221">src/createjs/Text.ts:221</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>e: <a href="../interfaces/itickerdata.html" class="tsd-signature-type">ITickerData</a></h5>
+									<h5>e: <a href="../interfaces/itickerdata.html" class="tsd-signature-type" data-tsd-kind="Interface">ITickerData</a></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -529,8 +529,8 @@
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 			<nav class="tsd-navigation primary">
 				<ul>
-					<li class="globals  ">
-						<a href="../globals.html"><em>Globals</em></a>
+					<li class=" ">
+						<a href="../modules.html">Exports</a>
 					</li>
 				</ul>
 			</nav>
@@ -541,11 +541,11 @@
 					<li class="current tsd-kind-class">
 						<a href="createjstext.html" class="tsd-kind-icon">Createjs<wbr>Text</a>
 						<ul>
-							<li class=" tsd-kind-constructor tsd-parent-kind-class">
+							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
 								<a href="createjstext.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-protected">
-								<a href="createjstext.html#_originparams" class="tsd-kind-icon">_origin<wbr>Params</a>
+								<a href="createjstext.html#_createjsparams" class="tsd-kind-icon">_createjs<wbr>Params</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-protected">
 								<a href="createjstext.html#_pixidata" class="tsd-kind-icon">_pixi<wbr>Data</a>
@@ -606,19 +606,20 @@
 				<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
 			</ul>
 			<ul class="tsd-legend">
-				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
-				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-interface"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
 				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
 			</ul>
 			<ul class="tsd-legend">
-				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
 			</ul>
 			<ul class="tsd-legend">
-				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>

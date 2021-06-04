@@ -53,9 +53,6 @@ const P = createjs.Sprite;
  * [[https://createjs.com/docs/easeljs/classes/Sprite.html | createjs.Sprite]]
  */
 export class CreatejsSprite extends mixinCreatejsDisplayObject<PixiSprite, ICreatejsSpriteParam>(createjs.Sprite) {
-	protected _createjsParams: ICreatejsSpriteParam;
-	protected _pixiData: IPixiSpriteData;
-	
 	constructor(...args: any[]) {
 		super(...args);
 		
@@ -64,7 +61,7 @@ export class CreatejsSprite extends mixinCreatejsDisplayObject<PixiSprite, ICrea
 		P.apply(this, args);
 	}
 	
-	protected _initForPixi() {
+	private _initForPixi() {
 		this._createjsParams = createCreatejsSpriteParams();
 		this._pixiData = createPixiSpriteData(this);
 	}
@@ -83,14 +80,6 @@ export class CreatejsSprite extends mixinCreatejsDisplayObject<PixiSprite, ICrea
 		const texture = new Texture(baseTexture, frame.rect);
 		
 		this._pixiData.instance.texture = texture;
-	}
-	
-	get pixi() {
-		return this._pixiData.instance;
-	}
-	
-	updateForPixi(e: ITickerData) {
-		return true;
 	}
 }
 

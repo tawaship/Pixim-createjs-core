@@ -59,27 +59,35 @@ function createPixiMovieClipData(cjs: CreatejsMovieClip): IPixiMoveClipData {
 /**
  * @ignore
  */
-let _funcFlag = true;
-
-/**
- * @ignore
- */
 const P = createjs.Bitmap;
 
 /**
  * [[https://createjs.com/docs/easeljs/classes/MovieClip.html | createjs.MovieClip]]
  */
 export class CreatejsMovieClip extends mixinCreatejsDisplayObject<PixiMovieClip, ICreatejsMovieClipParam>(createjs.MovieClip) {
-	protected _createjsParams: ICreatejsMovieClipParam;
-	protected _pixiData: IPixiMoveClipData;
-	public updateForPixi: (e: ITickerData) => boolean;
-	
 	constructor(...args: any[]) {
 		super(...args);
 		
 		this._initForPixi();
 		
 		P.apply(this, args);
+	}
+	
+	private _initForPixi() {
+		this._createjsParams = createCreatejsMovieClipParams();
+		this._pixiData = createPixiMovieClipData(this);
+	}
+	
+	initialize(...args: any[]) {
+		this._initForPixi();
+		
+		return super.initialize(...args);
+	}
+	
+	protected _updateForPixi(e: ITickerData) {
+		this._updateState();
+		
+		return updateDisplayObjectChildren(this, e);
 	}
 	
 	get filters() {
@@ -171,27 +179,6 @@ export class CreatejsMovieClip extends mixinCreatejsDisplayObject<PixiMovieClip,
 		this._createjsParams.filters = value;
 	}
 	
-	protected _initForPixi() {
-		this._createjsParams = createCreatejsMovieClipParams();
-		this._pixiData = createPixiMovieClipData(this);
-		
-		if (!_funcFlag) {
-			this.updateForPixi = this._updateForPixiUnsynched;
-		} else {
-			this.updateForPixi = this._updateForPixiSynched;
-		}
-	}
-	
-	initialize(...args: any[]) {
-		this._initForPixi();
-		
-		//if (!this._createjsEventManager) {
-		//	console.log(this instanceof createjs.MovieClip)
-		//	throw new Error
-		//}
-		return super.initialize(...args);
-	}
-	
 	addChild(child) {
 		this._pixiData.subInstance.addChild(child._pixiData.instance);
 		
@@ -220,24 +207,6 @@ export class CreatejsMovieClip extends mixinCreatejsDisplayObject<PixiMovieClip,
 		this._pixiData.subInstance.removeChildren();
 		
 		return super.removeAllChldren();
-	}
-	
-	get pixi() {
-		return this._pixiData.instance;
-	}
-	
-	static selectUpdateFunc(flag: boolean) {
-		_funcFlag = flag;
-	}
-	
-	protected _updateForPixiSynched(e: ITickerData) {
-		this._updateState();
-		
-		return updateDisplayObjectChildren(this, e);
-	}
-	
-	protected _updateForPixiUnsynched(e: ITickerData) {
-		return this._tick(e);
 	}
 }
 

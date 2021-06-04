@@ -476,10 +476,6 @@ function createPixiMovieClipData(cjs) {
 /**
  * @ignore
  */
-let _funcFlag = true;
-/**
- * @ignore
- */
 const P = createjs.Bitmap;
 /**
  * [[https://createjs.com/docs/easeljs/classes/MovieClip.html | createjs.MovieClip]]
@@ -489,6 +485,18 @@ class CreatejsMovieClip extends mixinCreatejsDisplayObject(createjs.MovieClip) {
         super(...args);
         this._initForPixi();
         P.apply(this, args);
+    }
+    _initForPixi() {
+        this._createjsParams = createCreatejsMovieClipParams();
+        this._pixiData = createPixiMovieClipData(this);
+    }
+    initialize(...args) {
+        this._initForPixi();
+        return super.initialize(...args);
+    }
+    _updateForPixi(e) {
+        this._updateState();
+        return updateDisplayObjectChildren(this, e);
     }
     get filters() {
         return this._createjsParams.filters;
@@ -561,24 +569,6 @@ class CreatejsMovieClip extends mixinCreatejsDisplayObject(createjs.MovieClip) {
         }
         this._createjsParams.filters = value;
     }
-    _initForPixi() {
-        this._createjsParams = createCreatejsMovieClipParams();
-        this._pixiData = createPixiMovieClipData(this);
-        if (!_funcFlag) {
-            this.updateForPixi = this._updateForPixiUnsynched;
-        }
-        else {
-            this.updateForPixi = this._updateForPixiSynched;
-        }
-    }
-    initialize(...args) {
-        this._initForPixi();
-        //if (!this._createjsEventManager) {
-        //	console.log(this instanceof createjs.MovieClip)
-        //	throw new Error
-        //}
-        return super.initialize(...args);
-    }
     addChild(child) {
         this._pixiData.subInstance.addChild(child._pixiData.instance);
         return super.addChild(child);
@@ -598,19 +588,6 @@ class CreatejsMovieClip extends mixinCreatejsDisplayObject(createjs.MovieClip) {
     removeAllChldren() {
         this._pixiData.subInstance.removeChildren();
         return super.removeAllChldren();
-    }
-    get pixi() {
-        return this._pixiData.instance;
-    }
-    static selectUpdateFunc(flag) {
-        _funcFlag = flag;
-    }
-    _updateForPixiSynched(e) {
-        this._updateState();
-        return updateDisplayObjectChildren(this, e);
-    }
-    _updateForPixiUnsynched(e) {
-        return this._tick(e);
     }
 }
 // temporary prototype
@@ -677,12 +654,6 @@ class CreatejsSprite extends mixinCreatejsDisplayObject(createjs.Sprite) {
         const baseTexture = pixi_js.BaseTexture.from(frame.image);
         const texture = new pixi_js.Texture(baseTexture, frame.rect);
         this._pixiData.instance.texture = texture;
-    }
-    get pixi() {
-        return this._pixiData.instance;
-    }
-    updateForPixi(e) {
-        return true;
     }
 }
 // temporary prototype
@@ -765,14 +736,8 @@ class CreatejsShape extends mixinCreatejsDisplayObject(createjs.Shape) {
         }
         this._createjsParams.graphics = value;
     }
-    get pixi() {
-        return this._pixiData.instance;
-    }
     get masked() {
         return this._pixiData.masked;
-    }
-    updateForPixi(e) {
-        return true;
     }
 }
 // temporary prototype
@@ -1027,12 +992,6 @@ class CreatejsGraphics extends mixinCreatejsDisplayObject(createjs.Graphics) {
         this._pixiData.instance.drawRegularPolygon(x, y, radius, sides, angle * DEG_TO_RAD$1);
         return super.drawPolyStar(x, y, radius, sides, pointSize, angle);
     }
-    get pixi() {
-        return this._pixiData.instance;
-    }
-    updateForPixi(e) {
-        return true;
-    }
 }
 // alias
 Object.defineProperties(CreatejsGraphics.prototype, {
@@ -1254,12 +1213,6 @@ class CreatejsText extends mixinCreatejsDisplayObject(createjs.Text) {
         this._align(this.textAlign);
         this._createjsParams.lineWidth = width;
     }
-    get pixi() {
-        return this._pixiData.instance;
-    }
-    updateForPixi(e) {
-        return true;
-    }
 }
 // temporary prototype
 Object.defineProperties(CreatejsText.prototype, {
@@ -1273,34 +1226,6 @@ Object.defineProperties(CreatejsText.prototype, {
     }
 });
 
-const createjs$1 = Object.assign(createjs, {
-    Stage: CreatejsStage,
-    StageGL: CreatejsStageGL,
-    MovieClip: CreatejsMovieClip,
-    Sprite: CreatejsSprite,
-    Shape: CreatejsShape,
-    Bitmap: CreatejsBitmap,
-    Graphics: CreatejsGraphics,
-    Text: CreatejsText
-});
-
-/**
- * @ignore
- */
-let _isPrepare = false;
-/**
- * Prepare createjs content published with Adobe Animate.
- */
-function prepareAnimate(options = {}) {
-    if (_isPrepare) {
-        return;
-    }
-    CreatejsMovieClip.selectUpdateFunc(options.useSynchedTimeline);
-    if (options.useMotionGuide) {
-        window.createjs.MotionGuidePlugin.install();
-    }
-    _isPrepare = true;
-}
 /**
  * Load assets of createjs content published with Adobe Animate.
  *
@@ -1308,7 +1233,7 @@ function prepareAnimate(options = {}) {
  * @param basepath Directory path of Animate content.
  */
 function loadAssetAsync(id, basepath, options = {}) {
-    const comp = window.AdobeAn.getComposition(id);
+    const comp = AdobeAn.getComposition(id);
     if (!comp) {
         throw new Error('no composition');
     }
@@ -1320,8 +1245,8 @@ function loadAssetAsync(id, basepath, options = {}) {
         if (basepath) {
             basepath = (basepath + '/').replace(/([^\:])\/\//, "$1/");
         }
-        const loader = new window.createjs.LoadQueue(false, basepath);
-        loader.installPlugin(window.createjs.Sound);
+        const loader = new createjs.LoadQueue(false, basepath);
+        loader.installPlugin(createjs.Sound);
         loader.addEventListener('fileload', function (evt) {
             handleFileLoad(evt, comp);
         });
@@ -1341,7 +1266,7 @@ function loadAssetAsync(id, basepath, options = {}) {
         const queue = evt.target;
         const ssMetadata = lib.ssMetadata;
         for (let i = 0; i < ssMetadata.length; i++) {
-            ss[ssMetadata[i].name] = new window.createjs.SpriteSheet({
+            ss[ssMetadata[i].name] = new createjs.SpriteSheet({
                 images: [
                     queue.getResult(ssMetadata[i].name)
                 ],
@@ -1351,20 +1276,18 @@ function loadAssetAsync(id, basepath, options = {}) {
         return lib;
     });
 }
-function initializeAnimate(obj = {}) {
-    window.createjs.Stage = CreatejsStage;
-    window.createjs.StageGL = CreatejsStageGL;
-    window.createjs.MovieClip = CreatejsMovieClip;
-    window.createjs.Sprite = CreatejsSprite;
-    window.createjs.Shape = CreatejsShape;
-    window.createjs.Bitmap = CreatejsBitmap;
-    window.createjs.Graphics = CreatejsGraphics;
-    window.createjs.Text = CreatejsText;
-    window.createjs.ButtonHelper = CreatejsButtonHelper;
-    for (let i in obj) {
-        window.createjs[i] = obj[i];
-    }
-}
+// overrides
+createjs.Stage = CreatejsStage;
+createjs.StageGL = CreatejsStageGL;
+createjs.MovieClip = CreatejsMovieClip;
+createjs.Sprite = CreatejsSprite;
+createjs.Shape = CreatejsShape;
+createjs.Bitmap = CreatejsBitmap;
+createjs.Graphics = CreatejsGraphics;
+createjs.Text = CreatejsText;
+createjs.ButtonHelper = CreatejsButtonHelper;
+// install plugins
+createjs.MotionGuidePlugin.install();
 /**
  * @ignore
  */
@@ -1376,10 +1299,10 @@ function handleFileLoad(evt, comp) {
 }
 
 Object.defineProperty(exports, 'PixiPoint', {
-    enumerable: true,
-    get: function () {
-        return pixi_js.Point;
-    }
+	enumerable: true,
+	get: function () {
+		return pixi_js.Point;
+	}
 });
 exports.CreatejsBitmap = CreatejsBitmap;
 exports.CreatejsButtonHelper = CreatejsButtonHelper;
@@ -1400,11 +1323,9 @@ exports.PixiText = PixiText;
 exports.PixiTextContainer = PixiTextContainer;
 exports.createCreatejsParams = createCreatejsParams;
 exports.createPixiData = createPixiData;
-exports.createjs = createjs$1;
-exports.initializeAnimate = initializeAnimate;
+exports.createjs = createjs;
 exports.loadAssetAsync = loadAssetAsync;
 exports.mixinCreatejsDisplayObject = mixinCreatejsDisplayObject;
 exports.mixinPixiContainer = mixinPixiContainer;
-exports.prepareAnimate = prepareAnimate;
 exports.updateDisplayObjectChildren = updateDisplayObjectChildren;
 //# sourceMappingURL=pixi-animate-core.cjs.js.map
