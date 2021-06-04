@@ -1,6 +1,6 @@
 # @tawaship/pixi-animate-core
 
-A module for processing the content published by Adobe Animate with "[pixi.js](https://github.com/pixijs/pixi.js)".
+A module for processing the content created by Adobe Animate with "[pixi.js](https://github.com/pixijs/pixi.js)".
 
 **This plugin is a core module, not intended to run alone.**
 

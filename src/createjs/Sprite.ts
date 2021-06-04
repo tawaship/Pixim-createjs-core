@@ -1,6 +1,6 @@
 import { Sprite, Texture, BaseTexture } from 'pixi.js';
 import { createjs } from './alias';
-import { createPixiData, createCreatejsParams, IPixiData, ICreatejsParam, ITickerData } from './core';
+import { createPixiData, createCreatejsParams, IPixiData, ICreatejsParam, ITickerData, TCreatejsMask, IExpandedCreatejsDisplayObject } from './core';
 import { createObject, DEG_TO_RAD } from './utils';
 import { EventManager, TCreatejsInteractionEvent, ICreatejsInteractionEventDelegate } from './EventManager';
 import { CreatejsButtonHelper } from './ButtonHelper';
@@ -44,7 +44,7 @@ export interface IPixiSpriteData extends IPixiData<PixiSprite> {
 function createPixiSpriteData(cjs: CreatejsSprite | {}): IPixiSpriteData {
 	const pixi = new PixiSprite(cjs);
 	
-	return createPixiData(pixi, pixi.anchor)
+	return createPixiData<PixiSprite>(pixi, pixi.anchor)
 }
 
 /**
@@ -55,7 +55,7 @@ const P = createjs.Sprite;
 /**
  * [[https://createjs.com/docs/easeljs/classes/Sprite.html | createjs.Sprite]]
  */
-export class CreatejsSprite extends createjs.Sprite {
+export class CreatejsSprite extends createjs.Sprite implements IExpandedCreatejsDisplayObject {
 	protected _pixiData: IPixiSpriteData;
 	protected _createjsParams: ICreatejsSpriteParam;
 	private _createjsEventManager: EventManager;
@@ -63,19 +63,17 @@ export class CreatejsSprite extends createjs.Sprite {
 	constructor(...args: any[]) {
 		super(...args);
 		
-		this._initForPixi();
+		this._pixiData = createPixiSpriteData(this);
+		this._createjsParams = createCreatejsSpriteParams();
+		this._createjsEventManager = new EventManager(this);
 		
 		P.apply(this, args);
 	}
 	
-	private _initForPixi() {
+	initialize(...args: any[]) {
 		this._pixiData = createPixiSpriteData(this);
 		this._createjsParams = createCreatejsSpriteParams();
 		this._createjsEventManager = new EventManager(this);
-	}
-	
-	initialize(...args: any[]) {
-		this._initForPixi();
 		
 		return super.initialize(...args);
 	}
@@ -221,7 +219,7 @@ export class CreatejsSprite extends createjs.Sprite {
 		return this._createjsParams.mask;
 	}
 	
-	set mask(value: CreatejsShape | null) {
+	set mask(value: TCreatejsMask) {
 		if (value) {
 			value.masked.push(this._pixiData.instance);
 			this._pixiData.instance.mask = value.pixi;

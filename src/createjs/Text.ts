@@ -1,6 +1,6 @@
 import { Container, Text } from 'pixi.js';
 import { createjs } from './alias';
-import { createPixiData, createCreatejsParams, IPixiData, ICreatejsParam, ITickerData } from './core';
+import { createPixiData, createCreatejsParams, IPixiData, ICreatejsParam, ITickerData, TCreatejsMask, IExpandedCreatejsDisplayObject } from './core';
 import { createObject, DEG_TO_RAD } from './utils';
 import { EventManager, TCreatejsInteractionEvent, ICreatejsInteractionEventDelegate } from './EventManager';
 import { CreatejsButtonHelper } from './ButtonHelper';
@@ -34,11 +34,18 @@ export class PixiTextContainer extends Container {
 	}
 }
 
+export type TTextAlign = 'left' | 'center' | 'right';
+
+/**
+ * @ignore
+ */
+const DEF_ALIGN: TTextAlign = 'left';
+
 export interface ICreatejsTextParam extends ICreatejsParam {
 	text: string;
 	font: string;
 	color: string;
-	textAlign: string;
+	textAlign: TTextAlign;
 	lineHeight: number;
 	lineWidth: number;
 }
@@ -51,7 +58,7 @@ function createCreatejsTextParams(text: string, font: string, color: string): IC
 		text: text,
 		font: font,
 		color: color,
-		textAlign: 'left',
+		textAlign: DEF_ALIGN,
 		lineHeight: 0,
 		lineWidth: 0
 	});
@@ -67,7 +74,7 @@ export interface IPixiTextData extends IPixiData<PixiTextContainer> {
 function createPixiTextData(cjs: CreatejsText, text: PixiText): IPixiTextData {
 	const pixi = new PixiTextContainer(cjs, text);
 	
-	return createPixiData(pixi, pixi.pivot);
+	return createPixiData<PixiTextContainer>(pixi, pixi.pivot);
 }
 
 export interface IParsedText {
@@ -84,7 +91,7 @@ const P = createjs.Text;
 /**
  * [[https://createjs.com/docs/easeljs/classes/Text.html | createjs.Text]]
  */
-export class CreatejsText extends createjs.Text {
+export class CreatejsText extends createjs.Text implements IExpandedCreatejsDisplayObject {
 	protected _pixiData: IPixiTextData;
 	protected _createjsParams: ICreatejsTextParam;
 	private _createjsEventManager: EventManager;
@@ -92,12 +99,6 @@ export class CreatejsText extends createjs.Text {
 	constructor(text: string, font: string, color: string = '#000000', ...args: any[]) {
 		super(text, font, color, ...args);
 		
-		this._initForPixi(text, font, color, ...args);
-		
-		P.call(this, text, font, color, ...args);
-	}
-	
-	private _initForPixi(text: string, font: string, color: string = '#000000', ...args: any[]) {
 		this._createjsParams = createCreatejsTextParams(text, font, color);
 		
 		const _font = this._parseFont(font);
@@ -114,6 +115,8 @@ export class CreatejsText extends createjs.Text {
 		this._pixiData.instance.addChild(t);
 		
 		this._createjsEventManager = new EventManager(this);
+		
+		P.call(this, text, font, color, ...args);
 	}
 	
 	get pixi() {
@@ -257,7 +260,7 @@ export class CreatejsText extends createjs.Text {
 		return this._createjsParams.mask;
 	}
 	
-	set mask(value: CreatejsShape | null) {
+	set mask(value: TCreatejsMask) {
 		if (value) {
 			value.masked.push(this._pixiData.instance);
 			this._pixiData.instance.mask = value.pixi;
@@ -283,15 +286,15 @@ export class CreatejsText extends createjs.Text {
 		this._createjsParams.text = text;
 	}
 	
-	private _parseFont(font): IParsedText {
+	private _parseFont(font: string): IParsedText {
 		const p = font.split(' ');
 		
 		let w = 'normal';
-		let s = p.shift();
+		let s = p.shift() || '';
 		
 		if (s.indexOf('px') === -1) {
 			w = s;
-			s = p.shift();
+			s = p.shift() || '';
 		}
 		
 		return {
@@ -313,7 +316,7 @@ export class CreatejsText extends createjs.Text {
 		this._createjsParams.font = font;
 	}
 	
-	private _parseColor(color) {
+	private _parseColor(color: string) {
 		return parseInt(color.slice(1), 16);
 	}
 	
@@ -327,7 +330,7 @@ export class CreatejsText extends createjs.Text {
 		this._createjsParams.color = color;
 	}
 	
-	private _align(align) {
+	private _align(align: TTextAlign) {
 		if (align === 'left') {
 			this._pixiData.instance.text.x = 0;
 			return;

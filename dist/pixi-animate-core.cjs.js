@@ -1,5 +1,5 @@
 /*!
- * @tawaship/pixi-animate-core - v2.1.2
+ * @tawaship/pixi-animate-core - v3.0.0
  * 
  * @require pixi.js v5.3.2
  * @author tawaship (makazu.mori@gmail.com)
@@ -336,23 +336,16 @@ const P = createjs.MovieClip;
  */
 class CreatejsMovieClip extends createjs.MovieClip {
     constructor(...args) {
-        super(...args);
-        this._initForPixi();
-        P.apply(this, args);
-        setTimeout(() => {
-            for (let i in this.children) {
-                console.log(this.children[i], this.children[i].isVisible());
-            }
-        }, 1000);
-        //this.constructor.apply(this. args)
-    }
-    _initForPixi() {
+        super();
         this._pixiData = createPixiMovieClipData(this);
         this._createjsParams = createCreatejsMovieClipParams();
         this._createjsEventManager = new EventManager(this);
+        P.apply(this, args);
     }
     initialize(...args) {
-        this._initForPixi();
+        this._pixiData = createPixiMovieClipData(this);
+        this._createjsParams = createCreatejsMovieClipParams();
+        this._createjsEventManager = new EventManager(this);
         return super.initialize(...args);
     }
     get pixi() {
@@ -543,7 +536,7 @@ class CreatejsMovieClip extends createjs.MovieClip {
                     v.x += n.x;
                     v.y += n.y;
                 }
-                nc.filters = null;
+                nc.filters = [];
                 nc.cacheAsBitmap = false;
                 this._pixiData.subInstance = o;
             }
@@ -551,15 +544,15 @@ class CreatejsMovieClip extends createjs.MovieClip {
         this._createjsParams.filters = value;
     }
     addChild(child) {
-        this._pixiData.subInstance.addChild(child._pixiData.instance);
+        this._pixiData.subInstance.addChild(child.pixi);
         return super.addChild(child);
     }
     addChildAt(child, index) {
-        this._pixiData.subInstance.addChildAt(child._pixiData.instance, index);
+        this._pixiData.subInstance.addChildAt(child.pixi, index);
         return super.addChildAt(child, index);
     }
     removeChild(child) {
-        this._pixiData.subInstance.removeChild(child._pixiData.instance);
+        this._pixiData.subInstance.removeChild(child.pixi);
         return super.removeChild(child);
     }
     removeChildAt(index) {
@@ -618,16 +611,15 @@ const P$1 = createjs.Sprite;
 class CreatejsSprite extends createjs.Sprite {
     constructor(...args) {
         super(...args);
-        this._initForPixi();
-        P$1.apply(this, args);
-    }
-    _initForPixi() {
         this._pixiData = createPixiSpriteData(this);
         this._createjsParams = createCreatejsSpriteParams();
         this._createjsEventManager = new EventManager(this);
+        P$1.apply(this, args);
     }
     initialize(...args) {
-        this._initForPixi();
+        this._pixiData = createPixiSpriteData(this);
+        this._createjsParams = createCreatejsSpriteParams();
+        this._createjsEventManager = new EventManager(this);
         return super.initialize(...args);
     }
     get pixi() {
@@ -790,7 +782,7 @@ class PixiShape extends pixi_js.Container {
  */
 function createCreatejsShapeParams(graphics) {
     return Object.assign(createCreatejsParams(), {
-        graphics: graphics
+        graphics
     });
 }
 /**
@@ -812,16 +804,15 @@ const P$2 = createjs.Shape;
 class CreatejsShape extends createjs.Shape {
     constructor(...args) {
         super(...args);
-        this._initForPixi();
-        P$2.apply(this, args);
-    }
-    _initForPixi() {
         this._pixiData = createPixiShapeData(this);
         this._createjsParams = createCreatejsShapeParams(null);
         this._createjsEventManager = new EventManager(this);
+        P$2.apply(this, args);
     }
     initialize(...args) {
-        this._initForPixi();
+        this._pixiData = createPixiShapeData(this);
+        this._createjsParams = createCreatejsShapeParams(null);
+        this._createjsEventManager = new EventManager(this);
         return super.initialize(...args);
     }
     get pixi() {
@@ -1020,16 +1011,15 @@ const P$3 = createjs.Bitmap;
 class CreatejsBitmap extends createjs.Bitmap {
     constructor(...args) {
         super(...args);
-        this._initForPixi();
-        P$3.apply(this, args);
-    }
-    _initForPixi() {
         this._pixiData = createPixiBitmapData(this);
         this._createjsParams = createCreatejsBitmapParams();
         this._createjsEventManager = new EventManager(this);
+        P$3.apply(this, args);
     }
     initialize(...args) {
-        this._initForPixi();
+        this._pixiData = createPixiBitmapData(this);
+        this._createjsParams = createCreatejsBitmapParams();
+        this._createjsEventManager = new EventManager(this);
         const res = super.initialize(...args);
         const texture = pixi_js.Texture.from(this.image);
         this._pixiData.instance.texture = texture;
@@ -1192,7 +1182,7 @@ function createCreatejsGraphicsParams() {
 /**
  * @ignore
  */
-function createGraphicsPixiData(cjs) {
+function createPixiGraphicsData(cjs) {
     const pixi = new PixiGraphics(cjs);
     return Object.assign(createPixiData(pixi, pixi.pivot), {
         strokeFill: 0,
@@ -1233,19 +1223,18 @@ const P$4 = createjs.Graphics;
 class CreatejsGraphics extends createjs.Graphics {
     constructor(...args) {
         super(...args);
-        this._initForPixi();
+        this._pixiData = createPixiGraphicsData(this);
+        this._createjsParams = createCreatejsGraphicsParams();
+        this._createjsEventManager = new EventManager(this);
         P$4.apply(this, args);
         this._pixiData.instance.beginFill(0xFFEEEE, 1);
         this._pixiData.strokeFill = 0;
         this._pixiData.strokeAlpha = 1;
     }
-    _initForPixi() {
-        this._pixiData = createGraphicsPixiData(this);
+    initialize(...args) {
+        this._pixiData = createPixiGraphicsData(this);
         this._createjsParams = createCreatejsGraphicsParams();
         this._createjsEventManager = new EventManager(this);
-    }
-    initialize(...args) {
-        this._initForPixi();
         return super.initialize(...args);
     }
     get pixi() {
@@ -1371,6 +1360,7 @@ class CreatejsGraphics extends createjs.Graphics {
         }
         this._createjsParams.mask = value;
     }
+    // path methods
     moveTo(x, y) {
         if (this._pixiData.instance.clone().endFill().containsPoint({ x: x, y: y })) {
             this._pixiData.instance.beginHole();
@@ -1381,37 +1371,73 @@ class CreatejsGraphics extends createjs.Graphics {
         this._pixiData.instance.moveTo(x, y);
         return super.moveTo(x, y);
     }
+    mt(x, y) {
+        return this.moveTo(x, y);
+    }
     lineTo(x, y) {
         this._pixiData.instance.lineTo(x, y);
         return super.lineTo(x, y);
+    }
+    lt(x, y) {
+        return this.lineTo(x, y);
     }
     arcTo(x1, y1, x2, y2, radius) {
         this._pixiData.instance.arcTo(x1, y1, x2, y2, radius);
         return super.arcTo(x1, y1, x2, y2, radius);
     }
+    at(x1, y1, x2, y2, radius) {
+        return this.arcTo(x1, y1, x2, y2, radius);
+    }
     arc(x, y, radius, startAngle, endAngle, anticlockwise) {
         this._pixiData.instance.arc(x, y, radius, startAngle, endAngle, anticlockwise);
         return super.arc(x, y, radius, startAngle, endAngle, anticlockwise);
+    }
+    a(x, y, radius, startAngle, endAngle, anticlockwise) {
+        return this.arc(x, y, radius, startAngle, endAngle, anticlockwise);
     }
     quadraticCurveTo(cpx, cpy, x, y) {
         this._pixiData.instance.quadraticCurveTo(cpx, cpy, x, y);
         return super.quadraticCurveTo(cpx, cpy, x, y);
     }
+    qt(cpx, cpy, x, y) {
+        return this.quadraticCurveTo(cpx, cpy, x, y);
+    }
     bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y) {
         this._pixiData.instance.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
         return super.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
+    }
+    bt(cp1x, cp1y, cp2x, cp2y, x, y) {
+        return this.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
+    }
+    curveTo(cp1x, cp1y, cp2x, cp2y, x, y) {
+        return this.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
     }
     rect(x, y, w, h) {
         this._pixiData.instance.drawRect(x, y, w, h);
         return super.rect(x, y, w, h);
     }
+    r(x, y, w, h) {
+        return this.rect(x, y, w, h);
+    }
+    drawRect(x, y, w, h) {
+        return this.rect(x, y, w, h);
+    }
+    dr(x, y, w, h) {
+        return this.rect(x, y, w, h);
+    }
     closePath() {
         this._pixiData.instance.closePath();
         return super.closePath();
     }
+    cp() {
+        return this.closePath();
+    }
     clear() {
         this._pixiData.instance.clear();
         return super.clear();
+    }
+    c() {
+        return this.clear();
     }
     _parseColor(color) {
         const res = {
@@ -1436,9 +1462,15 @@ class CreatejsGraphics extends createjs.Graphics {
         this._pixiData.instance.beginFill(c.color, c.alpha);
         return super.beginFill(color);
     }
+    f(color) {
+        return this.beginFill(color);
+    }
     endFill() {
         this._pixiData.instance.endFill();
         return super.endFill();
+    }
+    ef() {
+        return this.endFill();
     }
     setStrokeStyle(thickness, caps, joints, miterLimit, ignoreScale) {
         this._pixiData.instance.lineTextureStyle({
@@ -1447,9 +1479,12 @@ class CreatejsGraphics extends createjs.Graphics {
             alpha: this._pixiData.strokeAlpha,
             cap: (caps in LineCap) ? LineCap[caps] : LineCap[0],
             join: (joints in LineJoin) ? LineJoin[joints] : LineJoin[0],
-            miterLimit: miterLimit
+            miterLimit
         });
         return super.setStrokeStyle(thickness, caps, joints, miterLimit, ignoreScale);
+    }
+    ss(thickness, caps, joints, miterLimit, ignoreScale) {
+        return this.setStrokeStyle(thickness, caps, joints, miterLimit, ignoreScale);
     }
     beginStroke(color) {
         const c = this._parseColor(color);
@@ -1457,86 +1492,38 @@ class CreatejsGraphics extends createjs.Graphics {
         this._pixiData.strokeAlpha = c.alpha;
         return super.beginStroke(color);
     }
+    s(color) {
+        return this.beginStroke(color);
+    }
     drawRoundRect(x, y, w, h, radius) {
         this._pixiData.instance.drawRoundedRect(x, y, w, h, radius);
         return super.drawRoundRect(x, y, w, h, radius);
+    }
+    rr(x, y, w, h, radius) {
+        return this.drawRoundRect(x, y, w, h, radius);
     }
     drawCircle(x, y, radius) {
         this._pixiData.instance.drawCircle(x, y, radius);
         return super.drawCircle(x, y, radius);
     }
+    dc(x, y, radius) {
+        return this.drawCircle(x, y, radius);
+    }
     drawEllipse(x, y, w, h) {
         this._pixiData.instance.drawEllipse(x, y, w, h);
         return super.drawEllipse(x, y, w, h);
+    }
+    de(x, y, w, h) {
+        return this.drawEllipse(x, y, w, h);
     }
     drawPolyStar(x, y, radius, sides, pointSize, angle) {
         this._pixiData.instance.drawRegularPolygon(x, y, radius, sides, angle * DEG_TO_RAD);
         return super.drawPolyStar(x, y, radius, sides, pointSize, angle);
     }
-}
-// alias
-Object.defineProperties(CreatejsGraphics.prototype, {
-    curveTo: {
-        value: CreatejsGraphics.prototype.quadraticCurveTo
-    },
-    drawRect: {
-        value: CreatejsGraphics.prototype.rect
-    },
-    mt: {
-        value: CreatejsGraphics.prototype.moveTo
-    },
-    lt: {
-        value: CreatejsGraphics.prototype.lineTo
-    },
-    at: {
-        value: CreatejsGraphics.prototype.arcTo
-    },
-    bt: {
-        value: CreatejsGraphics.prototype.bezierCurveTo
-    },
-    qt: {
-        value: CreatejsGraphics.prototype.quadraticCurveTo
-    },
-    a: {
-        value: CreatejsGraphics.prototype.arc
-    },
-    r: {
-        value: CreatejsGraphics.prototype.rect
-    },
-    cp: {
-        value: CreatejsGraphics.prototype.closePath
-    },
-    c: {
-        value: CreatejsGraphics.prototype.clear
-    },
-    f: {
-        value: CreatejsGraphics.prototype.beginFill
-    },
-    ef: {
-        value: CreatejsGraphics.prototype.endFill
-    },
-    ss: {
-        value: CreatejsGraphics.prototype.setStrokeStyle
-    },
-    s: {
-        value: CreatejsGraphics.prototype.beginStroke
-    },
-    dr: {
-        value: CreatejsGraphics.prototype.drawRect
-    },
-    rr: {
-        value: CreatejsGraphics.prototype.drawRoundRect
-    },
-    dc: {
-        value: CreatejsGraphics.prototype.drawCircle
-    },
-    de: {
-        value: CreatejsGraphics.prototype.drawEllipse
-    },
-    dp: {
-        value: CreatejsGraphics.prototype.drawPolyStar
+    dp(x, y, radius, sides, pointSize, angle) {
+        return this.drawPolyStar(x, y, radius, sides, pointSize, angle);
     }
-});
+}
 // temporary prototype
 Object.defineProperties(CreatejsGraphics.prototype, {
     _createjsParams: {
@@ -1544,7 +1531,7 @@ Object.defineProperties(CreatejsGraphics.prototype, {
         writable: true
     },
     _pixiData: {
-        value: createGraphicsPixiData(createObject(CreatejsGraphics.prototype)),
+        value: createPixiGraphicsData(createObject(CreatejsGraphics.prototype)),
         writable: true
     }
 });
@@ -1573,12 +1560,16 @@ class PixiTextContainer extends pixi_js.Container {
 /**
  * @ignore
  */
+const DEF_ALIGN = 'left';
+/**
+ * @ignore
+ */
 function createCreatejsTextParams(text, font, color) {
     return Object.assign(createCreatejsParams(), {
         text: text,
         font: font,
         color: color,
-        textAlign: 'left',
+        textAlign: DEF_ALIGN,
         lineHeight: 0,
         lineWidth: 0
     });
@@ -1600,10 +1591,6 @@ const P$5 = createjs.Text;
 class CreatejsText extends createjs.Text {
     constructor(text, font, color = '#000000', ...args) {
         super(text, font, color, ...args);
-        this._initForPixi(text, font, color, ...args);
-        P$5.call(this, text, font, color, ...args);
-    }
-    _initForPixi(text, font, color = '#000000', ...args) {
         this._createjsParams = createCreatejsTextParams(text, font, color);
         const _font = this._parseFont(font);
         const t = new PixiText(text, {
@@ -1616,6 +1603,7 @@ class CreatejsText extends createjs.Text {
         this._pixiData = createPixiTextData(this, t);
         this._pixiData.instance.addChild(t);
         this._createjsEventManager = new EventManager(this);
+        P$5.call(this, text, font, color, ...args);
     }
     get pixi() {
         return this._pixiData.instance;
@@ -1751,10 +1739,10 @@ class CreatejsText extends createjs.Text {
     _parseFont(font) {
         const p = font.split(' ');
         let w = 'normal';
-        let s = p.shift();
+        let s = p.shift() || '';
         if (s.indexOf('px') === -1) {
             w = s;
-            s = p.shift();
+            s = p.shift() || '';
         }
         return {
             fontWeight: w,

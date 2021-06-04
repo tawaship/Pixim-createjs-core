@@ -1,4 +1,4 @@
-import { TCreatejsObject } from './core';
+import { TCreatejsObject, IExpandedCreatejsDisplayObject } from './core';
 import { DisplayObject } from 'pixi.js';
 
 export type TCreatejsInteractionEvent = 'mousedown' | 'rollover' | 'rollout' | 'pressmove' | 'pressup';

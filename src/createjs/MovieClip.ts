@@ -1,7 +1,7 @@
-import { Container, filters } from 'pixi.js';
+import { DisplayObject, Container, filters } from 'pixi.js';
 import { createjs } from './alias';
 import { CreatejsColorFilter } from './ColorFilter';
-import { createPixiData, createCreatejsParams, IPixiData, ICreatejsParam, updateDisplayObjectChildren, ITickerData } from './core';
+import { createPixiData, createCreatejsParams, IPixiData, ICreatejsParam, updateDisplayObjectChildren, ITickerData, TCreatejsColorFilters, TCreatejsMask, IExpandedCreatejsDisplayObject } from './core';
 import { createObject, DEG_TO_RAD } from './utils';
 import { EventManager, TCreatejsInteractionEvent, ICreatejsInteractionEventDelegate } from './EventManager';
 import { CreatejsButtonHelper } from './ButtonHelper';
@@ -54,7 +54,7 @@ export interface IPixiMovieClipData extends IPixiData<PixiMovieClip> {
 function createPixiMovieClipData(cjs: CreatejsMovieClip): IPixiMovieClipData {
 	const pixi = new PixiMovieClip(cjs);
 	
-	return Object.assign(createPixiData(pixi, pixi.pivot), {
+	return Object.assign(createPixiData<PixiMovieClip>(pixi, pixi.pivot), {
 		subInstance: pixi
 	});
 }
@@ -67,32 +67,25 @@ const P = createjs.MovieClip;
 /**
  * [[https://createjs.com/docs/easeljs/classes/MovieClip.html | createjs.MovieClip]]
  */
-export class CreatejsMovieClip extends createjs.MovieClip {
+export class CreatejsMovieClip extends createjs.MovieClip implements IExpandedCreatejsDisplayObject {
 	protected _pixiData: IPixiMovieClipData;
 	protected _createjsParams: ICreatejsMovieClipParam;
 	private _createjsEventManager: EventManager;
 	
 	constructor(...args: any[]) {
-		super(...args);
+		super();
 		
-		this._initForPixi();
-		P.apply(this, args);
-		setTimeout(() => {
-			for (let i in this.children) {
-				console.log(this.children[i], this.children[i].isVisible())
-			}
-		}, 1000)
-		//this.constructor.apply(this. args)
-	}
-	
-	private _initForPixi() {
 		this._pixiData = createPixiMovieClipData(this);
 		this._createjsParams = createCreatejsMovieClipParams();
 		this._createjsEventManager = new EventManager(this);
+		
+		P.apply(this, args);
 	}
 	
 	initialize(...args: any[]) {
-		this._initForPixi();
+		this._pixiData = createPixiMovieClipData(this);
+		this._createjsParams = createCreatejsMovieClipParams();
+		this._createjsEventManager = new EventManager(this);
 		
 		return super.initialize(...args);
 	}
@@ -101,7 +94,7 @@ export class CreatejsMovieClip extends createjs.MovieClip {
 		return this._pixiData.instance;
 	}
 	
-	updateForPixi(e: ITickerData) {
+	updateForPixi(e: ITickerData): boolean {
 		this._updateState();
 		
 		return updateDisplayObjectChildren(this, e);
@@ -240,7 +233,7 @@ export class CreatejsMovieClip extends createjs.MovieClip {
 		return this._createjsParams.mask;
 	}
 	
-	set mask(value: CreatejsShape | null) {
+	set mask(value: TCreatejsMask) {
 		if (value) {
 			value.masked.push(this._pixiData.instance);
 			this._pixiData.instance.mask = value.pixi;
@@ -259,7 +252,7 @@ export class CreatejsMovieClip extends createjs.MovieClip {
 		return this._createjsParams.filters;
 	}
 	
-	set filters(value: CreatejsColorFilter[]) {
+	set filters(value: TCreatejsColorFilters) {
 		if (value) {
 			const list = [];
 			
@@ -334,7 +327,7 @@ export class CreatejsMovieClip extends createjs.MovieClip {
 					v.y += n.y;
 				}
 				
-				nc.filters = null;
+				nc.filters = [];
 				nc.cacheAsBitmap = false;
 				
 				this._pixiData.subInstance = o;
@@ -344,25 +337,25 @@ export class CreatejsMovieClip extends createjs.MovieClip {
 		this._createjsParams.filters = value;
 	}
 	
-	addChild(child) {
-		this._pixiData.subInstance.addChild(child._pixiData.instance);
+	addChild(child: IExpandedCreatejsDisplayObject) {
+		this._pixiData.subInstance.addChild(child.pixi);
 		
 		return super.addChild(child);
 	}
 	
-	addChildAt(child, index) {
-		this._pixiData.subInstance.addChildAt(child._pixiData.instance, index);
+	addChildAt(child: IExpandedCreatejsDisplayObject, index: number) {
+		this._pixiData.subInstance.addChildAt(child.pixi, index);
 		
 		return super.addChildAt(child, index);
 	}
 	
-	removeChild(child) {
-		this._pixiData.subInstance.removeChild(child._pixiData.instance);
+	removeChild(child: IExpandedCreatejsDisplayObject) {
+		this._pixiData.subInstance.removeChild(child.pixi);
 		
 		return super.removeChild(child);
 	}
 	
-	removeChildAt(index) {
+	removeChildAt(index: number) {
 		this._pixiData.subInstance.removeChildAt(index);
 		
 		return super.removeChildAt(index);

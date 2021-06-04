@@ -1,6 +1,6 @@
 import { DisplayObject, Container } from 'pixi.js';
 import { createjs } from './alias';
-import { createPixiData, createCreatejsParams, IPixiData, ICreatejsParam, ITickerData } from './core';
+import { createPixiData, createCreatejsParams, IPixiData, ICreatejsParam, ITickerData, TCreatejsMask, IExpandedCreatejsDisplayObject } from './core';
 import { CreatejsGraphics } from './Graphics';
 import { createObject, DEG_TO_RAD } from './utils';
 import { EventManager, TCreatejsInteractionEvent, ICreatejsInteractionEventDelegate } from './EventManager';
@@ -24,7 +24,7 @@ export class PixiShape extends Container {
 }
 
 export interface ICreatejsShapeParam extends ICreatejsParam {
-	graphics: CreatejsGraphics;
+	graphics: CreatejsGraphics | null;
 }
 
 /**
@@ -32,7 +32,7 @@ export interface ICreatejsShapeParam extends ICreatejsParam {
  */
 function createCreatejsShapeParams(graphics: CreatejsGraphics | null): ICreatejsShapeParam {
 	return Object.assign(createCreatejsParams(), {
-		graphics: graphics
+		graphics
 	});
 }
 
@@ -49,7 +49,7 @@ export interface IPixiShapeData extends IPixiData<PixiShape> {
 function createPixiShapeData(cjs: CreatejsShape): IPixiShapeData {
 	const pixi = new PixiShape(cjs);
 	
-	return Object.assign(createPixiData(pixi, pixi.pivot), {
+	return Object.assign(createPixiData<PixiShape>(pixi, pixi.pivot), {
 		masked: []
 	});
 }
@@ -62,7 +62,7 @@ const P = createjs.Shape;
 /**
  * [[https://createjs.com/docs/easeljs/classes/Shape.html | createjs.Shape]]
  */
-export class CreatejsShape extends createjs.Shape {
+export class CreatejsShape extends createjs.Shape implements IExpandedCreatejsDisplayObject {
 	protected _pixiData: IPixiShapeData;
 	protected _createjsParams: ICreatejsShapeParam;
 	private _createjsEventManager: EventManager;
@@ -70,19 +70,17 @@ export class CreatejsShape extends createjs.Shape {
 	constructor(...args: any[]) {
 		super(...args);
 		
-		this._initForPixi();
+		this._pixiData = createPixiShapeData(this);
+		this._createjsParams = createCreatejsShapeParams(null);
+		this._createjsEventManager = new EventManager(this);
 		
 		P.apply(this, args);
 	}
 	
-	private _initForPixi() {
+	initialize(...args: any[]) {
 		this._pixiData = createPixiShapeData(this);
 		this._createjsParams = createCreatejsShapeParams(null);
 		this._createjsEventManager = new EventManager(this);
-	}
-	
-	initialize(...args: any[]) {
-		this._initForPixi();
 		
 		return super.initialize(...args);
 	}
@@ -228,7 +226,7 @@ export class CreatejsShape extends createjs.Shape {
 		return this._createjsParams.mask;
 	}
 	
-	set mask(value: CreatejsShape | null) {
+	set mask(value: TCreatejsMask) {
 		if (value) {
 			value.masked.push(this._pixiData.instance);
 			this._pixiData.instance.mask = value.pixi;

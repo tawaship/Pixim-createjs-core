@@ -36,6 +36,10 @@ export function createPixiData<TPixiDisplayObject extends DisplayObject>(pixi: T
 	};
 }
 
+export type TCreatejsMask = CreatejsShape | null;
+
+export type TCreatejsColorFilters = CreatejsColorFilter[] | null;
+
 export interface ICreatejsParam {
 	x: number;
 	y: number;
@@ -50,7 +54,7 @@ export interface ICreatejsParam {
 	alpha: number;
 	_off: boolean;
 	mask: CreatejsShape | null;
-	filters: CreatejsColorFilter[] | null;
+	filters: TCreatejsColorFilters;
 }
 
 export type TCreatejsObject =

@@ -1,6 +1,6 @@
 import { Sprite, Texture } from 'pixi.js';
 import { createjs } from './alias';
-import { createPixiData, createCreatejsParams, IPixiData, ICreatejsParam, ITickerData } from './core';
+import { createPixiData, createCreatejsParams, IPixiData, ICreatejsParam, ITickerData, TCreatejsMask, IExpandedCreatejsDisplayObject } from './core';
 import { createObject, DEG_TO_RAD } from './utils';
 import { EventManager, TCreatejsInteractionEvent, ICreatejsInteractionEventDelegate } from './EventManager';
 import { CreatejsButtonHelper } from './ButtonHelper';
@@ -55,7 +55,7 @@ const P = createjs.Bitmap;
 /**
  * [[https://createjs.com/docs/easeljs/classes/Bitmap.html | createjs.Bitmap]]
  */
-export class CreatejsBitmap extends createjs.Bitmap {
+export class CreatejsBitmap extends createjs.Bitmap implements IExpandedCreatejsDisplayObject {
 	protected _pixiData: IPixiBitmapData;
 	protected _createjsParams: ICreatejsBitmapParam;
 	private _createjsEventManager: EventManager;
@@ -63,19 +63,17 @@ export class CreatejsBitmap extends createjs.Bitmap {
 	constructor(...args: any[]) {
 		super(...args);
 		
-		this._initForPixi();
+		this._pixiData = createPixiBitmapData(this);
+		this._createjsParams = createCreatejsBitmapParams();
+		this._createjsEventManager = new EventManager(this);
 		
 		P.apply(this, args);
 	}
 	
-	private _initForPixi() {
+	initialize(...args: any[]) {
 		this._pixiData = createPixiBitmapData(this);
 		this._createjsParams = createCreatejsBitmapParams();
 		this._createjsEventManager = new EventManager(this);
-	}
-	
-	initialize(...args: any[]) {
-		this._initForPixi();
 		
 		const res = super.initialize(...args);
 		const texture = Texture.from(this.image);
@@ -225,7 +223,7 @@ export class CreatejsBitmap extends createjs.Bitmap {
 		return this._createjsParams.mask;
 	}
 	
-	set mask(value: CreatejsShape | null) {
+	set mask(value: TCreatejsMask) {
 		if (value) {
 			value.masked.push(this._pixiData.instance);
 			this._pixiData.instance.mask = value.pixi;
