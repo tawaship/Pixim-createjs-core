@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>ICreatejsInteractionEventData | @tawaship/pixi-animate-core - v2.1.2</title>
+	<title>IExpandedCreatejsDisplayObject | @tawaship/pixi-animate-core - v2.1.2</title>
 	<meta name="description" content="Documentation for @tawaship/pixi-animate-core - v2.1.2">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -55,10 +55,10 @@
 					<a href="../modules.html">@tawaship/pixi-animate-core - v2.1.2</a>
 				</li>
 				<li>
-					<a href="icreatejsinteractioneventdata.html">ICreatejsInteractionEventData</a>
+					<a href="iexpandedcreatejsdisplayobject.html">IExpandedCreatejsDisplayObject</a>
 				</li>
 			</ul>
-			<h1>Interface ICreatejsInteractionEventData</h1>
+			<h1>Interface IExpandedCreatejsDisplayObject</h1>
 		</div>
 	</div>
 </header>
@@ -69,7 +69,12 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">ICreatejsInteractionEventData</span>
+						<span class="tsd-signature-type">TCreatejsDisplayObject</span>
+						<ul class="tsd-hierarchy">
+							<li>
+								<span class="target">IExpandedCreatejsDisplayObject</span>
+							</li>
+						</ul>
 					</li>
 				</ul>
 			</section>
@@ -78,55 +83,36 @@
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
-							<h3>Properties</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="icreatejsinteractioneventdata.html#types" class="tsd-kind-icon">types</a></li>
-							</ul>
-						</section>
-						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="icreatejsinteractioneventdata.html#factory" class="tsd-kind-icon">factory</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="iexpandedcreatejsdisplayobject.html#updateforpixi" class="tsd-kind-icon">update<wbr>For<wbr>Pixi</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="types" class="tsd-anchor"></a>
-					<h3>types</h3>
-					<div class="tsd-signature tsd-kind-icon">types<span class="tsd-signature-symbol">:</span> <a href="../modules.html#tpixiinteractionevent" class="tsd-signature-type" data-tsd-kind="Type alias">TPixiInteractionEvent</a><span class="tsd-signature-symbol">[]</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/createjs/core.ts#L83">src/createjs/core.ts:83</a></li>
-						</ul>
-					</aside>
-				</section>
-			</section>
-			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
-					<a name="factory" class="tsd-anchor"></a>
-					<h3>factory</h3>
+					<a name="updateforpixi" class="tsd-anchor"></a>
+					<h3>update<wbr>For<wbr>Pixi</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-						<li class="tsd-signature tsd-kind-icon">factory<span class="tsd-signature-symbol">(</span>cb<span class="tsd-signature-symbol">: </span><a href="icreatejsinteractioneventdelegate.html" class="tsd-signature-type" data-tsd-kind="Interface">ICreatejsInteractionEventDelegate</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="ipixiinteractioneventdelegate.html" class="tsd-signature-type" data-tsd-kind="Interface">IPixiInteractionEventDelegate</a></li>
+						<li class="tsd-signature tsd-kind-icon">update<wbr>For<wbr>Pixi<span class="tsd-signature-symbol">(</span>e<span class="tsd-signature-symbol">: </span><a href="itickerdata.html" class="tsd-signature-type" data-tsd-kind="Interface">ITickerData</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/createjs/core.ts#L84">src/createjs/core.ts:84</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/createjs/core.ts#L86">src/createjs/core.ts:86</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>cb: <a href="icreatejsinteractioneventdelegate.html" class="tsd-signature-type" data-tsd-kind="Interface">ICreatejsInteractionEventDelegate</a></h5>
+									<h5>e: <a href="itickerdata.html" class="tsd-signature-type" data-tsd-kind="Interface">ITickerData</a></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="ipixiinteractioneventdelegate.html" class="tsd-signature-type" data-tsd-kind="Interface">IPixiInteractionEventDelegate</a></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -145,13 +131,10 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface">
-						<a href="icreatejsinteractioneventdata.html" class="tsd-kind-icon">ICreatejs<wbr>Interaction<wbr>Event<wbr>Data</a>
+						<a href="iexpandedcreatejsdisplayobject.html" class="tsd-kind-icon">IExpanded<wbr>Createjs<wbr>Display<wbr>Object</a>
 						<ul>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="icreatejsinteractioneventdata.html#types" class="tsd-kind-icon">types</a>
-							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface">
-								<a href="icreatejsinteractioneventdata.html#factory" class="tsd-kind-icon">factory</a>
+								<a href="iexpandedcreatejsdisplayobject.html#updateforpixi" class="tsd-kind-icon">update<wbr>For<wbr>Pixi</a>
 							</li>
 						</ul>
 					</li>
@@ -167,14 +150,13 @@
 		<h2>Legend</h2>
 		<div class="tsd-legend-group">
 			<ul class="tsd-legend">
-				<li class="tsd-kind-constructor tsd-parent-kind-interface"><span class="tsd-kind-icon">Constructor</span></li>
-				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
-			</ul>
-			<ul class="tsd-legend">
 				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
 				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
 				<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>

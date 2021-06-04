@@ -283,7 +283,7 @@ export class CreatejsText extends createjs.Text {
 		this._createjsParams.text = text;
 	}
 	
-	_parseFont(font): IParsedText {
+	private _parseFont(font): IParsedText {
 		const p = font.split(' ');
 		
 		let w = 'normal';
@@ -313,7 +313,7 @@ export class CreatejsText extends createjs.Text {
 		this._createjsParams.font = font;
 	}
 	
-	_parseColor(color) {
+	private _parseColor(color) {
 		return parseInt(color.slice(1), 16);
 	}
 	
@@ -327,7 +327,7 @@ export class CreatejsText extends createjs.Text {
 		this._createjsParams.color = color;
 	}
 	
-	_align(align) {
+	private _align(align) {
 		if (align === 'left') {
 			this._pixiData.instance.text.x = 0;
 			return;
