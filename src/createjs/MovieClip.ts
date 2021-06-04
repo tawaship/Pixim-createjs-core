@@ -84,7 +84,7 @@ export class CreatejsMovieClip extends mixinCreatejsDisplayObject<IPixiMoveClipD
 		return super.initialize(...args);
 	}
 	
-	protected _updateForPixi(e: ITickerData) {
+	updateForPixi(e: ITickerData) {
 		this._updateState();
 		
 		return updateDisplayObjectChildren(this, e);

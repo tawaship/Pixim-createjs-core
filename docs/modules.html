@@ -109,7 +109,6 @@
 								<li class="tsd-kind-interface"><a href="interfaces/ipixishapedata.html" class="tsd-kind-icon">IPixi<wbr>Shape<wbr>Data</a></li>
 								<li class="tsd-kind-interface"><a href="interfaces/ipixispritedata.html" class="tsd-kind-icon">IPixi<wbr>Sprite<wbr>Data</a></li>
 								<li class="tsd-kind-interface"><a href="interfaces/ipixitextdata.html" class="tsd-kind-icon">IPixi<wbr>Text<wbr>Data</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/iprepareoption.html" class="tsd-kind-icon">IPrepare<wbr>Option</a></li>
 								<li class="tsd-kind-interface"><a href="interfaces/itickerdata.html" class="tsd-kind-icon">ITicker<wbr>Data</a></li>
 							</ul>
 						</section>
@@ -132,11 +131,9 @@
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-function"><a href="modules.html#createcreatejsparams" class="tsd-kind-icon">create<wbr>Createjs<wbr>Params</a></li>
 								<li class="tsd-kind-function tsd-has-type-parameter"><a href="modules.html#createpixidata" class="tsd-kind-icon">create<wbr>Pixi<wbr>Data</a></li>
-								<li class="tsd-kind-function"><a href="modules.html#initializeanimate" class="tsd-kind-icon">initialize<wbr>Animate</a></li>
 								<li class="tsd-kind-function"><a href="modules.html#loadassetasync" class="tsd-kind-icon">load<wbr>Asset<wbr>Async</a></li>
 								<li class="tsd-kind-function tsd-has-type-parameter"><a href="modules.html#mixincreatejsdisplayobject" class="tsd-kind-icon">mixin<wbr>Createjs<wbr>Display<wbr>Object</a></li>
 								<li class="tsd-kind-function tsd-has-type-parameter"><a href="modules.html#mixinpixicontainer" class="tsd-kind-icon">mixin<wbr>Pixi<wbr>Container</a></li>
-								<li class="tsd-kind-function"><a href="modules.html#prepareanimate" class="tsd-kind-icon">prepare<wbr>Animate</a></li>
 								<li class="tsd-kind-function"><a href="modules.html#updatedisplayobjectchildren" class="tsd-kind-icon">update<wbr>Display<wbr>Object<wbr>Children</a></li>
 							</ul>
 						</section>
@@ -184,9 +181,14 @@
 					<div class="tsd-signature tsd-kind-icon">createjs<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/createjs/index.ts#L24">src/createjs/index.ts:24</a></li>
+							<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/createjs/alias.ts#L9">src/createjs/alias.ts:9</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>createjsオブジェクト</p>
+						</div>
+					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
@@ -212,7 +214,7 @@
 					<a name="createpixidata" class="tsd-anchor"></a>
 					<h3>create<wbr>Pixi<wbr>Data</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-has-type-parameter">
-						<li class="tsd-signature tsd-kind-icon">create<wbr>Pixi<wbr>Data&lt;TPixiContainer&gt;<span class="tsd-signature-symbol">(</span>pixi<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TPixiContainer</span>, regObj<span class="tsd-signature-symbol">: </span><a href="classes/pixipoint.html" class="tsd-signature-type" data-tsd-kind="Class">PixiPoint</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="interfaces/ipixidata.html" class="tsd-signature-type" data-tsd-kind="Interface">IPixiData</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TPixiContainer</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">create<wbr>Pixi<wbr>Data&lt;TPixiDisplayObject&gt;<span class="tsd-signature-symbol">(</span>pixi<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TPixiDisplayObject</span>, regObj<span class="tsd-signature-symbol">: </span><a href="classes/pixipoint.html" class="tsd-signature-type" data-tsd-kind="Class">PixiPoint</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="interfaces/ipixidata.html" class="tsd-signature-type" data-tsd-kind="Interface">IPixiData</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TPixiDisplayObject</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
@@ -224,47 +226,19 @@
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
 							<ul class="tsd-type-parameters">
 								<li>
-									<h4>TPixiContainer<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Container</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TPixiContainer</span><span class="tsd-signature-symbol">&gt;</span></h4>
+									<h4>TPixiDisplayObject<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">DisplayObject</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TPixiDisplayObject</span><span class="tsd-signature-symbol">&gt;</span></h4>
 								</li>
 							</ul>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>pixi: <span class="tsd-signature-type">TPixiContainer</span></h5>
+									<h5>pixi: <span class="tsd-signature-type">TPixiDisplayObject</span></h5>
 								</li>
 								<li>
 									<h5>regObj: <a href="classes/pixipoint.html" class="tsd-signature-type" data-tsd-kind="Class">PixiPoint</a></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="interfaces/ipixidata.html" class="tsd-signature-type" data-tsd-kind="Interface">IPixiData</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TPixiContainer</span><span class="tsd-signature-symbol">&gt;</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-function">
-					<a name="initializeanimate" class="tsd-anchor"></a>
-					<h3>initialize<wbr>Animate</h3>
-					<ul class="tsd-signatures tsd-kind-function">
-						<li class="tsd-signature tsd-kind-icon">initialize<wbr>Animate<span class="tsd-signature-symbol">(</span>obj<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{}</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/core.ts#L117">src/core.ts:117</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>obj: <span class="tsd-signature-symbol">{}</span><span class="tsd-signature-symbol"> = {}</span></h5>
-									<ul class="tsd-parameters">
-										<li class="tsd-parameter-index-signature">
-											<h5><span class="tsd-signature-symbol">[</span>name: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]: </span><span class="tsd-signature-type">any</span></h5>
-										</li>
-									</ul>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="interfaces/ipixidata.html" class="tsd-signature-type" data-tsd-kind="Interface">IPixiData</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TPixiDisplayObject</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -278,7 +252,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/core.ts#L61">src/core.ts:61</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/core.ts#L26">src/core.ts:26</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -312,7 +286,7 @@
 					<a name="mixincreatejsdisplayobject" class="tsd-anchor"></a>
 					<h3>mixin<wbr>Createjs<wbr>Display<wbr>Object</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-has-type-parameter">
-						<li class="tsd-signature tsd-kind-icon">mixin<wbr>Createjs<wbr>Display<wbr>Object&lt;TPixiContainer, TCreatejsParam, TBase&gt;<span class="tsd-signature-symbol">(</span>Base<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TBase</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span>prototype<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-type">TBase</span></li>
+						<li class="tsd-signature tsd-kind-icon">mixin<wbr>Createjs<wbr>Display<wbr>Object&lt;TPixiData, TCreatejsParam, TBase&gt;<span class="tsd-signature-symbol">(</span>Base<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TBase</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span>prototype<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-type">TBase</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
@@ -324,7 +298,7 @@
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
 							<ul class="tsd-type-parameters">
 								<li>
-									<h4>TPixiContainer<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Container</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TPixiContainer</span><span class="tsd-signature-symbol">&gt;</span></h4>
+									<h4>TPixiData<span class="tsd-signature-symbol">: </span><a href="interfaces/ipixidata.html" class="tsd-signature-type" data-tsd-kind="Interface">IPixiData</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">DisplayObject</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TPixiData</span><span class="tsd-signature-symbol">&gt;</span></h4>
 								</li>
 								<li>
 									<h4>TCreatejsParam<span class="tsd-signature-symbol">: </span><a href="interfaces/icreatejsparam.html" class="tsd-signature-type" data-tsd-kind="Interface">ICreatejsParam</a></h4>
@@ -369,34 +343,6 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">{ </span>prototype<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-type">TBase</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-function">
-					<a name="prepareanimate" class="tsd-anchor"></a>
-					<h3>prepare<wbr>Animate</h3>
-					<ul class="tsd-signatures tsd-kind-function">
-						<li class="tsd-signature tsd-kind-icon">prepare<wbr>Animate<span class="tsd-signature-symbol">(</span>options<span class="tsd-signature-symbol">?: </span><a href="interfaces/iprepareoption.html" class="tsd-signature-type" data-tsd-kind="Interface">IPrepareOption</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/pixi-animate-core/blob/master/src/core.ts#L41">src/core.ts:41</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Prepare createjs content published with Adobe Animate.</p>
-								</div>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>options: <a href="interfaces/iprepareoption.html" class="tsd-signature-type" data-tsd-kind="Interface">IPrepareOption</a><span class="tsd-signature-symbol"> = {}</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -559,9 +505,6 @@
 						<a href="interfaces/ipixitextdata.html" class="tsd-kind-icon">IPixi<wbr>Text<wbr>Data</a>
 					</li>
 					<li class=" tsd-kind-interface">
-						<a href="interfaces/iprepareoption.html" class="tsd-kind-icon">IPrepare<wbr>Option</a>
-					</li>
-					<li class=" tsd-kind-interface">
 						<a href="interfaces/itickerdata.html" class="tsd-kind-icon">ITicker<wbr>Data</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
@@ -583,9 +526,6 @@
 						<a href="modules.html#createpixidata" class="tsd-kind-icon">create<wbr>Pixi<wbr>Data</a>
 					</li>
 					<li class=" tsd-kind-function">
-						<a href="modules.html#initializeanimate" class="tsd-kind-icon">initialize<wbr>Animate</a>
-					</li>
-					<li class=" tsd-kind-function">
 						<a href="modules.html#loadassetasync" class="tsd-kind-icon">load<wbr>Asset<wbr>Async</a>
 					</li>
 					<li class=" tsd-kind-function tsd-has-type-parameter">
@@ -593,9 +533,6 @@
 					</li>
 					<li class=" tsd-kind-function tsd-has-type-parameter">
 						<a href="modules.html#mixinpixicontainer" class="tsd-kind-icon">mixin<wbr>Pixi<wbr>Container</a>
-					</li>
-					<li class=" tsd-kind-function">
-						<a href="modules.html#prepareanimate" class="tsd-kind-icon">prepare<wbr>Animate</a>
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="modules.html#updatedisplayobjectchildren" class="tsd-kind-icon">update<wbr>Display<wbr>Object<wbr>Children</a>
@@ -610,19 +547,14 @@
 		<h2>Legend</h2>
 		<div class="tsd-legend-group">
 			<ul class="tsd-legend">
-				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
-				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
-				<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
-			</ul>
-			<ul class="tsd-legend">
 				<li class="tsd-kind-constructor tsd-parent-kind-interface"><span class="tsd-kind-icon">Constructor</span></li>
 				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
 				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
 			</ul>
 			<ul class="tsd-legend">
-				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
@@ -632,7 +564,7 @@
 				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
 			</ul>
 			<ul class="tsd-legend">
-				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
 			</ul>
 		</div>
 	</div>

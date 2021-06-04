@@ -491,7 +491,7 @@ class CreatejsMovieClip extends mixinCreatejsDisplayObject(createjs.MovieClip) {
         this._initForPixi();
         return super.initialize(...args);
     }
-    _updateForPixi(e) {
+    updateForPixi(e) {
         this._updateState();
         return updateDisplayObjectChildren(this, e);
     }
