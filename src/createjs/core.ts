@@ -33,12 +33,12 @@ export function mixinPixiContainer<TBase extends IPixiContainerClass>(Base: TBas
 	}
 }
 
-export interface IPixiData<T extends Container> {
+export interface IPixiData<T extends DisplayObject> {
 	regObj: Point;
-	instance: T | null;
+	instance: T;
 }
 
-export function createPixiData<TPixiContainer extends Container>(pixi: TPixiContainer, regObj: Point): IPixiData<TPixiContainer> {
+export function createPixiData<TPixiDisplayObject extends DisplayObject>(pixi: TPixiDisplayObject, regObj: Point): IPixiData<TPixiDisplayObject> {
 	return {
 		regObj,
 		instance: pixi
@@ -263,9 +263,9 @@ export interface ICreatejsDisplayObjectClass<T = TCreatejsDisplayObject> {
 	new (...args: any[]): T;
 }
 
-export function mixinCreatejsDisplayObject<TPixiContainer extends Container, TCreatejsParam extends ICreatejsParam, TBase extends ICreatejsDisplayObjectClass = ICreatejsDisplayObjectClass>(Base: TBase) {
+export function mixinCreatejsDisplayObject<TPixiData extends IPixiData<DisplayObject>, TCreatejsParam extends ICreatejsParam, TBase extends ICreatejsDisplayObjectClass = ICreatejsDisplayObjectClass>(Base: TBase) {
 	return class C extends Base {
-		protected _pixiData: IPixiData<TPixiContainer>;
+		protected _pixiData: TPixiData;
 		protected _createjsParams: TCreatejsParam;
 		private _createjsEventManager: EventManager;
 		

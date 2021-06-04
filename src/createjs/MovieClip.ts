@@ -64,7 +64,7 @@ const P = createjs.Bitmap;
 /**
  * [[https://createjs.com/docs/easeljs/classes/MovieClip.html | createjs.MovieClip]]
  */
-export class CreatejsMovieClip extends mixinCreatejsDisplayObject<PixiMovieClip, ICreatejsMovieClipParam>(createjs.MovieClip) {
+export class CreatejsMovieClip extends mixinCreatejsDisplayObject<IPixiMoveClipData, ICreatejsMovieClipParam>(createjs.MovieClip) {
 	constructor(...args: any[]) {
 		super(...args);
 		

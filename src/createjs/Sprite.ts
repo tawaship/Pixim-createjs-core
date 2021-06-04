@@ -52,7 +52,7 @@ const P = createjs.Sprite;
 /**
  * [[https://createjs.com/docs/easeljs/classes/Sprite.html | createjs.Sprite]]
  */
-export class CreatejsSprite extends mixinCreatejsDisplayObject<PixiSprite, ICreatejsSpriteParam>(createjs.Sprite) {
+export class CreatejsSprite extends mixinCreatejsDisplayObject<IPixiSpriteData, ICreatejsSpriteParam>(createjs.Sprite) {
 	constructor(...args: any[]) {
 		super(...args);
 		

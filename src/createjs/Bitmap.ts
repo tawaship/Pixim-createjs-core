@@ -52,7 +52,7 @@ const P = createjs.Bitmap;
 /**
  * [[https://createjs.com/docs/easeljs/classes/Bitmap.html | createjs.Bitmap]]
  */
-export class CreatejsBitmap extends mixinCreatejsDisplayObject<PixiBitmap, ICreatejsBitmapParam>(createjs.Bitmap) {
+export class CreatejsBitmap extends mixinCreatejsDisplayObject<IPixiBitmapData, ICreatejsBitmapParam>(createjs.Bitmap) {
 	constructor(...args: any[]) {
 		super(...args);
 		

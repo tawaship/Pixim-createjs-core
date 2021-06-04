@@ -60,7 +60,7 @@ const P = createjs.Shape;
 /**
  * [[https://createjs.com/docs/easeljs/classes/Shape.html | createjs.Shape]]
  */
-export class CreatejsShape extends mixinCreatejsDisplayObject<PixiShape, ICreatejsShapeParam>(createjs.Shape) {
+export class CreatejsShape extends mixinCreatejsDisplayObject<IPixiShapeData, ICreatejsShapeParam>(createjs.Shape) {
 	protected _createjsParams: ICreatejsShapeParam;
 	protected _pixiData: IPixiShapeData;
 	

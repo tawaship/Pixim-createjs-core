@@ -81,7 +81,7 @@ const P = createjs.Text;
 /**
  * [[https://createjs.com/docs/easeljs/classes/Text.html | createjs.Text]]
  */
-export class CreatejsText extends mixinCreatejsDisplayObject<PixiTextContainer, ICreatejsTextParam>(createjs.Text) {
+export class CreatejsText extends mixinCreatejsDisplayObject<IPixiTextData, ICreatejsTextParam>(createjs.Text) {
 	constructor(text: string, font: string, color: string = '#000000', ...args: any[]) {
 		super(text, font, color, ...args);
 		

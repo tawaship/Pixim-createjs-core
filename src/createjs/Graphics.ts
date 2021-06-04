@@ -89,7 +89,7 @@ const P = createjs.Graphics;
 /**
  * [[https://createjs.com/docs/easeljs/classes/Graphics.html | createjs.Graphics]]
  */
-export class CreatejsGraphics extends mixinCreatejsDisplayObject<PixiGraphics, ICreatejsGraphicsParam>(createjs.Graphics) {
+export class CreatejsGraphics extends mixinCreatejsDisplayObject<IPixiGraphicsData, ICreatejsGraphicsParam>(createjs.Graphics) {
 	constructor(...args: any[]) {
 		super(...args);
 		
