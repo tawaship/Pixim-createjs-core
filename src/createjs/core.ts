@@ -9,6 +9,7 @@ import { CreatejsShape } from './Shape';
 import { CreatejsBitmap } from './Bitmap';
 import { CreatejsGraphics } from './Graphics';
 import { CreatejsText } from './Text';
+import { createjs } from './alias';
 
 type TCreatejsDisplayObject = any/* createjs.DisplayObject */;
 
@@ -396,17 +397,7 @@ export function mixinCreatejsDisplayObject<TPixiData extends IPixiData<DisplayOb
 			this._pixiData.instance.renderable = !value;
 			this._createjsParams._off = value;
 		}
-		/*
-		dispatchEvent: {
-			dispatchEvent(eventObj, bubbles, cancelable) {
-				var type = eventObj typeof 'string' ? eventObj : eventObj.type;
-				
-				this._pixiData.instance.emit(type, eventObj);
-				
-				return createjs.DisplayObject.prototype.dispatchEvent.apply(this, arguments);
-			}
-		},
-		*/
+		
 		addEventListener(type: TCreatejsInteractionEvent | string, cb: ICreatejsInteractionEventDelegate | CreatejsButtonHelper, ...args: any[]) {
 			if (!(cb instanceof CreatejsButtonHelper)) {
 				if (type === 'mousedown' || type === 'rollover' || type === 'rollout' || type === 'pressmove' || type === 'pressup') {
@@ -436,8 +427,8 @@ export function mixinCreatejsDisplayObject<TPixiData extends IPixiData<DisplayOb
 				value.masked.push(this._pixiData.instance);
 				this._pixiData.instance.mask = value.pixi;
 				
-				this._pixiData.instance.once('added', function() {
-					this.parent.addChild(value.pixi);
+				this._pixiData.instance.once('added', () => {
+					this._pixiData.instance.parent.addChild(value.pixi);
 				});
 			} else {
 				this._pixiData.instance.mask = null;
@@ -477,7 +468,11 @@ export function createCreatejsParams(): ICreatejsParam {
 	};
 }
 
-export function updateDisplayObjectChildren(cjs: TCreatejsObject, e: ITickerData) {
+export interface IExpandedCreatejsDisplayObject extends TCreatejsDisplayObject {
+	updateForPixi(e: ITickerData): boolean;
+}
+
+export function updateDisplayObjectChildren(cjs: IExpandedCreatejsDisplayObject, e: ITickerData) {
 	const list = cjs.children.slice();
 	for (let i = 0,l = list.length; i < l; i++) {
 		const child = list[i];

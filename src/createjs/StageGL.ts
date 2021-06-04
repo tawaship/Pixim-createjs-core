@@ -10,5 +10,7 @@ export class CreatejsStageGL extends createjs.StageGL {
 		this.dispatchEvent("drawstart");
 		updateDisplayObjectChildren(this, props);
 		this.dispatchEvent("drawend");
+		
+		return true;
 	}
 }

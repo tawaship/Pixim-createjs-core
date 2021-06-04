@@ -10,5 +10,7 @@ export class CreatejsStage extends createjs.Stage {
 		this.dispatchEvent("drawstart");
 		updateDisplayObjectChildren(this, props);
 		this.dispatchEvent("drawend");
+		
+		return true;
 	}
 }
