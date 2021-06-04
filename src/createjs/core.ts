@@ -88,7 +88,7 @@ export interface IExpandedCreatejsDisplayObject extends TCreatejsDisplayObject {
 
 export function updateDisplayObjectChildren(cjs: IExpandedCreatejsDisplayObject, e: ITickerData) {
 	const list = cjs.children.slice();
-	for (let i = 0,l = list.length; i < l; i++) {
+	for (let i = 0, l = list.length; i < l; i++) {
 		const child = list[i];
 		if (!child.isVisible()) { continue; }
 		//child.draw();

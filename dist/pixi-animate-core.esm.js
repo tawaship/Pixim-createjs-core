@@ -296,6 +296,7 @@ class CreatejsButtonHelper extends createjs.ButtonHelper {
 class PixiMovieClip extends Container {
     constructor(cjs) {
         super();
+        this._filterContainer = null;
         this._createjs = cjs;
     }
     get filterContainer() {
@@ -335,6 +336,12 @@ class CreatejsMovieClip extends createjs.MovieClip {
         super(...args);
         this._initForPixi();
         P.apply(this, args);
+        setTimeout(() => {
+            for (let i in this.children) {
+                console.log(this.children[i], this.children[i].isVisible());
+            }
+        }, 1000);
+        //this.constructor.apply(this. args)
     }
     _initForPixi() {
         this._pixiData = createPixiMovieClipData(this);

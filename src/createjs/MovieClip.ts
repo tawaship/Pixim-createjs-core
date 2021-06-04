@@ -12,7 +12,7 @@ import { CreatejsShape } from './Shape';
  */
 export class PixiMovieClip extends Container {
 	private _createjs: CreatejsMovieClip;
-	private _filterContainer: Container | null;
+	private _filterContainer: Container | null = null;
 	
 	constructor(cjs: CreatejsMovieClip) {
 		super();
@@ -76,8 +76,13 @@ export class CreatejsMovieClip extends createjs.MovieClip {
 		super(...args);
 		
 		this._initForPixi();
-		
 		P.apply(this, args);
+		setTimeout(() => {
+			for (let i in this.children) {
+				console.log(this.children[i], this.children[i].isVisible())
+			}
+		}, 1000)
+		//this.constructor.apply(this. args)
 	}
 	
 	private _initForPixi() {
