@@ -328,6 +328,10 @@ export class CreatejsGraphics extends createjs.Graphics implements IExpandedCrea
 		return this.quadraticCurveTo(cpx, cpy, x, y);
 	}
 	
+	curveTo(cpx: number, cpy: number, x: number, y: number) {
+		return this.quadraticCurveTo(cpx, cpy, x, y);
+	}
+	
 	bezierCurveTo(cp1x: number, cp1y: number, cp2x: number, cp2y: number, x: number, y: number) {
 		this._pixiData.instance.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
 		
@@ -335,10 +339,6 @@ export class CreatejsGraphics extends createjs.Graphics implements IExpandedCrea
 	}
 	
 	bt(cp1x: number, cp1y: number, cp2x: number, cp2y: number, x: number, y: number) {
-		return this.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
-	}
-	
-	curveTo(cp1x: number, cp1y: number, cp2x: number, cp2y: number, x: number, y: number) {
 		return this.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
 	}
 	

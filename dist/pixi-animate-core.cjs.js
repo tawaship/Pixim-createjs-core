@@ -1402,14 +1402,14 @@ class CreatejsGraphics extends createjs.Graphics {
     qt(cpx, cpy, x, y) {
         return this.quadraticCurveTo(cpx, cpy, x, y);
     }
+    curveTo(cpx, cpy, x, y) {
+        return this.quadraticCurveTo(cpx, cpy, x, y);
+    }
     bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y) {
         this._pixiData.instance.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
         return super.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
     }
     bt(cp1x, cp1y, cp2x, cp2y, x, y) {
-        return this.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
-    }
-    curveTo(cp1x, cp1y, cp2x, cp2y, x, y) {
         return this.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
     }
     rect(x, y, w, h) {

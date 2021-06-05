@@ -9,3 +9,4 @@ tsconfig.json
 rollup.config.js
 *.drawio
 *.png
+yarn.lock
