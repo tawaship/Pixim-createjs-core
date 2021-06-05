@@ -4,6 +4,6 @@
 declare const window: any;
 
 /**
- * createjsオブジェクト
+ * Global createjs object
  */
 export const createjs = window.createjs;
