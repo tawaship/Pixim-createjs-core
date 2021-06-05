@@ -47,7 +47,7 @@ function updateDisplayObjectChildren(cjs, e) {
 }
 
 /**
- * createjsオブジェクト
+ * Global createjs object
  */
 const createjs = window.createjs;
 
