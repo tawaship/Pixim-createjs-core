@@ -12,7 +12,7 @@ A module for processing the content created with Adobe Animate with "[pixi.js](h
 
 ### Each original (simplified) flow
 
-- createjs contents published by Adobe Animate
+- createjs contents created with Adobe Animate
 ![origin](https://raw.githubusercontent.com/tawaship/pixi-animate-core/master/img/animate.png)
 
 - pixi.js contents
