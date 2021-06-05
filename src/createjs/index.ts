@@ -8,3 +8,4 @@ export * from './Bitmap';
 export * from './Graphics';
 export * from './Text';
 export * from './ButtonHelper';
+export { createjs } from './alias';

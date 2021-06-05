@@ -1,6 +1,6 @@
 # @tawaship/pixi-animate-core
 
-A module for processing the content published by Adobe Animate with "[pixi.js](https://github.com/pixijs/pixi.js)".
+A module for processing the content created with Adobe Animate with "[pixi.js](https://github.com/pixijs/pixi.js)".
 
 **This plugin is a core module, not intended to run alone.**
 
@@ -24,7 +24,7 @@ A module for processing the content published by Adobe Animate with "[pixi.js](h
 
 ## Supported versions
 
-- A complete set of content published with Adobe Animate version 20.02 / 20.5.1
+- A complete set of content created with Adobe Animate version 20.02 / 20.5.1
 - pixi.js 5.3.2
 
 I have not confirmed the operation on other versions.
@@ -71,6 +71,11 @@ npm install --save @tawaship/pixi-animate-core
 	|name|class|
 	|:--|:--|
 	|createjs.Stage|[CreatejsStage](https://tawaship.github.io/pixi-animate-core/classes/createjsstage.html)|
+
+### 3.0.0
+
+- Migrated all files to typescript
+- Abolition of some options
 
 ## Unimplemented
 

@@ -5,7 +5,7 @@ import del from 'del';
 
 const conf = require('./package.json');
 const version = conf.version;
-const pixi = conf.dependencies['pixi.js'].replace('^', '');
+const pixi = conf.devDependencies['pixi.js'].replace('^', '');
 
 const banner = [
 	'/*!',

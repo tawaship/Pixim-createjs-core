@@ -1,23 +1,20 @@
-/**
- * @ignore
- */
-declare const window: any;
+import { createjs } from './alias';
 
 /**
  * [[https://createjs.com/docs/easeljs/classes/ButtonHelper.html | createjs.ButtonHelper]]
  */
-export class CreatejsButtonHelper extends window.createjs.ButtonHelper {
+export class CreatejsButtonHelper extends createjs.ButtonHelper {
 	constructor(...args: any[]) {
-		super(...arguments);
+		super(...args);
 		
-		const createjs = arguments[0];
+		const createjs = args[0];
 		const pixi = createjs.pixi;
 		
-		const baseFrame = arguments[1];
-		const overFrame = arguments[2];
-		const downFrame = arguments[3];
+		const baseFrame = args[1];
+		const overFrame = args[2];
+		const downFrame = args[3];
 		const hit = arguments[5];
-		const hitFrame = arguments[6];
+		const hitFrame = args[6];
 		
 		hit.gotoAndStop(hitFrame);
 		const hitPixi = pixi.addChild(hit.pixi);

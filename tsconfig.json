@@ -1,13 +1,16 @@
 {
-  "include": ["src/**/*.ts"],
+  "include": ["src/index.ts"],
   "compilerOptions": {
-    "target": "ES6"
+    "target": "ES6",
+    "moduleResolution": "node",
+    "strict": false,
+    "declaration": true,
+    "outDir": "./types"
   },
   "typedocOptions": {
-    "mode": "file",
     "out": "docs",
-    "moduleResolution": "node",
     "gitRevision": "master",
+    "entryPoints": ["src/index.ts"],
     "includeVersion": true
   },
   "exclude": ["node_modules", "src/**/*.d.ts"]
