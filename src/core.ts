@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js';
 import * as PA from './createjs/index';
-import createjs from '@tawaship/createjs-exporter';
+import createjs from '@tawaship/createjs-module';
 
 export interface IAnimateLibrary {
 	[ name: string ]: any;

@@ -1,5 +1,5 @@
 import { DisplayObject, Container, filters } from 'pixi.js';
-import createjs from '@tawaship/createjs-exporter';
+import createjs from '@tawaship/createjs-module';
 import { CreatejsColorFilter } from './ColorFilter';
 import { createPixiData, createCreatejsParams, IPixiData, ICreatejsParam, updateDisplayObjectChildren, ITickerData, TCreatejsColorFilters, TCreatejsMask, IExpandedCreatejsDisplayObject } from './core';
 import { createObject, DEG_TO_RAD } from './utils';

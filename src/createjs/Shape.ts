@@ -1,5 +1,5 @@
 import { DisplayObject, Container } from 'pixi.js';
-import createjs from '@tawaship/createjs-exporter';
+import createjs from '@tawaship/createjs-module';
 import { createPixiData, createCreatejsParams, IPixiData, ICreatejsParam, ITickerData, TCreatejsMask, IExpandedCreatejsDisplayObject } from './core';
 import { CreatejsGraphics } from './Graphics';
 import { createObject, DEG_TO_RAD } from './utils';

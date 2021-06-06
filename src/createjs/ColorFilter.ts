@@ -1,4 +1,4 @@
-import createjs from '@tawaship/createjs-exporter';
+import createjs from '@tawaship/createjs-module';
 
 /**
  * [[https://createjs.com/docs/easeljs/classes/ColorFilter.html | createjs.ColorFilter]]

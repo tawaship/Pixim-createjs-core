@@ -1,5 +1,5 @@
 import { Graphics, LINE_CAP, LINE_JOIN} from 'pixi.js';
-import createjs from '@tawaship/createjs-exporter';
+import createjs from '@tawaship/createjs-module';
 import { createPixiData, createCreatejsParams, IPixiData, ICreatejsParam,  ITickerData, TCreatejsMask, IExpandedCreatejsDisplayObject } from './core';
 import { createObject, DEG_TO_RAD } from './utils';
 import { EventManager, TCreatejsInteractionEvent, ICreatejsInteractionEventDelegate } from './EventManager';

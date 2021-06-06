@@ -5,7 +5,7 @@ import del from 'del';
 
 const conf = require('./package.json');
 const version = conf.version;
-const pixi = conf.devDependencies['pixi.js'].replace('^', '');
+const pixi = conf.devDependencies['pixi.js'];
 
 const banner = [
 	'/*!',
@@ -40,7 +40,7 @@ export default (async () => {
 					sourcemap: true
 				}
 			],
-			external: ['pixi.js', '@tawaship/createjs-exporter'],
+			external: ['pixi.js', '@tawaship/createjs-module'],
 			watch: {
 				clearScreen: false
 			},

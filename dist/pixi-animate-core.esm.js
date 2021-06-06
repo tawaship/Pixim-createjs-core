@@ -1,13 +1,13 @@
 /*!
- * @tawaship/pixi-animate-core - v3.0.1
+ * @tawaship/pixi-animate-core - v3.0.3
  * 
- * @require pixi.js v5.3.2
+ * @require pixi.js v^5.3.2
  * @author tawaship (makazu.mori@gmail.com)
  * @license MIT
  */
 
-import createjs from '@tawaship/createjs-exporter';
-export { default as createjs } from '@tawaship/createjs-exporter';
+import createjs from '@tawaship/createjs-module';
+export { default as createjs } from '@tawaship/createjs-module';
 import { Container, filters, Sprite, BaseTexture, Texture, Graphics, LINE_CAP, LINE_JOIN, Text } from 'pixi.js';
 export { Point as PixiPoint } from 'pixi.js';
 

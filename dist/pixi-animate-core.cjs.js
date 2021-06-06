@@ -1,7 +1,7 @@
 /*!
- * @tawaship/pixi-animate-core - v3.0.1
+ * @tawaship/pixi-animate-core - v3.0.3
  * 
- * @require pixi.js v5.3.2
+ * @require pixi.js v^5.3.2
  * @author tawaship (makazu.mori@gmail.com)
  * @license MIT
  */
@@ -12,7 +12,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
 function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
 
-var createjs = _interopDefault(require('@tawaship/createjs-exporter'));
+var createjs = _interopDefault(require('@tawaship/createjs-module'));
 var pixi_js = require('pixi.js');
 
 function createPixiData(pixi, regObj) {
