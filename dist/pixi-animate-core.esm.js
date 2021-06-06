@@ -1,11 +1,13 @@
 /*!
- * @tawaship/pixi-animate-core - v3.0.0
+ * @tawaship/pixi-animate-core - v3.0.1
  * 
  * @require pixi.js v5.3.2
  * @author tawaship (makazu.mori@gmail.com)
  * @license MIT
  */
 
+import createjs from '@tawaship/createjs-exporter';
+export { default as createjs } from '@tawaship/createjs-exporter';
 import { Container, filters, Sprite, BaseTexture, Texture, Graphics, LINE_CAP, LINE_JOIN, Text } from 'pixi.js';
 export { Point as PixiPoint } from 'pixi.js';
 
@@ -45,11 +47,6 @@ function updateDisplayObjectChildren(cjs, e) {
     }
     return true;
 }
-
-/**
- * Global createjs object
- */
-const createjs = window.createjs;
 
 /**
  * [[https://createjs.com/docs/easeljs/classes/Stage.html | createjs.Stage]]
@@ -1819,11 +1816,10 @@ Object.defineProperties(CreatejsText.prototype, {
 /**
  * Load assets of createjs content published with Adobe Animate.
  *
- * @param id "lib.properties.id" in Animate content.
+ * @param comp Composition obtained from `AdobeAn.getComposition`.
  * @param basepath Directory path of Animate content.
  */
-function loadAssetAsync(id, basepath, options = {}) {
-    const comp = AdobeAn.getComposition(id);
+function loadAssetAsync(comp, basepath, options = {}) {
     if (!comp) {
         throw new Error('no composition');
     }
@@ -1888,5 +1884,5 @@ function handleFileLoad(evt, comp) {
     }
 }
 
-export { CreatejsBitmap, CreatejsButtonHelper, CreatejsGraphics, CreatejsMovieClip, CreatejsShape, CreatejsSprite, CreatejsStage, CreatejsStageGL, CreatejsText, PixiBitmap, PixiGraphics, PixiMovieClip, PixiShape, PixiSprite, PixiText, PixiTextContainer, createCreatejsParams, createPixiData, createjs, loadAssetAsync, updateDisplayObjectChildren };
+export { CreatejsBitmap, CreatejsButtonHelper, CreatejsGraphics, CreatejsMovieClip, CreatejsShape, CreatejsSprite, CreatejsStage, CreatejsStageGL, CreatejsText, PixiBitmap, PixiGraphics, PixiMovieClip, PixiShape, PixiSprite, PixiText, PixiTextContainer, createCreatejsParams, createPixiData, loadAssetAsync, updateDisplayObjectChildren };
 //# sourceMappingURL=pixi-animate-core.esm.js.map

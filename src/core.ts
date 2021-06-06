@@ -1,10 +1,6 @@
 import * as PIXI from 'pixi.js';
 import * as PA from './createjs/index';
-
-/**
- * @ignore
- */
-declare const AdobeAn: any;
+import createjs from '@tawaship/createjs-exporter';
 
 export interface IAnimateLibrary {
 	[ name: string ]: any;
@@ -20,11 +16,10 @@ export interface ILoadAssetOption {
 /**
  * Load assets of createjs content published with Adobe Animate.
  * 
- * @param id "lib.properties.id" in Animate content.
+ * @param comp Composition obtained from `AdobeAn.getComposition`.
  * @param basepath Directory path of Animate content.
  */
-export function loadAssetAsync(id: string, basepath: string, options: ILoadAssetOption = {}) {
-	const comp = AdobeAn.getComposition(id);
+export function loadAssetAsync(comp: any, basepath: string, options: ILoadAssetOption = {}) {
 	if (!comp) {
 		throw new Error('no composition');
 	}
@@ -40,9 +35,9 @@ export function loadAssetAsync(id: string, basepath: string, options: ILoadAsset
 			basepath = (basepath + '/').replace(/([^\:])\/\//, "$1/");
 		}
 		
-		const loader = new PA.createjs.LoadQueue(false, basepath);
+		const loader = new createjs.LoadQueue(false, basepath);
 		
-		loader.installPlugin(PA.createjs.Sound);
+		loader.installPlugin(createjs.Sound);
 		
 		loader.addEventListener('fileload', function(evt: any) {
 			handleFileLoad(evt, comp);
@@ -67,7 +62,7 @@ export function loadAssetAsync(id: string, basepath: string, options: ILoadAsset
 		const ssMetadata = lib.ssMetadata;
 		
 		for (let i = 0; i < ssMetadata.length; i++) {
-			ss[ssMetadata[i].name] = new PA.createjs.SpriteSheet({
+			ss[ssMetadata[i].name] = new createjs.SpriteSheet({
 				images: [
 					queue.getResult(ssMetadata[i].name)
 				],
@@ -80,18 +75,18 @@ export function loadAssetAsync(id: string, basepath: string, options: ILoadAsset
 }
 
 // overrides
-PA.createjs.Stage = PA.CreatejsStage;
-PA.createjs.StageGL = PA.CreatejsStageGL;
-PA.createjs.MovieClip = PA.CreatejsMovieClip;
-PA.createjs.Sprite = PA.CreatejsSprite;
-PA.createjs.Shape = PA.CreatejsShape;
-PA.createjs.Bitmap = PA.CreatejsBitmap;
-PA.createjs.Graphics = PA.CreatejsGraphics;
-PA.createjs.Text = PA.CreatejsText;
-PA.createjs.ButtonHelper = PA.CreatejsButtonHelper;
+createjs.Stage = PA.CreatejsStage;
+createjs.StageGL = PA.CreatejsStageGL;
+createjs.MovieClip = PA.CreatejsMovieClip;
+createjs.Sprite = PA.CreatejsSprite;
+createjs.Shape = PA.CreatejsShape;
+createjs.Bitmap = PA.CreatejsBitmap;
+createjs.Graphics = PA.CreatejsGraphics;
+createjs.Text = PA.CreatejsText;
+createjs.ButtonHelper = PA.CreatejsButtonHelper;
 
 // install plugins
-PA.createjs.MotionGuidePlugin.install();
+createjs.MotionGuidePlugin.install();
 
 /**
  * @ignore

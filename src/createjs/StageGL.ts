@@ -1,4 +1,4 @@
-import { createjs } from './alias';
+import createjs from '@tawaship/createjs-exporter';
 import { updateDisplayObjectChildren, ITickerData, IExpandedCreatejsDisplayObject } from './core';
 
 /**

@@ -1,4 +1,4 @@
-import { createjs } from './alias';
+import createjs from '@tawaship/createjs-exporter';
 
 /**
  * [[https://createjs.com/docs/easeljs/classes/ButtonHelper.html | createjs.ButtonHelper]]

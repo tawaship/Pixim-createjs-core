@@ -1,5 +1,5 @@
 /*!
- * @tawaship/pixi-animate-core - v3.0.0
+ * @tawaship/pixi-animate-core - v3.0.1
  * 
  * @require pixi.js v5.3.2
  * @author tawaship (makazu.mori@gmail.com)
@@ -10,6 +10,9 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
+function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
+
+var createjs = _interopDefault(require('@tawaship/createjs-exporter'));
 var pixi_js = require('pixi.js');
 
 function createPixiData(pixi, regObj) {
@@ -48,11 +51,6 @@ function updateDisplayObjectChildren(cjs, e) {
     }
     return true;
 }
-
-/**
- * Global createjs object
- */
-const createjs = window.createjs;
 
 /**
  * [[https://createjs.com/docs/easeljs/classes/Stage.html | createjs.Stage]]
@@ -1822,11 +1820,10 @@ Object.defineProperties(CreatejsText.prototype, {
 /**
  * Load assets of createjs content published with Adobe Animate.
  *
- * @param id "lib.properties.id" in Animate content.
+ * @param comp Composition obtained from `AdobeAn.getComposition`.
  * @param basepath Directory path of Animate content.
  */
-function loadAssetAsync(id, basepath, options = {}) {
-    const comp = AdobeAn.getComposition(id);
+function loadAssetAsync(comp, basepath, options = {}) {
     if (!comp) {
         throw new Error('no composition');
     }
@@ -1891,6 +1888,7 @@ function handleFileLoad(evt, comp) {
     }
 }
 
+exports.createjs = createjs;
 Object.defineProperty(exports, 'PixiPoint', {
 	enumerable: true,
 	get: function () {
@@ -1915,7 +1913,6 @@ exports.PixiText = PixiText;
 exports.PixiTextContainer = PixiTextContainer;
 exports.createCreatejsParams = createCreatejsParams;
 exports.createPixiData = createPixiData;
-exports.createjs = createjs;
 exports.loadAssetAsync = loadAssetAsync;
 exports.updateDisplayObjectChildren = updateDisplayObjectChildren;
 //# sourceMappingURL=pixi-animate-core.cjs.js.map

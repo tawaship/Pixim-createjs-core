@@ -9,7 +9,6 @@ import { CreatejsShape } from './Shape';
 import { CreatejsBitmap } from './Bitmap';
 import { CreatejsGraphics } from './Graphics';
 import { CreatejsText } from './Text';
-import { createjs } from './alias';
 
 type TCreatejsDisplayObject = any/* createjs.DisplayObject */;
 

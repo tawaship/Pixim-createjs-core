@@ -40,7 +40,7 @@ export default (async () => {
 					sourcemap: true
 				}
 			],
-			external: ['pixi.js'],
+			external: ['pixi.js', '@tawaship/createjs-exporter'],
 			watch: {
 				clearScreen: false
 			},

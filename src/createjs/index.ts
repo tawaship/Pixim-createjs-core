@@ -1,3 +1,5 @@
+import createjs from '@tawaship/createjs-exporter';
+export { createjs };
 export * from './core';
 export * from './Stage';
 export * from './StageGL';
@@ -8,4 +10,3 @@ export * from './Bitmap';
 export * from './Graphics';
 export * from './Text';
 export * from './ButtonHelper';
-export { createjs } from './alias';
