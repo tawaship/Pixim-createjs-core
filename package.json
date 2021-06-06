@@ -30,7 +30,7 @@
   },
   "homepage": "https://tawaship.github.io/pixi-animate-core/",
   "devDependencies": {
-    "@rollup/plugin-commonjs": "11.0.2",
+    "@rollup/plugin-commonjs": "^11.0.2",
     "@rollup/plugin-node-resolve": "^7.1.1",
     "@rollup/plugin-typescript": "^3.0.0",
     "@tawaship/createjs-module": "^1.0.0",
