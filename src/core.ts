@@ -39,12 +39,23 @@ export function loadAssetAsync(comp: any, basepath: string, options: ILoadAssetO
 		
 		loader.installPlugin(createjs.Sound);
 		
-		loader.addEventListener('fileload', function(evt: any) {
+		const errors: any[] = [];
+		
+		loader.addEventListener('fileload', (evt: any) => {
 			handleFileLoad(evt, comp);
 		});
 		
-		loader.addEventListener('complete', function(evt: any) {
+		loader.addEventListener('complete', (evt: any) => {
+			if (errors.length) {
+				reject(errors);
+				return;
+			}
+			
 			resolve(evt);
+		});
+		
+		loader.addEventListener('error', (evt: any) => {
+			errors.push(evt.data);
 		});
 		
 		if (options.crossOrigin) {
