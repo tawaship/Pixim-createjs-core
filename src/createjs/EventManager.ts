@@ -18,8 +18,12 @@ export interface ICreatejsInteractionEventData {
 	factory(cb: ICreatejsInteractionEventDelegate): IPixiInteractionEventDelegate;
 }
 
+/**
+ * @ignore
+ */
+let _isDown = false;
+
 export class EventManager {
-	private _isDown: boolean = false;
 	private _events: { [name in TPixiInteractionEvent]: { func: IPixiInteractionEventDelegate, origin: ICreatejsInteractionEventDelegate  }[] };
 	private _data: { [name in TCreatejsInteractionEvent]: ICreatejsInteractionEventData };
 	
@@ -120,7 +124,7 @@ export class EventManager {
 			e.rawX = ev.global.x;
 			e.rawY = ev.global.y;
 			
-			this._isDown = true;
+			_isDown = true;
 			
 			cb(e);
 		};
@@ -135,7 +139,7 @@ export class EventManager {
 			e.rawX = ev.global.x;
 			e.rawY = ev.global.y;
 			
-			this._isDown = true;
+			//_isDown = true;
 			
 			cb(e);
 		};
@@ -150,7 +154,7 @@ export class EventManager {
 			e.rawX = ev.global.x;
 			e.rawY = ev.global.y;
 			
-			this._isDown = true;
+			//_isDown = true;
 			
 			cb(e);
 		};
@@ -158,7 +162,7 @@ export class EventManager {
 	
 	private _pressmoveFactory(cjs: TCreatejsObject, cb: ICreatejsInteractionEventDelegate) {
 		return (e: any) => {
-			if (!this._isDown) {
+			if (!_isDown) {
 				return;
 			}
 			
@@ -175,13 +179,13 @@ export class EventManager {
 	
 	private _pressupFactory(cjs: TCreatejsObject, cb: ICreatejsInteractionEventDelegate) {
 		return (e: any) => {
-			if (!this._isDown) {
+			if (!_isDown) {
 				return;
 			}
 			
 			e.currentTarget = cjs;
 			
-			this._isDown = false;
+			_isDown = false;
 			
 			e.target = e.target && e.target.createjs;
 			const ev = e.data;
