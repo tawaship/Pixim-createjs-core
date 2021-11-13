@@ -93,8 +93,6 @@ export function updateDisplayObjectChildren(cjs: IExpandedCreatejsDisplayObject,
 	const list = cjs.children.slice();
 	for (let i = 0, l = list.length; i < l; i++) {
 		const child = list[i];
-		if (!child.isVisible()) { continue; }
-		//child.draw();
 		child.updateForPixi(e);
 	}
 	
