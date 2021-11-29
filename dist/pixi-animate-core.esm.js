@@ -1,5 +1,5 @@
 /*!
- * @tawaship/pixi-animate-core - v3.0.4-b
+ * @tawaship/pixi-animate-core - v3.0.5
  * 
  * @require pixi.js v^5.3.2
  * @author tawaship (makazu.mori@gmail.com)
@@ -8,7 +8,7 @@
 
 import createjs from '@tawaship/createjs-module';
 export { default as createjs } from '@tawaship/createjs-module';
-import { Container, filters, Sprite, BaseTexture, Texture, Graphics, LINE_CAP, LINE_JOIN, Text } from 'pixi.js';
+import { Container, filters, Sprite, BaseTexture, Texture, Graphics, LINE_CAP, LINE_JOIN, Text, utils } from 'pixi.js';
 export { Point as PixiPoint } from 'pixi.js';
 
 function createPixiData(pixi, regObj) {
@@ -1812,6 +1812,9 @@ Object.defineProperties(CreatejsText.prototype, {
     }
 });
 
+function resolvePath(path, basepath) {
+    return utils.url.resolve(basepath, path);
+}
 /**
  * Load assets of createjs content published with Adobe Animate.
  *
@@ -1828,9 +1831,9 @@ function loadAssetAsync(comp, basepath, options = {}) {
             resolve({});
         }
         if (basepath) {
-            basepath = (basepath + '/').replace(/([^\:])\/\//, "$1/");
+            basepath = basepath.replace(/([^\/])$/, "$1/");
         }
-        const loader = new createjs.LoadQueue(false, basepath);
+        const loader = new createjs.LoadQueue(false);
         loader.installPlugin(createjs.Sound);
         const errors = [];
         loader.addEventListener('fileload', (evt) => {
@@ -1846,13 +1849,28 @@ function loadAssetAsync(comp, basepath, options = {}) {
         loader.addEventListener('error', (evt) => {
             errors.push(evt.data);
         });
-        if (options.crossOrigin) {
-            const m = lib.properties.manifest;
-            for (let i = 0; i < m.length; i++) {
-                m[i].crossOrigin = true;
+        const manifests = [];
+        const origin = lib.properties.manifest;
+        for (let i = 0; i < origin.length; i++) {
+            const o = origin[i];
+            const m = {
+                src: resolvePath(o.src, basepath),
+                id: o.id
+            };
+            for (let i in o) {
+                if (!m[i]) {
+                    m[i] = o[i];
+                }
             }
+            if (options.crossOrigin) {
+                m.crossOrigin = true;
+            }
+            if (o.src.indexOf('data:') === 0) {
+                m.type = 'image';
+            }
+            manifests.push(m);
         }
-        loader.loadManifest(lib.properties.manifest);
+        loader.loadManifest(manifests);
     })
         .then((evt) => {
         const ss = comp.getSpriteSheet();
@@ -1891,5 +1909,5 @@ function handleFileLoad(evt, comp) {
     }
 }
 
-export { CreatejsBitmap, CreatejsButtonHelper, CreatejsGraphics, CreatejsMovieClip, CreatejsShape, CreatejsSprite, CreatejsStage, CreatejsStageGL, CreatejsText, PixiBitmap, PixiGraphics, PixiMovieClip, PixiShape, PixiSprite, PixiText, PixiTextContainer, createCreatejsParams, createPixiData, loadAssetAsync, updateDisplayObjectChildren };
+export { CreatejsBitmap, CreatejsButtonHelper, CreatejsGraphics, CreatejsMovieClip, CreatejsShape, CreatejsSprite, CreatejsStage, CreatejsStageGL, CreatejsText, PixiBitmap, PixiGraphics, PixiMovieClip, PixiShape, PixiSprite, PixiText, PixiTextContainer, createCreatejsParams, createPixiData, loadAssetAsync, resolvePath, updateDisplayObjectChildren };
 //# sourceMappingURL=pixi-animate-core.esm.js.map

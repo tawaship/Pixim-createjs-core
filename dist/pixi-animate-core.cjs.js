@@ -1,5 +1,5 @@
 /*!
- * @tawaship/pixi-animate-core - v3.0.4-b
+ * @tawaship/pixi-animate-core - v3.0.5
  * 
  * @require pixi.js v^5.3.2
  * @author tawaship (makazu.mori@gmail.com)
@@ -13,7 +13,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
 
 var createjs = _interopDefault(require('@tawaship/createjs-module'));
-var pixi_js = require('pixi.js');
+var PIXI = require('pixi.js');
 
 function createPixiData(pixi, regObj) {
     return {
@@ -293,7 +293,7 @@ class CreatejsButtonHelper extends createjs.ButtonHelper {
 /**
  * [[http://pixijs.download/release/docs/PIXI.Container.html | PIXI.Container]]
  */
-class PixiMovieClip extends pixi_js.Container {
+class PixiMovieClip extends PIXI.Container {
     constructor(cjs) {
         super();
         this._filterContainer = null;
@@ -480,7 +480,7 @@ class CreatejsMovieClip extends createjs.MovieClip {
                 if (f instanceof createjs.ColorMatrixFilter) {
                     continue;
                 }
-                const m = new pixi_js.filters.ColorMatrixFilter();
+                const m = new PIXI.filters.ColorMatrixFilter();
                 m.matrix = [
                     f.redMultiplier, 0, 0, 0, f.redOffset / 255,
                     0, f.greenMultiplier, 0, 0, f.greenOffset / 255,
@@ -492,8 +492,8 @@ class CreatejsMovieClip extends createjs.MovieClip {
             }
             var o = this._pixiData.instance;
             var c = o.children;
-            var n = new pixi_js.Container();
-            var nc = this._pixiData.subInstance = n.addChild(new pixi_js.Container());
+            var n = new PIXI.Container();
+            var nc = this._pixiData.subInstance = n.addChild(new PIXI.Container());
             while (c.length) {
                 nc.addChild(c[0]);
             }
@@ -576,7 +576,7 @@ Object.defineProperties(CreatejsMovieClip.prototype, {
 /**
  * [[http://pixijs.download/release/docs/PIXI.Sprite.html | PIXI.Sprite]]
  */
-class PixiSprite extends pixi_js.Sprite {
+class PixiSprite extends PIXI.Sprite {
     constructor(cjs) {
         super();
         this._createjs = cjs;
@@ -745,8 +745,8 @@ class CreatejsSprite extends createjs.Sprite {
     gotoAndStop(...args) {
         super.gotoAndStop(...args);
         const frame = this.spriteSheet.getFrame(this.currentFrame);
-        const baseTexture = pixi_js.BaseTexture.from(frame.image);
-        const texture = new pixi_js.Texture(baseTexture, frame.rect);
+        const baseTexture = PIXI.BaseTexture.from(frame.image);
+        const texture = new PIXI.Texture(baseTexture, frame.rect);
         this._pixiData.instance.texture = texture;
     }
 }
@@ -765,7 +765,7 @@ Object.defineProperties(CreatejsSprite.prototype, {
 /**
  * [[http://pixijs.download/release/docs/PIXI.Container.html | PIXI.Container]]
  */
-class PixiShape extends pixi_js.Container {
+class PixiShape extends PIXI.Container {
     constructor(cjs) {
         super();
         this._createjs = cjs;
@@ -976,7 +976,7 @@ Object.defineProperties(CreatejsShape.prototype, {
 /**
  * [[http://pixijs.download/release/docs/PIXI.Sprite.html | PIXI.Sprite]]
  */
-class PixiBitmap extends pixi_js.Sprite {
+class PixiBitmap extends PIXI.Sprite {
     constructor(cjs) {
         super();
         this._createjs = cjs;
@@ -1018,7 +1018,7 @@ class CreatejsBitmap extends createjs.Bitmap {
         this._createjsParams = createCreatejsBitmapParams();
         this._createjsEventManager = new EventManager(this);
         const res = super.initialize(...args);
-        const texture = pixi_js.Texture.from(this.image);
+        const texture = PIXI.Texture.from(this.image);
         this._pixiData.instance.texture = texture;
         return res;
     }
@@ -1161,7 +1161,7 @@ Object.defineProperties(CreatejsBitmap.prototype, {
 /**
  * [[http://pixijs.download/release/docs/PIXI.Graphics.html | PIXI.Graphics]]
  */
-class PixiGraphics extends pixi_js.Graphics {
+class PixiGraphics extends PIXI.Graphics {
     constructor(cjs) {
         super();
         this._createjs = cjs;
@@ -1198,17 +1198,17 @@ const COLOR_GREEN = 16 * 16;
  * @ignore
  */
 const LineCap = {
-    0: pixi_js.LINE_CAP.BUTT,
-    1: pixi_js.LINE_CAP.ROUND,
-    2: pixi_js.LINE_CAP.SQUARE
+    0: PIXI.LINE_CAP.BUTT,
+    1: PIXI.LINE_CAP.ROUND,
+    2: PIXI.LINE_CAP.SQUARE
 };
 /**
  * @ignore
  */
 const LineJoin = {
-    0: pixi_js.LINE_JOIN.MITER,
-    1: pixi_js.LINE_JOIN.ROUND,
-    2: pixi_js.LINE_JOIN.BEVEL
+    0: PIXI.LINE_JOIN.MITER,
+    1: PIXI.LINE_JOIN.ROUND,
+    2: PIXI.LINE_JOIN.BEVEL
 };
 /**
  * @ignore
@@ -1536,12 +1536,12 @@ Object.defineProperties(CreatejsGraphics.prototype, {
 /**
  * [[http://pixijs.download/release/docs/PIXI.Text.html | PIXI.Text]]
  */
-class PixiText extends pixi_js.Text {
+class PixiText extends PIXI.Text {
 }
 /**
  * [[http://pixijs.download/release/docs/PIXI.Container.html | PIXI.Container]]
  */
-class PixiTextContainer extends pixi_js.Container {
+class PixiTextContainer extends PIXI.Container {
     constructor(cjs, text) {
         super();
         this._createjs = cjs;
@@ -1816,6 +1816,9 @@ Object.defineProperties(CreatejsText.prototype, {
     }
 });
 
+function resolvePath(path, basepath) {
+    return PIXI.utils.url.resolve(basepath, path);
+}
 /**
  * Load assets of createjs content published with Adobe Animate.
  *
@@ -1832,9 +1835,9 @@ function loadAssetAsync(comp, basepath, options = {}) {
             resolve({});
         }
         if (basepath) {
-            basepath = (basepath + '/').replace(/([^\:])\/\//, "$1/");
+            basepath = basepath.replace(/([^\/])$/, "$1/");
         }
-        const loader = new createjs.LoadQueue(false, basepath);
+        const loader = new createjs.LoadQueue(false);
         loader.installPlugin(createjs.Sound);
         const errors = [];
         loader.addEventListener('fileload', (evt) => {
@@ -1850,13 +1853,28 @@ function loadAssetAsync(comp, basepath, options = {}) {
         loader.addEventListener('error', (evt) => {
             errors.push(evt.data);
         });
-        if (options.crossOrigin) {
-            const m = lib.properties.manifest;
-            for (let i = 0; i < m.length; i++) {
-                m[i].crossOrigin = true;
+        const manifests = [];
+        const origin = lib.properties.manifest;
+        for (let i = 0; i < origin.length; i++) {
+            const o = origin[i];
+            const m = {
+                src: resolvePath(o.src, basepath),
+                id: o.id
+            };
+            for (let i in o) {
+                if (!m[i]) {
+                    m[i] = o[i];
+                }
             }
+            if (options.crossOrigin) {
+                m.crossOrigin = true;
+            }
+            if (o.src.indexOf('data:') === 0) {
+                m.type = 'image';
+            }
+            manifests.push(m);
         }
-        loader.loadManifest(lib.properties.manifest);
+        loader.loadManifest(manifests);
     })
         .then((evt) => {
         const ss = comp.getSpriteSheet();
@@ -1899,7 +1917,7 @@ exports.createjs = createjs;
 Object.defineProperty(exports, 'PixiPoint', {
 	enumerable: true,
 	get: function () {
-		return pixi_js.Point;
+		return PIXI.Point;
 	}
 });
 exports.CreatejsBitmap = CreatejsBitmap;
@@ -1921,5 +1939,6 @@ exports.PixiTextContainer = PixiTextContainer;
 exports.createCreatejsParams = createCreatejsParams;
 exports.createPixiData = createPixiData;
 exports.loadAssetAsync = loadAssetAsync;
+exports.resolvePath = resolvePath;
 exports.updateDisplayObjectChildren = updateDisplayObjectChildren;
 //# sourceMappingURL=pixi-animate-core.cjs.js.map

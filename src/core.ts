@@ -13,6 +13,18 @@ export interface ILoadAssetOption {
 	crossOrigin?: boolean;
 };
 
+export function resolvePath(path: string, basepath: string) {
+	return PIXI.utils.url.resolve(basepath, path);
+}
+
+export interface IAnimateManifest {
+	src: string;
+	id: string;
+	type?: string;
+	crossOrigin?: boolean;
+	[key: string]: any;
+}
+
 /**
  * Load assets of createjs content published with Adobe Animate.
  * 
@@ -32,10 +44,10 @@ export function loadAssetAsync(comp: any, basepath: string, options: ILoadAssetO
 		}
 		
 		if (basepath) {
-			basepath = (basepath + '/').replace(/([^\:])\/\//, "$1/");
+			basepath = basepath.replace(/([^\/])$/, "$1/");
 		}
 		
-		const loader = new createjs.LoadQueue(false, basepath);
+		const loader = new createjs.LoadQueue(false);
 		
 		loader.installPlugin(createjs.Sound);
 		
@@ -58,14 +70,35 @@ export function loadAssetAsync(comp: any, basepath: string, options: ILoadAssetO
 			errors.push(evt.data);
 		});
 		
-		if (options.crossOrigin) {
-			const m = lib.properties.manifest;
-			for (let i = 0; i < m.length; i++) {
-				m[i].crossOrigin = true;
+		const manifests: IAnimateManifest[] = [];
+		const origin = lib.properties.manifest;
+		
+		for (let i = 0; i < origin.length; i++) {
+			const o = origin[i];
+			
+			const m: IAnimateManifest = {
+				src: resolvePath(o.src, basepath),
+				id: o.id
+			};
+			
+			for (let i in o) {
+				if (!m[i]) {
+					m[i] = o[i];
+				}
 			}
+			
+			if (options.crossOrigin) {
+				m.crossOrigin = true;
+			}
+			
+			if (o.src.indexOf('data:') === 0) {
+				m.type = 'image';
+			}
+			
+			manifests.push(m);
 		}
 		
-		loader.loadManifest(lib.properties.manifest);
+		loader.loadManifest(manifests);
 	})
 	.then((evt: any) => {
 		const ss = comp.getSpriteSheet();
