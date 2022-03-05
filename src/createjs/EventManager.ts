@@ -1,198 +1,164 @@
 import { TCreatejsObject, IExpandedCreatejsDisplayObject } from './core';
-import { DisplayObject } from 'pixi.js';
+import { DisplayObject, utils } from 'pixi.js';
 
-export type TCreatejsInteractionEvent = 'mousedown' | 'rollover' | 'rollout' | 'pressmove' | 'pressup';
-
-export type TPixiInteractionEvent = 'pointerdown' | 'pointerover' | 'pointerout' | 'pointermove' | 'pointerup' | 'pointerupoutside';
+/**
+ * @ignore
+ */
+const createjsInteractionEvents = {
+	mousedown: true,
+	pressmove: true,
+	pressup: true,
+	rollover: true,
+	rollout: true,
+	click: true
+};
 
 export interface ICreatejsInteractionEventDelegate {
 	 (e: any): void;
 }
 
-export interface IPixiInteractionEventDelegate {
-	 (e: any): void;
-}
-
-export interface ICreatejsInteractionEventData {
-	types: TPixiInteractionEvent[];
-	factory(cb: ICreatejsInteractionEventDelegate): IPixiInteractionEventDelegate;
-}
-
-/**
- * @ignore
- */
-let _isDown = false;
-
 export class EventManager {
-	private _events: { [name in TPixiInteractionEvent]: { func: IPixiInteractionEventDelegate, origin: ICreatejsInteractionEventDelegate  }[] };
-	private _data: { [name in TCreatejsInteractionEvent]: ICreatejsInteractionEventData };
+	private _isDown: boolean = false;
+	private _emitter: utils.EventEmitter;
+	private _cjs: TCreatejsObject;
 	
 	constructor(cjs: TCreatejsObject) {
-		this._events = {
-			pointerdown: [],
-			pointerover: [],
-			pointerout: [],
-			pointermove: [],
-			pointerup: [],
-			pointerupoutside: []
-		};
+		this._cjs = cjs;
+		this._emitter = new utils.EventEmitter();
 		
-		this._data = {
-			mousedown:{
-				types: ['pointerdown'],
-				factory: (cb: ICreatejsInteractionEventDelegate) => {
-					return this._mousedownFactory(cjs, cb);
-				}
-			},
-			rollover: {
-				types: ['pointerover'],
-				factory: (cb: ICreatejsInteractionEventDelegate) => {
-					return this._rolloverFactory(cjs, cb);
-				}
-			},
-			rollout: {
-				types: ['pointerout'],
-				factory: (cb: ICreatejsInteractionEventDelegate) => {
-					return this._rolloutFactory(cjs, cb);
-				}
-			},
-			pressmove: {
-				types: ['pointermove'],
-				factory: (cb: ICreatejsInteractionEventDelegate) => {
-					console.log(cb)
-					return this._pressmoveFactory(cjs, cb);
-				}
-			},
-			pressup: {
-				types: ['pointerup', 'pointerupoutside'],
-				factory: (cb: ICreatejsInteractionEventDelegate) => {
-					return this._pressupFactory(cjs, cb);
-				}
-			}
+		const pixi = cjs.pixi;
+		
+		pixi
+		.on('pointerdown', this._onPointerDown, this)
+		.on('pointermove', this._onPointerMove, this)
+		.on('pointerup', this._onPointerUp, this)
+		.on('pointerupoutside', this._onPointerUpOutside, this)
+		.on('pointertap', this._onPointerTap, this)
+		.on('pointerover', this._onPointerOver, this)
+		.on('pointerout', this._onPointerOut, this);
+	}
+	
+	private _onPointerDown(e: any) {
+		e.currentTarget = e.currentTarget.createjs;
+		
+		e.target = e.target.createjs;
+		const ev = e.data;
+		e.rawX = ev.global.x;
+		e.rawY = ev.global.y;
+		
+		this._isDown = true;
+		
+		this._emitter.emit('mousedown', e);
+	}
+	
+	private _onPointerMove(e: any) {
+		if (!this._isDown) {
+			return;
+		}
+		
+		e.currentTarget = this._cjs;
+		
+		e.target = e.target && e.target.createjs;
+		const ev = e.data;
+		e.rawX = ev.global.x;
+		e.rawY = ev.global.y;
+		
+		this._emitter.emit('pressmove', e);
+	}
+	
+	private _onPointerUp(e: any) {
+		e.currentTarget = this._cjs;
+		
+		e.target = e.target && e.target.createjs;
+		const ev = e.data;
+		e.rawX = ev.global.x;
+		e.rawY = ev.global.y;
+		
+		this._isDown = false;
+		
+		this._emitter.emit('pressup', e);
+	}
+	
+	private _onPointerUpOutside(e: any) {
+		e.currentTarget = this._cjs;
+		
+		e.target = e.target && e.target.createjs;
+		const ev = e.data;
+		e.rawX = ev.global.x;
+		e.rawY = ev.global.y;
+		
+		this._isDown = false;
+		
+		this._emitter.emit('pressup', e);
+	}
+	
+	private _onPointerTap(e: any) {
+		e.currentTarget = this._cjs;
+		
+		e.target = e.target && e.target.createjs;
+		const ev = e.data;
+		e.rawX = ev.global.x;
+		e.rawY = ev.global.y;
+		
+		this._emitter.emit('click', e);
+	}
+	
+	private _onPointerOver(e: any) {
+		e.currentTarget = e.currentTarget.createjs;
+		
+		e.target = e.currentTarget.createjs;
+		const ev = e.data;
+		e.rawX = ev.global.x;
+		e.rawY = ev.global.y;
+		
+		this._emitter.emit('rollover', e);
+	}
+	
+	private _onPointerOut(e: any) {
+		e.currentTarget = e.currentTarget.createjs;
+		
+		e.target = e.currentTarget.createjs;
+		const ev = e.data;
+		e.rawX = ev.global.x;
+		e.rawY = ev.global.y;
+		
+		this._emitter.emit('rollout', e);
+	}
+	
+	add(type: string, cb: ICreatejsInteractionEventDelegate) {
+		if (!(type in createjsInteractionEvents)) {
+			return;
+		}
+		
+		this._emitter.off(type, cb);
+		this._emitter.on(type, cb);
+		
+		if (this._emitter.eventNames().length > 0) {
+			this._cjs.pixi.interactive = true;
 		}
 	}
 	
-	add(pixi: DisplayObject, type: TCreatejsInteractionEvent, cb: ICreatejsInteractionEventDelegate) {
-		const data = this._data[type];
-		
-		const types = data.types;
-		const func = data.factory(cb);
-		
-		for (let i = 0; i < types.length; i++) {
-			const t = types[i];
-			this._events[t].push({ func, origin: cb });
-			
-			pixi.on(t, func);
+	remove(type: string, cb: ICreatejsInteractionEventDelegate) {
+		if (!(type in createjsInteractionEvents)) {
+			return;
 		}
 		
-		pixi.interactive = true;
-	}
-	
-	remove(pixi: DisplayObject, type: TCreatejsInteractionEvent, cb: ICreatejsInteractionEventDelegate) {
-		const data = this._data[type];
+		this._emitter.off(type, cb);
 		
-		const types = data.types;
-		
-		for (let i = 0; i < types.length; i++) {
-			const t = types[i];
-			
-			const list = this._events[t];
-			
-			if (list) {
-				for (var j = list.length - 1; j >= 0; j--) {
-					if (list[j].origin === cb) {
-						pixi.off(t, list[j].func);
-						
-						list.splice(j, 1);
-						break;
-					}
-				}
-				
-				if (list.length === 0) {
-					this._events[t] = [];
-				}
-			}
+		if (this._emitter.eventNames().length === 0) {
+			this._cjs.pixi.interactive = false;
 		}
 	}
 	
-	private _mousedownFactory(cjs: TCreatejsObject, cb: ICreatejsInteractionEventDelegate) {
-		return (e: any) => {
-			e.currentTarget = e.currentTarget.createjs;
-			
-			e.target = e.target.createjs;
-			const ev = e.data;
-			e.rawX = ev.global.x;
-			e.rawY = ev.global.y;
-			
-			_isDown = true;
-			
-			cb(e);
-		};
-	}
-	
-	private _rolloverFactory(cjs: TCreatejsObject, cb: ICreatejsInteractionEventDelegate) {
-		return (e: any) => {
-			e.currentTarget = e.currentTarget.createjs;
-			
-			e.target = e.currentTarget.createjs;
-			const ev = e.data;
-			e.rawX = ev.global.x;
-			e.rawY = ev.global.y;
-			
-			//_isDown = true;
-			
-			cb(e);
-		};
-	}
-	
-	private _rolloutFactory(cjs: TCreatejsObject, cb: ICreatejsInteractionEventDelegate) {
-		return (e: any) => {
-			e.currentTarget = e.currentTarget.createjs;
-			
-			e.target = e.currentTarget.createjs;
-			const ev = e.data;
-			e.rawX = ev.global.x;
-			e.rawY = ev.global.y;
-			
-			//_isDown = true;
-			
-			cb(e);
-		};
-	}
-	
-	private _pressmoveFactory(cjs: TCreatejsObject, cb: ICreatejsInteractionEventDelegate) {
-		return (e: any) => {
-			if (!_isDown) {
-				return;
-			}
-			
-			e.currentTarget = cjs;
-			
-			e.target = e.target && e.target.createjs;
-			const ev = e.data;
-			e.rawX = ev.global.x;
-			e.rawY = ev.global.y;
-			
-			cb(e);
-		};
-	}
-	
-	private _pressupFactory(cjs: TCreatejsObject, cb: ICreatejsInteractionEventDelegate) {
-		return (e: any) => {
-			if (!_isDown) {
-				return;
-			}
-			
-			e.currentTarget = cjs;
-			
-			_isDown = false;
-			
-			e.target = e.target && e.target.createjs;
-			const ev = e.data;
-			e.rawX = ev.global.x;
-			e.rawY = ev.global.y;
-			
-			cb(e);
-		};
+	removeAll(type?: string) {
+		if (type && !(type in createjsInteractionEvents)) {
+			return;
+		}
+		
+		this._emitter.removeAllListeners(type);
+		
+		if (this._emitter.eventNames().length === 0) {
+			this._cjs.pixi.interactive = false;
+		}
 	}
 }

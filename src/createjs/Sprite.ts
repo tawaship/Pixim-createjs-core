@@ -2,7 +2,7 @@ import { Sprite, Texture, BaseTexture } from 'pixi.js';
 import createjs from '@tawaship/createjs-module';
 import { createPixiData, createCreatejsParams, IPixiData, ICreatejsParam, ITickerData, TCreatejsMask, IExpandedCreatejsDisplayObject } from './core';
 import { createObject, DEG_TO_RAD } from './utils';
-import { EventManager, TCreatejsInteractionEvent, ICreatejsInteractionEventDelegate } from './EventManager';
+import { EventManager, ICreatejsInteractionEventDelegate } from './EventManager';
 import { CreatejsButtonHelper } from './ButtonHelper';
 import { CreatejsShape } from './Shape';
 
@@ -195,24 +195,26 @@ export class CreatejsSprite extends createjs.Sprite implements IExpandedCreatejs
 		this._createjsParams._off = value;
 	}
 	
-	addEventListener(type: TCreatejsInteractionEvent | string, cb: ICreatejsInteractionEventDelegate | CreatejsButtonHelper, ...args: any[]) {
+	addEventListener(type: string, cb: ICreatejsInteractionEventDelegate | CreatejsButtonHelper, ...args: any[]) {
 		if (!(cb instanceof CreatejsButtonHelper)) {
-			if (type === 'mousedown' || type === 'rollover' || type === 'rollout' || type === 'pressmove' || type === 'pressup') {
-				this._createjsEventManager.add(this._pixiData.instance, type, cb);
-			}
+			this._createjsEventManager.add(type, cb);
 		}
 		
 		return super.addEventListener(type, cb, ...args);
 	}
 	
-	removeEventListener(type: TCreatejsInteractionEvent | string, cb: ICreatejsInteractionEventDelegate, ...args: any[]) {
+	removeEventListener(type: string, cb: ICreatejsInteractionEventDelegate, ...args: any[]) {
 		if (!(cb instanceof CreatejsButtonHelper)) {
-			if (type === 'mousedown' || type === 'rollover' || type === 'rollout' || type === 'pressmove' || type === 'pressup') {
-				this._createjsEventManager.remove(this._pixiData.instance, type, cb);
-			}
+			this._createjsEventManager.remove(type, cb);
 		}
 		
 		return super.removeEventListener(type, cb, ...args);
+	}
+	
+	removeAllEventListeners(type?: string, ...args: any[]) {
+		this._createjsEventManager.removeAll(type);
+		
+		return super.removeAllEventListeners(type, ...args);
 	}
 	
 	get mask() {

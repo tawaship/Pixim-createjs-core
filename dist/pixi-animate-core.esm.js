@@ -1,5 +1,5 @@
 /*!
- * @tawaship/pixi-animate-core - v3.0.5
+ * @tawaship/pixi-animate-core - v3.1.0
  * 
  * @require pixi.js v^5.3.2
  * @author tawaship (makazu.mori@gmail.com)
@@ -8,7 +8,7 @@
 
 import createjs from '@tawaship/createjs-module';
 export { default as createjs } from '@tawaship/createjs-module';
-import { Container, filters, Sprite, BaseTexture, Texture, Graphics, LINE_CAP, LINE_JOIN, Text, utils } from 'pixi.js';
+import { utils, Container, filters, Sprite, BaseTexture, Texture, Graphics, LINE_CAP, LINE_JOIN, Text } from 'pixi.js';
 export { Point as PixiPoint } from 'pixi.js';
 
 function createPixiData(pixi, regObj) {
@@ -85,141 +85,118 @@ const DEG_TO_RAD = Math.PI / 180;
 /**
  * @ignore
  */
-let _isDown = false;
+const createjsInteractionEvents = {
+    mousedown: true,
+    pressmove: true,
+    pressup: true,
+    rollover: true,
+    rollout: true,
+    click: true
+};
 class EventManager {
     constructor(cjs) {
-        this._events = {
-            pointerdown: [],
-            pointerover: [],
-            pointerout: [],
-            pointermove: [],
-            pointerup: [],
-            pointerupoutside: []
-        };
-        this._data = {
-            mousedown: {
-                types: ['pointerdown'],
-                factory: (cb) => {
-                    return this._mousedownFactory(cjs, cb);
-                }
-            },
-            rollover: {
-                types: ['pointerover'],
-                factory: (cb) => {
-                    return this._rolloverFactory(cjs, cb);
-                }
-            },
-            rollout: {
-                types: ['pointerout'],
-                factory: (cb) => {
-                    return this._rolloutFactory(cjs, cb);
-                }
-            },
-            pressmove: {
-                types: ['pointermove'],
-                factory: (cb) => {
-                    console.log(cb);
-                    return this._pressmoveFactory(cjs, cb);
-                }
-            },
-            pressup: {
-                types: ['pointerup', 'pointerupoutside'],
-                factory: (cb) => {
-                    return this._pressupFactory(cjs, cb);
-                }
-            }
-        };
+        this._isDown = false;
+        this._cjs = cjs;
+        this._emitter = new utils.EventEmitter();
+        const pixi = cjs.pixi;
+        pixi
+            .on('pointerdown', this._onPointerDown, this)
+            .on('pointermove', this._onPointerMove, this)
+            .on('pointerup', this._onPointerUp, this)
+            .on('pointerupoutside', this._onPointerUpOutside, this)
+            .on('pointertap', this._onPointerTap, this)
+            .on('pointerover', this._onPointerOver, this)
+            .on('pointerout', this._onPointerOut, this);
     }
-    add(pixi, type, cb) {
-        const data = this._data[type];
-        const types = data.types;
-        const func = data.factory(cb);
-        for (let i = 0; i < types.length; i++) {
-            const t = types[i];
-            this._events[t].push({ func, origin: cb });
-            pixi.on(t, func);
+    _onPointerDown(e) {
+        e.currentTarget = e.currentTarget.createjs;
+        e.target = e.target.createjs;
+        const ev = e.data;
+        e.rawX = ev.global.x;
+        e.rawY = ev.global.y;
+        this._isDown = true;
+        this._emitter.emit('mousedown', e);
+    }
+    _onPointerMove(e) {
+        if (!this._isDown) {
+            return;
         }
-        pixi.interactive = true;
+        e.currentTarget = this._cjs;
+        e.target = e.target && e.target.createjs;
+        const ev = e.data;
+        e.rawX = ev.global.x;
+        e.rawY = ev.global.y;
+        this._emitter.emit('pressmove', e);
     }
-    remove(pixi, type, cb) {
-        const data = this._data[type];
-        const types = data.types;
-        for (let i = 0; i < types.length; i++) {
-            const t = types[i];
-            const list = this._events[t];
-            if (list) {
-                for (var j = list.length - 1; j >= 0; j--) {
-                    if (list[j].origin === cb) {
-                        pixi.off(t, list[j].func);
-                        list.splice(j, 1);
-                        break;
-                    }
-                }
-                if (list.length === 0) {
-                    this._events[t] = [];
-                }
-            }
+    _onPointerUp(e) {
+        e.currentTarget = this._cjs;
+        e.target = e.target && e.target.createjs;
+        const ev = e.data;
+        e.rawX = ev.global.x;
+        e.rawY = ev.global.y;
+        this._isDown = false;
+        this._emitter.emit('pressup', e);
+    }
+    _onPointerUpOutside(e) {
+        e.currentTarget = this._cjs;
+        e.target = e.target && e.target.createjs;
+        const ev = e.data;
+        e.rawX = ev.global.x;
+        e.rawY = ev.global.y;
+        this._isDown = false;
+        this._emitter.emit('pressup', e);
+    }
+    _onPointerTap(e) {
+        e.currentTarget = this._cjs;
+        e.target = e.target && e.target.createjs;
+        const ev = e.data;
+        e.rawX = ev.global.x;
+        e.rawY = ev.global.y;
+        this._emitter.emit('click', e);
+    }
+    _onPointerOver(e) {
+        e.currentTarget = e.currentTarget.createjs;
+        e.target = e.currentTarget.createjs;
+        const ev = e.data;
+        e.rawX = ev.global.x;
+        e.rawY = ev.global.y;
+        this._emitter.emit('rollover', e);
+    }
+    _onPointerOut(e) {
+        e.currentTarget = e.currentTarget.createjs;
+        e.target = e.currentTarget.createjs;
+        const ev = e.data;
+        e.rawX = ev.global.x;
+        e.rawY = ev.global.y;
+        this._emitter.emit('rollout', e);
+    }
+    add(type, cb) {
+        if (!(type in createjsInteractionEvents)) {
+            return;
+        }
+        this._emitter.off(type, cb);
+        this._emitter.on(type, cb);
+        if (this._emitter.eventNames().length > 0) {
+            this._cjs.pixi.interactive = true;
         }
     }
-    _mousedownFactory(cjs, cb) {
-        return (e) => {
-            e.currentTarget = e.currentTarget.createjs;
-            e.target = e.target.createjs;
-            const ev = e.data;
-            e.rawX = ev.global.x;
-            e.rawY = ev.global.y;
-            _isDown = true;
-            cb(e);
-        };
+    remove(type, cb) {
+        if (!(type in createjsInteractionEvents)) {
+            return;
+        }
+        this._emitter.off(type, cb);
+        if (this._emitter.eventNames().length === 0) {
+            this._cjs.pixi.interactive = false;
+        }
     }
-    _rolloverFactory(cjs, cb) {
-        return (e) => {
-            e.currentTarget = e.currentTarget.createjs;
-            e.target = e.currentTarget.createjs;
-            const ev = e.data;
-            e.rawX = ev.global.x;
-            e.rawY = ev.global.y;
-            //_isDown = true;
-            cb(e);
-        };
-    }
-    _rolloutFactory(cjs, cb) {
-        return (e) => {
-            e.currentTarget = e.currentTarget.createjs;
-            e.target = e.currentTarget.createjs;
-            const ev = e.data;
-            e.rawX = ev.global.x;
-            e.rawY = ev.global.y;
-            //_isDown = true;
-            cb(e);
-        };
-    }
-    _pressmoveFactory(cjs, cb) {
-        return (e) => {
-            if (!_isDown) {
-                return;
-            }
-            e.currentTarget = cjs;
-            e.target = e.target && e.target.createjs;
-            const ev = e.data;
-            e.rawX = ev.global.x;
-            e.rawY = ev.global.y;
-            cb(e);
-        };
-    }
-    _pressupFactory(cjs, cb) {
-        return (e) => {
-            if (!_isDown) {
-                return;
-            }
-            e.currentTarget = cjs;
-            _isDown = false;
-            e.target = e.target && e.target.createjs;
-            const ev = e.data;
-            e.rawX = ev.global.x;
-            e.rawY = ev.global.y;
-            cb(e);
-        };
+    removeAll(type) {
+        if (type && !(type in createjsInteractionEvents)) {
+            return;
+        }
+        this._emitter.removeAllListeners(type);
+        if (this._emitter.eventNames().length === 0) {
+            this._cjs.pixi.interactive = false;
+        }
     }
 }
 
@@ -435,19 +412,19 @@ class CreatejsMovieClip extends createjs.MovieClip {
     }
     addEventListener(type, cb, ...args) {
         if (!(cb instanceof CreatejsButtonHelper)) {
-            if (type === 'mousedown' || type === 'rollover' || type === 'rollout' || type === 'pressmove' || type === 'pressup') {
-                this._createjsEventManager.add(this._pixiData.instance, type, cb);
-            }
+            this._createjsEventManager.add(type, cb);
         }
         return super.addEventListener(type, cb, ...args);
     }
     removeEventListener(type, cb, ...args) {
         if (!(cb instanceof CreatejsButtonHelper)) {
-            if (type === 'mousedown' || type === 'rollover' || type === 'rollout' || type === 'pressmove' || type === 'pressup') {
-                this._createjsEventManager.remove(this._pixiData.instance, type, cb);
-            }
+            this._createjsEventManager.remove(type, cb);
         }
         return super.removeEventListener(type, cb, ...args);
+    }
+    removeAllEventListeners(type, ...args) {
+        this._createjsEventManager.removeAll(type);
+        return super.removeAllEventListeners(type, ...args);
     }
     get mask() {
         return this._createjsParams.mask;
@@ -708,19 +685,19 @@ class CreatejsSprite extends createjs.Sprite {
     }
     addEventListener(type, cb, ...args) {
         if (!(cb instanceof CreatejsButtonHelper)) {
-            if (type === 'mousedown' || type === 'rollover' || type === 'rollout' || type === 'pressmove' || type === 'pressup') {
-                this._createjsEventManager.add(this._pixiData.instance, type, cb);
-            }
+            this._createjsEventManager.add(type, cb);
         }
         return super.addEventListener(type, cb, ...args);
     }
     removeEventListener(type, cb, ...args) {
         if (!(cb instanceof CreatejsButtonHelper)) {
-            if (type === 'mousedown' || type === 'rollover' || type === 'rollout' || type === 'pressmove' || type === 'pressup') {
-                this._createjsEventManager.remove(this._pixiData.instance, type, cb);
-            }
+            this._createjsEventManager.remove(type, cb);
         }
         return super.removeEventListener(type, cb, ...args);
+    }
+    removeAllEventListeners(type, ...args) {
+        this._createjsEventManager.removeAll(type);
+        return super.removeAllEventListeners(type, ...args);
     }
     get mask() {
         return this._createjsParams.mask;
@@ -901,19 +878,19 @@ class CreatejsShape extends createjs.Shape {
     }
     addEventListener(type, cb, ...args) {
         if (!(cb instanceof CreatejsButtonHelper)) {
-            if (type === 'mousedown' || type === 'rollover' || type === 'rollout' || type === 'pressmove' || type === 'pressup') {
-                this._createjsEventManager.add(this._pixiData.instance, type, cb);
-            }
+            this._createjsEventManager.add(type, cb);
         }
         return super.addEventListener(type, cb, ...args);
     }
     removeEventListener(type, cb, ...args) {
         if (!(cb instanceof CreatejsButtonHelper)) {
-            if (type === 'mousedown' || type === 'rollover' || type === 'rollout' || type === 'pressmove' || type === 'pressup') {
-                this._createjsEventManager.remove(this._pixiData.instance, type, cb);
-            }
+            this._createjsEventManager.remove(type, cb);
         }
         return super.removeEventListener(type, cb, ...args);
+    }
+    removeAllEventListeners(type, ...args) {
+        this._createjsEventManager.removeAll(type);
+        return super.removeAllEventListeners(type, ...args);
     }
     get mask() {
         return this._createjsParams.mask;
@@ -1111,19 +1088,19 @@ class CreatejsBitmap extends createjs.Bitmap {
     }
     addEventListener(type, cb, ...args) {
         if (!(cb instanceof CreatejsButtonHelper)) {
-            if (type === 'mousedown' || type === 'rollover' || type === 'rollout' || type === 'pressmove' || type === 'pressup') {
-                this._createjsEventManager.add(this._pixiData.instance, type, cb);
-            }
+            this._createjsEventManager.add(type, cb);
         }
         return super.addEventListener(type, cb, ...args);
     }
     removeEventListener(type, cb, ...args) {
         if (!(cb instanceof CreatejsButtonHelper)) {
-            if (type === 'mousedown' || type === 'rollover' || type === 'rollout' || type === 'pressmove' || type === 'pressup') {
-                this._createjsEventManager.remove(this._pixiData.instance, type, cb);
-            }
+            this._createjsEventManager.remove(type, cb);
         }
         return super.removeEventListener(type, cb, ...args);
+    }
+    removeAllEventListeners(type, ...args) {
+        this._createjsEventManager.removeAll(type);
+        return super.removeAllEventListeners(type, ...args);
     }
     get mask() {
         return this._createjsParams.mask;
@@ -1323,19 +1300,19 @@ class CreatejsGraphics extends createjs.Graphics {
     }
     addEventListener(type, cb, ...args) {
         if (!(cb instanceof CreatejsButtonHelper)) {
-            if (type === 'mousedown' || type === 'rollover' || type === 'rollout' || type === 'pressmove' || type === 'pressup') {
-                this._createjsEventManager.add(this._pixiData.instance, type, cb);
-            }
+            this._createjsEventManager.add(type, cb);
         }
         return super.addEventListener(type, cb, ...args);
     }
     removeEventListener(type, cb, ...args) {
         if (!(cb instanceof CreatejsButtonHelper)) {
-            if (type === 'mousedown' || type === 'rollover' || type === 'rollout' || type === 'pressmove' || type === 'pressup') {
-                this._createjsEventManager.remove(this._pixiData.instance, type, cb);
-            }
+            this._createjsEventManager.remove(type, cb);
         }
         return super.removeEventListener(type, cb, ...args);
+    }
+    removeAllEventListeners(type, ...args) {
+        this._createjsEventManager.removeAll(type);
+        return super.removeAllEventListeners(type, ...args);
     }
     get mask() {
         return this._createjsParams.mask;
@@ -1691,19 +1668,19 @@ class CreatejsText extends createjs.Text {
     }
     addEventListener(type, cb, ...args) {
         if (!(cb instanceof CreatejsButtonHelper)) {
-            if (type === 'mousedown' || type === 'rollover' || type === 'rollout' || type === 'pressmove' || type === 'pressup') {
-                this._createjsEventManager.add(this._pixiData.instance, type, cb);
-            }
+            this._createjsEventManager.add(type, cb);
         }
         return super.addEventListener(type, cb, ...args);
     }
     removeEventListener(type, cb, ...args) {
         if (!(cb instanceof CreatejsButtonHelper)) {
-            if (type === 'mousedown' || type === 'rollover' || type === 'rollout' || type === 'pressmove' || type === 'pressup') {
-                this._createjsEventManager.remove(this._pixiData.instance, type, cb);
-            }
+            this._createjsEventManager.remove(type, cb);
         }
         return super.removeEventListener(type, cb, ...args);
+    }
+    removeAllEventListeners(type, ...args) {
+        this._createjsEventManager.removeAll(type);
+        return super.removeAllEventListeners(type, ...args);
     }
     get mask() {
         return this._createjsParams.mask;
