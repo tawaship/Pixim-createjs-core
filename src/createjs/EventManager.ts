@@ -1,4 +1,4 @@
-import { TCreatejsObject, IExpandedCreatejsDisplayObject } from './core';
+import { TCreatejsObject, ICreatejsDisplayObjectUpdater, ICreatejsDisplayObjectInitializer } from './core';
 import { DisplayObject, utils } from 'pixi.js';
 
 /**

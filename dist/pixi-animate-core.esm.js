@@ -1,5 +1,5 @@
 /*!
- * @tawaship/pixi-animate-core - v3.1.1
+ * @tawaship/pixi-animate-core - v3.2.0
  * 
  * @require pixi.js v^5.3.2
  * @author tawaship (makazu.mori@gmail.com)
@@ -10,6 +10,77 @@ import createjs from '@tawaship/createjs-module';
 export { default as createjs } from '@tawaship/createjs-module';
 import { utils, Container, filters, Sprite, BaseTexture, Texture, Graphics, LINE_CAP, LINE_JOIN, Text } from 'pixi.js';
 export { Point as PixiPoint } from 'pixi.js';
+
+/**
+ * [[https://createjs.com/docs/easeljs/classes/ButtonHelper.html | createjs.ButtonHelper]]
+ */
+class CreatejsButtonHelper extends createjs.ButtonHelper {
+    constructor(...args) {
+        super(...args);
+        const createjs = args[0];
+        const pixi = createjs.pixi;
+        const baseFrame = args[1];
+        const overFrame = args[2];
+        const downFrame = args[3];
+        const hit = arguments[5];
+        const hitFrame = args[6];
+        hit.gotoAndStop(hitFrame);
+        const hitPixi = pixi.addChild(hit.pixi);
+        hitPixi.alpha = 0.00001;
+        let isOver = false;
+        let isDown = false;
+        hitPixi.on('pointerover', function () {
+            isOver = true;
+            if (isDown) {
+                createjs.gotoAndStop(downFrame);
+            }
+            else {
+                createjs.gotoAndStop(overFrame);
+            }
+        });
+        hitPixi.on('pointerout', function () {
+            isOver = false;
+            if (isDown) {
+                createjs.gotoAndStop(overFrame);
+            }
+            else {
+                createjs.gotoAndStop(baseFrame);
+            }
+        });
+        hitPixi.on('pointerdown', function () {
+            isDown = true;
+            createjs.gotoAndStop(downFrame);
+        });
+        hitPixi.on('pointerup', function () {
+            isDown = false;
+            if (isOver) {
+                createjs.gotoAndStop(overFrame);
+            }
+            else {
+                createjs.gotoAndStop(baseFrame);
+            }
+        });
+        hitPixi.on('pointerupoutside', function () {
+            isDown = false;
+            if (isOver) {
+                createjs.gotoAndStop(overFrame);
+            }
+            else {
+                createjs.gotoAndStop(baseFrame);
+            }
+        });
+        hitPixi.interactive = true;
+        hitPixi.cursor = 'pointer';
+    }
+}
+
+function createObject(proto) {
+    return Object.create(proto);
+}
+/**
+ * @ignore
+ */
+const DEG_TO_RAD = Math.PI / 180;
 
 function createPixiData(pixi, regObj) {
     return {
@@ -31,8 +102,7 @@ function createCreatejsParams() {
         visible: true,
         alpha: 1,
         _off: false,
-        mask: null,
-        filters: null
+        mask: null
     };
 }
 function updateDisplayObjectChildren(cjs, e) {
@@ -42,6 +112,131 @@ function updateDisplayObjectChildren(cjs, e) {
         child.updateForPixi(e);
     }
     return true;
+}
+function mixinCreatejsDisplayObject(superClass) {
+    class C extends superClass {
+        get pixi() {
+            return this._pixiData.instance;
+        }
+        get x() {
+            return this._createjsParams.x;
+        }
+        set x(value) {
+            this._pixiData.instance.x = value;
+            this._createjsParams.x = value;
+        }
+        get y() {
+            return this._createjsParams.y;
+        }
+        set y(value) {
+            this._pixiData.instance.y = value;
+            this._createjsParams.y = value;
+        }
+        get scaleX() {
+            return this._createjsParams.scaleX;
+        }
+        set scaleX(value) {
+            this._pixiData.instance.scale.x = value;
+            this._createjsParams.scaleX = value;
+        }
+        get scaleY() {
+            return this._createjsParams.scaleY;
+        }
+        set scaleY(value) {
+            this._pixiData.instance.scale.y = value;
+            this._createjsParams.scaleY = value;
+        }
+        get skewX() {
+            return this._createjsParams.skewX;
+        }
+        set skewX(value) {
+            this._pixiData.instance.skew.x = -value * DEG_TO_RAD;
+            this._createjsParams.skewX = value;
+        }
+        get skewY() {
+            return this._createjsParams.skewY;
+        }
+        set skewY(value) {
+            this._pixiData.instance.skew.y = value * DEG_TO_RAD;
+            this._createjsParams.skewY = value;
+        }
+        get regX() {
+            return this._createjsParams.regX;
+        }
+        set regX(value) {
+            this._pixiData.regObj.x = value;
+            this._createjsParams.regX = value;
+        }
+        get regY() {
+            return this._createjsParams.regY;
+        }
+        set regY(value) {
+            this._pixiData.regObj.y = value;
+            this._createjsParams.regY = value;
+        }
+        get rotation() {
+            return this._createjsParams.rotation;
+        }
+        set rotation(value) {
+            this._pixiData.instance.rotation = value * DEG_TO_RAD;
+            this._createjsParams.rotation = value;
+        }
+        get visible() {
+            return this._createjsParams.visible;
+        }
+        set visible(value) {
+            value = !!value;
+            this._pixiData.instance.visible = value;
+            this._createjsParams.visible = value;
+        }
+        get alpha() {
+            return this._createjsParams.alpha;
+        }
+        set alpha(value) {
+            this._pixiData.instance.alpha = value;
+            this._createjsParams.alpha = value;
+        }
+        get _off() {
+            return this._createjsParams._off;
+        }
+        set _off(value) {
+            this._pixiData.instance.renderable = !value;
+            this._createjsParams._off = value;
+        }
+        addEventListener(type, cb, ...args) {
+            if (!(cb instanceof CreatejsButtonHelper)) {
+                this._createjsEventManager.add(type, cb);
+            }
+            return super.addEventListener(type, cb, ...args);
+        }
+        removeEventListener(type, cb, ...args) {
+            if (!(cb instanceof CreatejsButtonHelper)) {
+                this._createjsEventManager.remove(type, cb);
+            }
+            return super.removeEventListener(type, cb, ...args);
+        }
+        removeAllEventListeners(type, ...args) {
+            this._createjsEventManager.removeAll(type);
+            return super.removeAllEventListeners(type, ...args);
+        }
+        get mask() {
+            return this._createjsParams.mask;
+        }
+        set mask(value) {
+            if (value) {
+                value.masked.push(this._pixiData.instance);
+                this._pixiData.instance.mask = value.pixi;
+                this._pixiData.instance.once('added', () => {
+                    this._pixiData.instance.parent.addChild(value.pixi);
+                });
+            }
+            else {
+                this._pixiData.instance.mask = null;
+            }
+            this._createjsParams.mask = value;
+        }
+    }
+    return C;
 }
 
 /**
@@ -73,14 +268,6 @@ class CreatejsStageGL extends createjs.StageGL {
         return true;
     }
 }
-
-function createObject(proto) {
-    return Object.create(proto);
-}
-/**
- * @ignore
- */
-const DEG_TO_RAD = Math.PI / 180;
 
 /**
  * @ignore
@@ -201,69 +388,6 @@ class EventManager {
 }
 
 /**
- * [[https://createjs.com/docs/easeljs/classes/ButtonHelper.html | createjs.ButtonHelper]]
- */
-class CreatejsButtonHelper extends createjs.ButtonHelper {
-    constructor(...args) {
-        super(...args);
-        const createjs = args[0];
-        const pixi = createjs.pixi;
-        const baseFrame = args[1];
-        const overFrame = args[2];
-        const downFrame = args[3];
-        const hit = arguments[5];
-        const hitFrame = args[6];
-        hit.gotoAndStop(hitFrame);
-        const hitPixi = pixi.addChild(hit.pixi);
-        hitPixi.alpha = 0.00001;
-        let isOver = false;
-        let isDown = false;
-        hitPixi.on('pointerover', function () {
-            isOver = true;
-            if (isDown) {
-                createjs.gotoAndStop(downFrame);
-            }
-            else {
-                createjs.gotoAndStop(overFrame);
-            }
-        });
-        hitPixi.on('pointerout', function () {
-            isOver = false;
-            if (isDown) {
-                createjs.gotoAndStop(overFrame);
-            }
-            else {
-                createjs.gotoAndStop(baseFrame);
-            }
-        });
-        hitPixi.on('pointerdown', function () {
-            isDown = true;
-            createjs.gotoAndStop(downFrame);
-        });
-        hitPixi.on('pointerup', function () {
-            isDown = false;
-            if (isOver) {
-                createjs.gotoAndStop(overFrame);
-            }
-            else {
-                createjs.gotoAndStop(baseFrame);
-            }
-        });
-        hitPixi.on('pointerupoutside', function () {
-            isDown = false;
-            if (isOver) {
-                createjs.gotoAndStop(overFrame);
-            }
-            else {
-                createjs.gotoAndStop(baseFrame);
-            }
-        });
-        hitPixi.interactive = true;
-        hitPixi.cursor = 'pointer';
-    }
-}
-
-/**
  * [[http://pixijs.download/release/docs/PIXI.Container.html | PIXI.Container]]
  */
 class PixiMovieClip extends Container {
@@ -286,7 +410,9 @@ class PixiMovieClip extends Container {
  * @ignore
  */
 function createCreatejsMovieClipParams() {
-    return createCreatejsParams();
+    return Object.assign(createCreatejsParams(), {
+        filters: null
+    });
 }
 /**
  * @ignore
@@ -304,7 +430,7 @@ const P = createjs.MovieClip;
 /**
  * [[https://createjs.com/docs/easeljs/classes/MovieClip.html | createjs.MovieClip]]
  */
-class CreatejsMovieClip extends createjs.MovieClip {
+class CreatejsMovieClip extends mixinCreatejsDisplayObject(createjs.MovieClip) {
     constructor(...args) {
         super();
         this._pixiData = createPixiMovieClipData(this);
@@ -318,129 +444,9 @@ class CreatejsMovieClip extends createjs.MovieClip {
         this._createjsEventManager = new EventManager(this);
         return super.initialize(...args);
     }
-    get pixi() {
-        return this._pixiData.instance;
-    }
     updateForPixi(e) {
         this._updateState();
         return updateDisplayObjectChildren(this, e);
-    }
-    get x() {
-        return this._createjsParams.x;
-    }
-    set x(value) {
-        this._pixiData.instance.x = value;
-        this._createjsParams.x = value;
-    }
-    get y() {
-        return this._createjsParams.y;
-    }
-    set y(value) {
-        this._pixiData.instance.y = value;
-        this._createjsParams.y = value;
-    }
-    get scaleX() {
-        return this._createjsParams.scaleX;
-    }
-    set scaleX(value) {
-        this._pixiData.instance.scale.x = value;
-        this._createjsParams.scaleX = value;
-    }
-    get scaleY() {
-        return this._createjsParams.scaleY;
-    }
-    set scaleY(value) {
-        this._pixiData.instance.scale.y = value;
-        this._createjsParams.scaleY = value;
-    }
-    get skewX() {
-        return this._createjsParams.skewX;
-    }
-    set skewX(value) {
-        this._pixiData.instance.skew.x = -value * DEG_TO_RAD;
-        this._createjsParams.skewX = value;
-    }
-    get skewY() {
-        return this._createjsParams.skewY;
-    }
-    set skewY(value) {
-        this._pixiData.instance.skew.y = value * DEG_TO_RAD;
-        this._createjsParams.skewY = value;
-    }
-    get regX() {
-        return this._createjsParams.regX;
-    }
-    set regX(value) {
-        this._pixiData.regObj.x = value;
-        this._createjsParams.regX = value;
-    }
-    get regY() {
-        return this._createjsParams.regY;
-    }
-    set regY(value) {
-        this._pixiData.regObj.y = value;
-        this._createjsParams.regY = value;
-    }
-    get rotation() {
-        return this._createjsParams.rotation;
-    }
-    set rotation(value) {
-        this._pixiData.instance.rotation = value * DEG_TO_RAD;
-        this._createjsParams.rotation = value;
-    }
-    get visible() {
-        return this._createjsParams.visible;
-    }
-    set visible(value) {
-        value = !!value;
-        this._pixiData.instance.visible = value;
-        this._createjsParams.visible = value;
-    }
-    get alpha() {
-        return this._createjsParams.alpha;
-    }
-    set alpha(value) {
-        this._pixiData.instance.alpha = value;
-        this._createjsParams.alpha = value;
-    }
-    get _off() {
-        return this._createjsParams._off;
-    }
-    set _off(value) {
-        this._pixiData.instance.renderable = !value;
-        this._createjsParams._off = value;
-    }
-    addEventListener(type, cb, ...args) {
-        if (!(cb instanceof CreatejsButtonHelper)) {
-            this._createjsEventManager.add(type, cb);
-        }
-        return super.addEventListener(type, cb, ...args);
-    }
-    removeEventListener(type, cb, ...args) {
-        if (!(cb instanceof CreatejsButtonHelper)) {
-            this._createjsEventManager.remove(type, cb);
-        }
-        return super.removeEventListener(type, cb, ...args);
-    }
-    removeAllEventListeners(type, ...args) {
-        this._createjsEventManager.removeAll(type);
-        return super.removeAllEventListeners(type, ...args);
-    }
-    get mask() {
-        return this._createjsParams.mask;
-    }
-    set mask(value) {
-        if (value) {
-            value.masked.push(this._pixiData.instance);
-            this._pixiData.instance.mask = value.pixi;
-            this._pixiData.instance.once('added', () => {
-                this._pixiData.instance.parent.addChild(value.pixi);
-            });
-        }
-        else {
-            this._pixiData.instance.mask = null;
-        }
-        this._createjsParams.mask = value;
     }
     get filters() {
         return this._createjsParams.filters;
@@ -578,7 +584,7 @@ const P$1 = createjs.Sprite;
 /**
  * [[https://createjs.com/docs/easeljs/classes/Sprite.html | createjs.Sprite]]
  */
-class CreatejsSprite extends createjs.Sprite {
+class CreatejsSprite extends mixinCreatejsDisplayObject(createjs.Sprite) {
     constructor(...args) {
         super(...args);
         this._pixiData = createPixiSpriteData(this);
@@ -592,128 +598,8 @@ class CreatejsSprite extends createjs.Sprite {
         this._createjsEventManager = new EventManager(this);
         return super.initialize(...args);
     }
-    get pixi() {
-        return this._pixiData.instance;
-    }
     updateForPixi(e) {
         return true;
-    }
-    get x() {
-        return this._createjsParams.x;
-    }
-    set x(value) {
-        this._pixiData.instance.x = value;
-        this._createjsParams.x = value;
-    }
-    get y() {
-        return this._createjsParams.y;
-    }
-    set y(value) {
-        this._pixiData.instance.y = value;
-        this._createjsParams.y = value;
-    }
-    get scaleX() {
-        return this._createjsParams.scaleX;
-    }
-    set scaleX(value) {
-        this._pixiData.instance.scale.x = value;
-        this._createjsParams.scaleX = value;
-    }
-    get scaleY() {
-        return this._createjsParams.scaleY;
-    }
-    set scaleY(value) {
-        this._pixiData.instance.scale.y = value;
-        this._createjsParams.scaleY = value;
-    }
-    get skewX() {
-        return this._createjsParams.skewX;
-    }
-    set skewX(value) {
-        this._pixiData.instance.skew.x = -value * DEG_TO_RAD;
-        this._createjsParams.skewX = value;
-    }
-    get skewY() {
-        return this._createjsParams.skewY;
-    }
-    set skewY(value) {
-        this._pixiData.instance.skew.y = value * DEG_TO_RAD;
-        this._createjsParams.skewY = value;
-    }
-    get regX() {
-        return this._createjsParams.regX;
-    }
-    set regX(value) {
-        this._pixiData.regObj.x = value;
-        this._createjsParams.regX = value;
-    }
-    get regY() {
-        return this._createjsParams.regY;
-    }
-    set regY(value) {
-        this._pixiData.regObj.y = value;
-        this._createjsParams.regY = value;
-    }
-    get rotation() {
-        return this._createjsParams.rotation;
-    }
-    set rotation(value) {
-        this._pixiData.instance.rotation = value * DEG_TO_RAD;
-        this._createjsParams.rotation = value;
-    }
-    get visible() {
-        return this._createjsParams.visible;
-    }
-    set visible(value) {
-        value = !!value;
-        this._pixiData.instance.visible = value;
-        this._createjsParams.visible = value;
-    }
-    get alpha() {
-        return this._createjsParams.alpha;
-    }
-    set alpha(value) {
-        this._pixiData.instance.alpha = value;
-        this._createjsParams.alpha = value;
-    }
-    get _off() {
-        return this._createjsParams._off;
-    }
-    set _off(value) {
-        this._pixiData.instance.renderable = !value;
-        this._createjsParams._off = value;
-    }
-    addEventListener(type, cb, ...args) {
-        if (!(cb instanceof CreatejsButtonHelper)) {
-            this._createjsEventManager.add(type, cb);
-        }
-        return super.addEventListener(type, cb, ...args);
-    }
-    removeEventListener(type, cb, ...args) {
-        if (!(cb instanceof CreatejsButtonHelper)) {
-            this._createjsEventManager.remove(type, cb);
-        }
-        return super.removeEventListener(type, cb, ...args);
-    }
-    removeAllEventListeners(type, ...args) {
-        this._createjsEventManager.removeAll(type);
-        return super.removeAllEventListeners(type, ...args);
-    }
-    get mask() {
-        return this._createjsParams.mask;
-    }
-    set mask(value) {
-        if (value) {
-            value.masked.push(this._pixiData.instance);
-            this._pixiData.instance.mask = value.pixi;
-            this._pixiData.instance.once('added', () => {
-                this._pixiData.instance.parent.addChild(value.pixi);
-            });
-        }
-        else {
-            this._pixiData.instance.mask = null;
-        }
-        this._createjsParams.mask = value;
     }
     gotoAndStop(...args) {
         super.gotoAndStop(...args);
@@ -771,7 +657,7 @@ const P$2 = createjs.Shape;
 /**
  * [[https://createjs.com/docs/easeljs/classes/Shape.html | createjs.Shape]]
  */
-class CreatejsShape extends createjs.Shape {
+class CreatejsShape extends mixinCreatejsDisplayObject(createjs.Shape) {
     constructor(...args) {
         super(...args);
         this._pixiData = createPixiShapeData(this);
@@ -785,128 +671,8 @@ class CreatejsShape extends createjs.Shape {
         this._createjsEventManager = new EventManager(this);
         return super.initialize(...args);
     }
-    get pixi() {
-        return this._pixiData.instance;
-    }
     updateForPixi(e) {
         return true;
-    }
-    get x() {
-        return this._createjsParams.x;
-    }
-    set x(value) {
-        this._pixiData.instance.x = value;
-        this._createjsParams.x = value;
-    }
-    get y() {
-        return this._createjsParams.y;
-    }
-    set y(value) {
-        this._pixiData.instance.y = value;
-        this._createjsParams.y = value;
-    }
-    get scaleX() {
-        return this._createjsParams.scaleX;
-    }
-    set scaleX(value) {
-        this._pixiData.instance.scale.x = value;
-        this._createjsParams.scaleX = value;
-    }
-    get scaleY() {
-        return this._createjsParams.scaleY;
-    }
-    set scaleY(value) {
-        this._pixiData.instance.scale.y = value;
-        this._createjsParams.scaleY = value;
-    }
-    get skewX() {
-        return this._createjsParams.skewX;
-    }
-    set skewX(value) {
-        this._pixiData.instance.skew.x = -value * DEG_TO_RAD;
-        this._createjsParams.skewX = value;
-    }
-    get skewY() {
-        return this._createjsParams.skewY;
-    }
-    set skewY(value) {
-        this._pixiData.instance.skew.y = value * DEG_TO_RAD;
-        this._createjsParams.skewY = value;
-    }
-    get regX() {
-        return this._createjsParams.regX;
-    }
-    set regX(value) {
-        this._pixiData.regObj.x = value;
-        this._createjsParams.regX = value;
-    }
-    get regY() {
-        return this._createjsParams.regY;
-    }
-    set regY(value) {
-        this._pixiData.regObj.y = value;
-        this._createjsParams.regY = value;
-    }
-    get rotation() {
-        return this._createjsParams.rotation;
-    }
-    set rotation(value) {
-        this._pixiData.instance.rotation = value * DEG_TO_RAD;
-        this._createjsParams.rotation = value;
-    }
-    get visible() {
-        return this._createjsParams.visible;
-    }
-    set visible(value) {
-        value = !!value;
-        this._pixiData.instance.visible = value;
-        this._createjsParams.visible = value;
-    }
-    get alpha() {
-        return this._createjsParams.alpha;
-    }
-    set alpha(value) {
-        this._pixiData.instance.alpha = value;
-        this._createjsParams.alpha = value;
-    }
-    get _off() {
-        return this._createjsParams._off;
-    }
-    set _off(value) {
-        this._pixiData.instance.renderable = !value;
-        this._createjsParams._off = value;
-    }
-    addEventListener(type, cb, ...args) {
-        if (!(cb instanceof CreatejsButtonHelper)) {
-            this._createjsEventManager.add(type, cb);
-        }
-        return super.addEventListener(type, cb, ...args);
-    }
-    removeEventListener(type, cb, ...args) {
-        if (!(cb instanceof CreatejsButtonHelper)) {
-            this._createjsEventManager.remove(type, cb);
-        }
-        return super.removeEventListener(type, cb, ...args);
-    }
-    removeAllEventListeners(type, ...args) {
-        this._createjsEventManager.removeAll(type);
-        return super.removeAllEventListeners(type, ...args);
-    }
-    get mask() {
-        return this._createjsParams.mask;
-    }
-    set mask(value) {
-        if (value) {
-            value.masked.push(this._pixiData.instance);
-            this._pixiData.instance.mask = value.pixi;
-            this._pixiData.instance.once('added', () => {
-                this._pixiData.instance.parent.addChild(value.pixi);
-            });
-        }
-        else {
-            this._pixiData.instance.mask = null;
-        }
-        this._createjsParams.mask = value;
     }
     get graphics() {
         return this._createjsParams.graphics;
@@ -978,7 +744,7 @@ const P$3 = createjs.Bitmap;
 /**
  * [[https://createjs.com/docs/easeljs/classes/Bitmap.html | createjs.Bitmap]]
  */
-class CreatejsBitmap extends createjs.Bitmap {
+class CreatejsBitmap extends mixinCreatejsDisplayObject(createjs.Bitmap) {
     constructor(...args) {
         super(...args);
         this._pixiData = createPixiBitmapData(this);
@@ -995,128 +761,8 @@ class CreatejsBitmap extends createjs.Bitmap {
         this._pixiData.instance.texture = texture;
         return res;
     }
-    get pixi() {
-        return this._pixiData.instance;
-    }
     updateForPixi(e) {
         return true;
-    }
-    get x() {
-        return this._createjsParams.x;
-    }
-    set x(value) {
-        this._pixiData.instance.x = value;
-        this._createjsParams.x = value;
-    }
-    get y() {
-        return this._createjsParams.y;
-    }
-    set y(value) {
-        this._pixiData.instance.y = value;
-        this._createjsParams.y = value;
-    }
-    get scaleX() {
-        return this._createjsParams.scaleX;
-    }
-    set scaleX(value) {
-        this._pixiData.instance.scale.x = value;
-        this._createjsParams.scaleX = value;
-    }
-    get scaleY() {
-        return this._createjsParams.scaleY;
-    }
-    set scaleY(value) {
-        this._pixiData.instance.scale.y = value;
-        this._createjsParams.scaleY = value;
-    }
-    get skewX() {
-        return this._createjsParams.skewX;
-    }
-    set skewX(value) {
-        this._pixiData.instance.skew.x = -value * DEG_TO_RAD;
-        this._createjsParams.skewX = value;
-    }
-    get skewY() {
-        return this._createjsParams.skewY;
-    }
-    set skewY(value) {
-        this._pixiData.instance.skew.y = value * DEG_TO_RAD;
-        this._createjsParams.skewY = value;
-    }
-    get regX() {
-        return this._createjsParams.regX;
-    }
-    set regX(value) {
-        this._pixiData.regObj.x = value;
-        this._createjsParams.regX = value;
-    }
-    get regY() {
-        return this._createjsParams.regY;
-    }
-    set regY(value) {
-        this._pixiData.regObj.y = value;
-        this._createjsParams.regY = value;
-    }
-    get rotation() {
-        return this._createjsParams.rotation;
-    }
-    set rotation(value) {
-        this._pixiData.instance.rotation = value * DEG_TO_RAD;
-        this._createjsParams.rotation = value;
-    }
-    get visible() {
-        return this._createjsParams.visible;
-    }
-    set visible(value) {
-        value = !!value;
-        this._pixiData.instance.visible = value;
-        this._createjsParams.visible = value;
-    }
-    get alpha() {
-        return this._createjsParams.alpha;
-    }
-    set alpha(value) {
-        this._pixiData.instance.alpha = value;
-        this._createjsParams.alpha = value;
-    }
-    get _off() {
-        return this._createjsParams._off;
-    }
-    set _off(value) {
-        this._pixiData.instance.renderable = !value;
-        this._createjsParams._off = value;
-    }
-    addEventListener(type, cb, ...args) {
-        if (!(cb instanceof CreatejsButtonHelper)) {
-            this._createjsEventManager.add(type, cb);
-        }
-        return super.addEventListener(type, cb, ...args);
-    }
-    removeEventListener(type, cb, ...args) {
-        if (!(cb instanceof CreatejsButtonHelper)) {
-            this._createjsEventManager.remove(type, cb);
-        }
-        return super.removeEventListener(type, cb, ...args);
-    }
-    removeAllEventListeners(type, ...args) {
-        this._createjsEventManager.removeAll(type);
-        return super.removeAllEventListeners(type, ...args);
-    }
-    get mask() {
-        return this._createjsParams.mask;
-    }
-    set mask(value) {
-        if (value) {
-            value.masked.push(this._pixiData.instance);
-            this._pixiData.instance.mask = value.pixi;
-            this._pixiData.instance.once('added', () => {
-                this._pixiData.instance.parent.addChild(value.pixi);
-            });
-        }
-        else {
-            this._pixiData.instance.mask = null;
-        }
-        this._createjsParams.mask = value;
     }
 }
 // temporary prototype
@@ -1190,7 +836,7 @@ const P$4 = createjs.Graphics;
 /**
  * [[https://createjs.com/docs/easeljs/classes/Graphics.html | createjs.Graphics]]
  */
-class CreatejsGraphics extends createjs.Graphics {
+class CreatejsGraphics extends mixinCreatejsDisplayObject(createjs.Graphics) {
     constructor(...args) {
         super(...args);
         this._pixiData = createPixiGraphicsData(this);
@@ -1207,128 +853,8 @@ class CreatejsGraphics extends createjs.Graphics {
         this._createjsEventManager = new EventManager(this);
         return super.initialize(...args);
     }
-    get pixi() {
-        return this._pixiData.instance;
-    }
     updateForPixi(e) {
         return true;
-    }
-    get x() {
-        return this._createjsParams.x;
-    }
-    set x(value) {
-        this._pixiData.instance.x = value;
-        this._createjsParams.x = value;
-    }
-    get y() {
-        return this._createjsParams.y;
-    }
-    set y(value) {
-        this._pixiData.instance.y = value;
-        this._createjsParams.y = value;
-    }
-    get scaleX() {
-        return this._createjsParams.scaleX;
-    }
-    set scaleX(value) {
-        this._pixiData.instance.scale.x = value;
-        this._createjsParams.scaleX = value;
-    }
-    get scaleY() {
-        return this._createjsParams.scaleY;
-    }
-    set scaleY(value) {
-        this._pixiData.instance.scale.y = value;
-        this._createjsParams.scaleY = value;
-    }
-    get skewX() {
-        return this._createjsParams.skewX;
-    }
-    set skewX(value) {
-        this._pixiData.instance.skew.x = -value * DEG_TO_RAD;
-        this._createjsParams.skewX = value;
-    }
-    get skewY() {
-        return this._createjsParams.skewY;
-    }
-    set skewY(value) {
-        this._pixiData.instance.skew.y = value * DEG_TO_RAD;
-        this._createjsParams.skewY = value;
-    }
-    get regX() {
-        return this._createjsParams.regX;
-    }
-    set regX(value) {
-        this._pixiData.regObj.x = value;
-        this._createjsParams.regX = value;
-    }
-    get regY() {
-        return this._createjsParams.regY;
-    }
-    set regY(value) {
-        this._pixiData.regObj.y = value;
-        this._createjsParams.regY = value;
-    }
-    get rotation() {
-        return this._createjsParams.rotation;
-    }
-    set rotation(value) {
-        this._pixiData.instance.rotation = value * DEG_TO_RAD;
-        this._createjsParams.rotation = value;
-    }
-    get visible() {
-        return this._createjsParams.visible;
-    }
-    set visible(value) {
-        value = !!value;
-        this._pixiData.instance.visible = value;
-        this._createjsParams.visible = value;
-    }
-    get alpha() {
-        return this._createjsParams.alpha;
-    }
-    set alpha(value) {
-        this._pixiData.instance.alpha = value;
-        this._createjsParams.alpha = value;
-    }
-    get _off() {
-        return this._createjsParams._off;
-    }
-    set _off(value) {
-        this._pixiData.instance.renderable = !value;
-        this._createjsParams._off = value;
-    }
-    addEventListener(type, cb, ...args) {
-        if (!(cb instanceof CreatejsButtonHelper)) {
-            this._createjsEventManager.add(type, cb);
-        }
-        return super.addEventListener(type, cb, ...args);
-    }
-    removeEventListener(type, cb, ...args) {
-        if (!(cb instanceof CreatejsButtonHelper)) {
-            this._createjsEventManager.remove(type, cb);
-        }
-        return super.removeEventListener(type, cb, ...args);
-    }
-    removeAllEventListeners(type, ...args) {
-        this._createjsEventManager.removeAll(type);
-        return super.removeAllEventListeners(type, ...args);
-    }
-    get mask() {
-        return this._createjsParams.mask;
-    }
-    set mask(value) {
-        if (value) {
-            value.masked.push(this._pixiData.instance);
-            this._pixiData.instance.mask = value.pixi;
-            this._pixiData.instance.once('added', () => {
-                this._pixiData.instance.parent.addChild(value.pixi);
-            });
-        }
-        else {
-            this._pixiData.instance.mask = null;
-        }
-        this._createjsParams.mask = value;
     }
     // path methods
     moveTo(x, y) {
@@ -1558,7 +1084,7 @@ const P$5 = createjs.Text;
 /**
  * [[https://createjs.com/docs/easeljs/classes/Text.html | createjs.Text]]
  */
-class CreatejsText extends createjs.Text {
+class CreatejsText extends mixinCreatejsDisplayObject(createjs.Text) {
     constructor(text, font, color = '#000000', ...args) {
         super(text, font, color, ...args);
         this._createjsParams = createCreatejsTextParams(text, font, color);
@@ -1575,128 +1101,8 @@ class CreatejsText extends createjs.Text {
         this._createjsEventManager = new EventManager(this);
         P$5.call(this, text, font, color, ...args);
     }
-    get pixi() {
-        return this._pixiData.instance;
-    }
     updateForPixi(e) {
         return true;
-    }
-    get x() {
-        return this._createjsParams.x;
-    }
-    set x(value) {
-        this._pixiData.instance.x = value;
-        this._createjsParams.x = value;
-    }
-    get y() {
-        return this._createjsParams.y;
-    }
-    set y(value) {
-        this._pixiData.instance.y = value;
-        this._createjsParams.y = value;
-    }
-    get scaleX() {
-        return this._createjsParams.scaleX;
-    }
-    set scaleX(value) {
-        this._pixiData.instance.scale.x = value;
-        this._createjsParams.scaleX = value;
-    }
-    get scaleY() {
-        return this._createjsParams.scaleY;
-    }
-    set scaleY(value) {
-        this._pixiData.instance.scale.y = value;
-        this._createjsParams.scaleY = value;
-    }
-    get skewX() {
-        return this._createjsParams.skewX;
-    }
-    set skewX(value) {
-        this._pixiData.instance.skew.x = -value * DEG_TO_RAD;
-        this._createjsParams.skewX = value;
-    }
-    get skewY() {
-        return this._createjsParams.skewY;
-    }
-    set skewY(value) {
-        this._pixiData.instance.skew.y = value * DEG_TO_RAD;
-        this._createjsParams.skewY = value;
-    }
-    get regX() {
-        return this._createjsParams.regX;
-    }
-    set regX(value) {
-        this._pixiData.regObj.x = value;
-        this._createjsParams.regX = value;
-    }
-    get regY() {
-        return this._createjsParams.regY;
-    }
-    set regY(value) {
-        this._pixiData.regObj.y = value;
-        this._createjsParams.regY = value;
-    }
-    get rotation() {
-        return this._createjsParams.rotation;
-    }
-    set rotation(value) {
-        this._pixiData.instance.rotation = value * DEG_TO_RAD;
-        this._createjsParams.rotation = value;
-    }
-    get visible() {
-        return this._createjsParams.visible;
-    }
-    set visible(value) {
-        value = !!value;
-        this._pixiData.instance.visible = value;
-        this._createjsParams.visible = value;
-    }
-    get alpha() {
-        return this._createjsParams.alpha;
-    }
-    set alpha(value) {
-        this._pixiData.instance.alpha = value;
-        this._createjsParams.alpha = value;
-    }
-    get _off() {
-        return this._createjsParams._off;
-    }
-    set _off(value) {
-        this._pixiData.instance.renderable = !value;
-        this._createjsParams._off = value;
-    }
-    addEventListener(type, cb, ...args) {
-        if (!(cb instanceof CreatejsButtonHelper)) {
-            this._createjsEventManager.add(type, cb);
-        }
-        return super.addEventListener(type, cb, ...args);
-    }
-    removeEventListener(type, cb, ...args) {
-        if (!(cb instanceof CreatejsButtonHelper)) {
-            this._createjsEventManager.remove(type, cb);
-        }
-        return super.removeEventListener(type, cb, ...args);
-    }
-    removeAllEventListeners(type, ...args) {
-        this._createjsEventManager.removeAll(type);
-        return super.removeAllEventListeners(type, ...args);
-    }
-    get mask() {
-        return this._createjsParams.mask;
-    }
-    set mask(value) {
-        if (value) {
-            value.masked.push(this._pixiData.instance);
-            this._pixiData.instance.mask = value.pixi;
-            this._pixiData.instance.once('added', () => {
-                this._pixiData.instance.parent.addChild(value.pixi);
-            });
-        }
-        else {
-            this._pixiData.instance.mask = null;
-        }
-        this._createjsParams.mask = value;
     }
     get text() {
         return this._createjsParams.text;
@@ -1886,5 +1292,5 @@ function handleFileLoad(evt, comp) {
     }
 }
 
-export { CreatejsBitmap, CreatejsButtonHelper, CreatejsGraphics, CreatejsMovieClip, CreatejsShape, CreatejsSprite, CreatejsStage, CreatejsStageGL, CreatejsText, PixiBitmap, PixiGraphics, PixiMovieClip, PixiShape, PixiSprite, PixiText, PixiTextContainer, createCreatejsParams, createPixiData, loadAssetAsync, resolvePath, updateDisplayObjectChildren };
+export { CreatejsBitmap, CreatejsButtonHelper, CreatejsGraphics, CreatejsMovieClip, CreatejsShape, CreatejsSprite, CreatejsStage, CreatejsStageGL, CreatejsText, EventManager, PixiBitmap, PixiGraphics, PixiMovieClip, PixiShape, PixiSprite, PixiText, PixiTextContainer, createCreatejsParams, createPixiData, loadAssetAsync, mixinCreatejsDisplayObject, resolvePath, updateDisplayObjectChildren };
 //# sourceMappingURL=pixi-animate-core.esm.js.map

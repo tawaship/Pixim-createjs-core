@@ -10,3 +10,5 @@ export * from './Bitmap';
 export * from './Graphics';
 export * from './Text';
 export * from './ButtonHelper';
+export * from './EventManager';
+export * from './ColorFilter';

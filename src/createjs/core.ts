@@ -1,5 +1,4 @@
-import { DisplayObject, Container, Point } from 'pixi.js';
-import { CreatejsColorFilter } from './ColorFilter';
+import { Container, Point } from 'pixi.js';
 import { CreatejsButtonHelper } from './ButtonHelper';
 import { CreatejsStage } from './Stage';
 import { CreatejsStageGL } from './StageGL';
@@ -9,8 +8,8 @@ import { CreatejsShape } from './Shape';
 import { CreatejsBitmap } from './Bitmap';
 import { CreatejsGraphics } from './Graphics';
 import { CreatejsText } from './Text';
-
-type TCreatejsDisplayObject = any/* createjs.DisplayObject */;
+import { EventManager, ICreatejsInteractionEventDelegate } from './EventManager';
+import { DEG_TO_RAD } from './utils';
 
 /**
  * [[http://pixijs.download/release/docs/PIXI.Point.html | PIXI.Point]]
@@ -23,12 +22,12 @@ export interface ITickerData {
 	delta: number;
 }
 
-export interface IPixiData<T extends DisplayObject> {
+export interface IPixiData<T extends Container> {
 	regObj: Point;
 	instance: T;
 }
 
-export function createPixiData<TPixiDisplayObject extends DisplayObject>(pixi: TPixiDisplayObject, regObj: Point): IPixiData<TPixiDisplayObject> {
+export function createPixiData<TPixiDisplayObject extends Container>(pixi: TPixiDisplayObject, regObj: Point): IPixiData<TPixiDisplayObject> {
 	return {
 		regObj,
 		instance: pixi
@@ -36,8 +35,6 @@ export function createPixiData<TPixiDisplayObject extends DisplayObject>(pixi: T
 }
 
 export type TCreatejsMask = CreatejsShape | null;
-
-export type TCreatejsColorFilters = CreatejsColorFilter[] | null;
 
 export interface ICreatejsParam {
 	x: number;
@@ -52,8 +49,7 @@ export interface ICreatejsParam {
 	visible: boolean;
 	alpha: number;
 	_off: boolean;
-	mask: CreatejsShape | null;
-	filters: TCreatejsColorFilters;
+	mask: TCreatejsMask;
 }
 
 export type TCreatejsObject =
@@ -80,16 +76,21 @@ export function createCreatejsParams(): ICreatejsParam {
 		visible: true,
 		alpha: 1,
 		_off: false,
-		mask: null,
-		filters: null
+		mask: null
 	};
 }
 
-export interface IExpandedCreatejsDisplayObject extends TCreatejsDisplayObject {
+export type TCreatejsDisplayObject = any/* createjs.DisplayObject */;
+
+export interface ICreatejsDisplayObjectUpdater extends TCreatejsDisplayObject {
 	updateForPixi(e: ITickerData): boolean;
 }
 
-export function updateDisplayObjectChildren(cjs: IExpandedCreatejsDisplayObject, e: ITickerData) {
+export interface ICreatejsDisplayObjectInitializer {
+	initialize(...args: any[]): any;
+}
+
+export function updateDisplayObjectChildren(cjs: ICreatejsDisplayObjectUpdater, e: ITickerData) {
 	const list = cjs.children.slice();
 	for (let i = 0, l = list.length; i < l; i++) {
 		const child = list[i];
@@ -97,4 +98,177 @@ export function updateDisplayObjectChildren(cjs: IExpandedCreatejsDisplayObject,
 	}
 	
 	return true;
+}
+
+export interface IMixinedCreatejsDisplayObject extends ICreatejsParam, TCreatejsDisplayObject {
+	pixi: Container;
+	addEventListener(type: string, cb: ICreatejsInteractionEventDelegate | CreatejsButtonHelper, ...args: any[]): any;
+	removeEventListener(type: string, cb: ICreatejsInteractionEventDelegate, ...args: any[]): any;
+	removeAllEventListeners(type?: string, ...args: any[]): any;
+}
+
+type TMixinedCreatejsDisplayObjectClass = abstract new (...args: any[]) => IMixinedCreatejsDisplayObject;
+
+export function mixinCreatejsDisplayObject(superClass: new (...args: any[]) => TCreatejsDisplayObject): TMixinedCreatejsDisplayObjectClass {
+	abstract class C extends superClass {
+		protected abstract _pixiData: IPixiData<Container>;
+		protected abstract _createjsParams: ICreatejsParam;
+		protected abstract _createjsEventManager: EventManager;
+		
+		get pixi() {
+			return this._pixiData.instance;
+		}
+		
+		get x() {
+			return this._createjsParams.x;
+		}
+		
+		set x(value) {
+			this._pixiData.instance.x = value;
+			this._createjsParams.x = value;
+		}
+		
+		get y() {
+			return this._createjsParams.y;
+		}
+		
+		set y(value) {
+			this._pixiData.instance.y = value;
+			this._createjsParams.y = value;
+		}
+		
+		get scaleX() {
+			return this._createjsParams.scaleX;
+		}
+			
+		set scaleX(value) {
+			this._pixiData.instance.scale.x = value;
+			this._createjsParams.scaleX = value;
+		}
+		
+		get scaleY() {
+			return this._createjsParams.scaleY;
+		}
+		
+		set scaleY(value) {
+			this._pixiData.instance.scale.y = value;
+			this._createjsParams.scaleY = value;
+		}
+		
+		get skewX() {
+			return this._createjsParams.skewX;
+		}
+		
+		set skewX(value) {
+			this._pixiData.instance.skew.x = -value * DEG_TO_RAD;
+			this._createjsParams.skewX = value;
+		}
+		
+		get skewY() {
+			return this._createjsParams.skewY;
+		}
+		
+		set skewY(value) {
+			this._pixiData.instance.skew.y = value * DEG_TO_RAD;
+			this._createjsParams.skewY = value;
+		}
+		
+		get regX() {
+			return this._createjsParams.regX;
+		}
+		
+		set regX(value) {
+			this._pixiData.regObj.x = value;
+			this._createjsParams.regX = value;
+		}
+		
+		get regY() {
+			return this._createjsParams.regY;
+		}
+		
+		set regY(value) {
+			this._pixiData.regObj.y = value;
+			this._createjsParams.regY = value;
+		}
+		
+		get rotation() {
+			return this._createjsParams.rotation;
+		}
+		
+		set rotation(value) {
+			this._pixiData.instance.rotation = value * DEG_TO_RAD;
+			this._createjsParams.rotation = value;
+		}
+		
+		get visible() {
+			return this._createjsParams.visible;
+		}
+		
+		set visible(value) {
+			value = !!value;
+			this._pixiData.instance.visible = value;
+			this._createjsParams.visible = value;
+		}
+		
+		get alpha() {
+			return this._createjsParams.alpha;
+		}
+		
+		set alpha(value) {
+			this._pixiData.instance.alpha = value;
+			this._createjsParams.alpha = value;
+		}
+		
+		get _off() {
+			return this._createjsParams._off;
+		}
+		
+		set _off(value) {
+			this._pixiData.instance.renderable = !value;
+			this._createjsParams._off = value;
+		}
+		
+		addEventListener(type: string, cb: ICreatejsInteractionEventDelegate | CreatejsButtonHelper, ...args: any[]) {
+			if (!(cb instanceof CreatejsButtonHelper)) {
+				this._createjsEventManager.add(type, cb);
+			}
+			
+			return super.addEventListener(type, cb, ...args);
+		}
+		
+		removeEventListener(type: string, cb: ICreatejsInteractionEventDelegate, ...args: any[]) {
+			if (!(cb instanceof CreatejsButtonHelper)) {
+				this._createjsEventManager.remove(type, cb);
+			}
+			
+			return super.removeEventListener(type, cb, ...args);
+		}
+		
+		removeAllEventListeners(type?: string, ...args: any[]) {
+			this._createjsEventManager.removeAll(type);
+			
+			return super.removeAllEventListeners(type, ...args);
+		}
+		
+		get mask() {
+			return this._createjsParams.mask;
+		}
+		
+		set mask(value: TCreatejsMask) {
+			if (value) {
+				value.masked.push(this._pixiData.instance);
+				this._pixiData.instance.mask = value.pixi;
+				
+				this._pixiData.instance.once('added', () => {
+					this._pixiData.instance.parent.addChild(value.pixi);
+				});
+			} else {
+				this._pixiData.instance.mask = null;
+			}
+			
+			this._createjsParams.mask = value;
+		}
+	}
+	
+	return C;
 }
