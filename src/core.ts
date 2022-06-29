@@ -2,6 +2,11 @@ import * as PIXI from 'pixi.js';
 import * as PA from './createjs/index';
 import createjs from '@tawaship/createjs-module';
 
+/**
+ * @ignore
+ */
+declare const AdobeAn: any;
+
 export interface IAnimateLibrary {
 	[ name: string ]: any;
 }
@@ -17,23 +22,14 @@ export function resolvePath(path: string, basepath: string) {
 	return PIXI.utils.url.resolve(basepath, path);
 }
 
-export interface IAnimateManifest {
-	src: string;
-	id: string;
-	type?: string;
-	crossOrigin?: boolean;
-	[key: string]: any;
-}
-
 /**
  * Load assets of createjs content published with Adobe Animate.
  * 
  * @param comp Composition obtained from `AdobeAn.getComposition`.
- * @param basepath Directory path of Animate content.
  */
-export function loadAssetAsync(comp: any, basepath: string, options: ILoadAssetOption = {}) {
+export function loadAssetAsync(comp: any) {
 	if (!comp) {
-		throw new Error('no composition');
+		return Promise.reject(new Error('no composition'));
 	}
 	
 	const lib: IAnimateLibrary = comp.getLibrary();
@@ -41,10 +37,6 @@ export function loadAssetAsync(comp: any, basepath: string, options: ILoadAssetO
 	return new Promise((resolve, reject) => {
 		if (lib.properties.manifest.length === 0) {
 			resolve({});
-		}
-		
-		if (basepath) {
-			basepath = basepath.replace(/([^\/])$/, "$1/");
 		}
 		
 		const loader = new createjs.LoadQueue(false);
@@ -70,35 +62,7 @@ export function loadAssetAsync(comp: any, basepath: string, options: ILoadAssetO
 			errors.push(evt.data);
 		});
 		
-		const manifests: IAnimateManifest[] = [];
-		const origin = lib.properties.manifest;
-		
-		for (let i = 0; i < origin.length; i++) {
-			const o = origin[i];
-			
-			const m: IAnimateManifest = {
-				src: resolvePath(o.src, basepath),
-				id: o.id
-			};
-			
-			for (let i in o) {
-				if (!m[i]) {
-					m[i] = o[i];
-				}
-			}
-			
-			if (options.crossOrigin) {
-				m.crossOrigin = true;
-			}
-			
-			if (o.src.indexOf('data:') === 0) {
-				m.type = 'image';
-			}
-			
-			manifests.push(m);
-		}
-		
-		loader.loadManifest(manifests);
+		loader.loadManifest(lib.properties.manifest || []);
 	})
 	.then((evt: any) => {
 		const ss = comp.getSpriteSheet();

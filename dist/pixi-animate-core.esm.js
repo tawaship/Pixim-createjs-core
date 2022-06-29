@@ -1,5 +1,5 @@
 /*!
- * @tawaship/pixi-animate-core - v3.2.0
+ * @tawaship/pixi-animate-core - v3.4.0
  * 
  * @require pixi.js v^5.3.2
  * @author tawaship (makazu.mori@gmail.com)
@@ -1202,19 +1202,15 @@ function resolvePath(path, basepath) {
  * Load assets of createjs content published with Adobe Animate.
  *
  * @param comp Composition obtained from `AdobeAn.getComposition`.
- * @param basepath Directory path of Animate content.
  */
-function loadAssetAsync(comp, basepath, options = {}) {
+function loadAssetAsync(comp) {
     if (!comp) {
-        throw new Error('no composition');
+        return Promise.reject(new Error('no composition'));
     }
     const lib = comp.getLibrary();
     return new Promise((resolve, reject) => {
         if (lib.properties.manifest.length === 0) {
             resolve({});
-        }
-        if (basepath) {
-            basepath = basepath.replace(/([^\/])$/, "$1/");
         }
         const loader = new createjs.LoadQueue(false);
         loader.installPlugin(createjs.Sound);
@@ -1232,28 +1228,7 @@ function loadAssetAsync(comp, basepath, options = {}) {
         loader.addEventListener('error', (evt) => {
             errors.push(evt.data);
         });
-        const manifests = [];
-        const origin = lib.properties.manifest;
-        for (let i = 0; i < origin.length; i++) {
-            const o = origin[i];
-            const m = {
-                src: resolvePath(o.src, basepath),
-                id: o.id
-            };
-            for (let i in o) {
-                if (!m[i]) {
-                    m[i] = o[i];
-                }
-            }
-            if (options.crossOrigin) {
-                m.crossOrigin = true;
-            }
-            if (o.src.indexOf('data:') === 0) {
-                m.type = 'image';
-            }
-            manifests.push(m);
-        }
-        loader.loadManifest(manifests);
+        loader.loadManifest(lib.properties.manifest || []);
     })
         .then((evt) => {
         const ss = comp.getSpriteSheet();
