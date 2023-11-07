@@ -1,6 +1,6 @@
 import { DisplayObject, Container, filters } from 'pixi.js';
 import createjs from '@tawaship/createjs-module';
-import { CreatejsColorFilter } from './ColorFilter';
+import { CreatejsColorFilter, PixiColorMatrixFilter } from './ColorFilter';
 import { mixinCreatejsDisplayObject, createPixiData, createCreatejsParams, IPixiData, ICreatejsParam, updateDisplayObjectChildren, ITickerData, TCreatejsMask, ICreatejsDisplayObjectUpdater, ICreatejsDisplayObjectInitializer } from './core';
 import { createObject, DEG_TO_RAD } from './utils';
 import { EventManager, ICreatejsInteractionEventDelegate } from './EventManager';
@@ -104,6 +104,27 @@ export class CreatejsMovieClip extends mixinCreatejsDisplayObject(createjs.Movie
 		return this._createjsParams.filters;
 	}
 	
+	//*
+	set filters(value: TCreatejsColorFilters) {
+		const list: PixiColorMatrixFilter[] = [];
+
+		if (value && value.length > 0) {
+			for (var i = 0; i < value.length; i++) {
+				let f = value[i];
+				
+				if (!(f instanceof createjs.ColorFilter)) {
+					continue;
+				}
+				
+				list.push(f.pixi);
+			}
+		}
+
+		this._pixiData.instance.filters = list;
+		this._createjsParams.filters = value;
+	}
+	//*/
+	/*
 	set filters(value: TCreatejsColorFilters) {
 		if (value) {
 			const list = [];
@@ -125,7 +146,17 @@ export class CreatejsMovieClip extends mixinCreatejsDisplayObject(createjs.Movie
 				];
 				list.push(m);
 			}
-			
+
+			for (var i = 0; i < value.length; i++) {
+				let f = value[i];
+				
+				if (!(f instanceof createjs.ColorFilter)) {
+					continue;
+				}
+				
+				list.push(f.pixi);
+			}
+
 			var o = this._pixiData.instance;
 			var c = o.children;
 			var n = new Container();
@@ -154,7 +185,7 @@ export class CreatejsMovieClip extends mixinCreatejsDisplayObject(createjs.Movie
 				if (child instanceof PixiMovieClip) {
 					const fc = child.filterContainer;
 					if (fc) {
-						fc.cacheAsBitmap = false;
+						//fc.cacheAsBitmap = false;
 					}
 				}
 			}
@@ -162,7 +193,7 @@ export class CreatejsMovieClip extends mixinCreatejsDisplayObject(createjs.Movie
 			n.y = y;
 			
 			nc.filters = list;
-			nc.cacheAsBitmap = true;
+			//nc.cacheAsBitmap = true;
 		} else {
 			const o = this._pixiData.instance;
 			
@@ -180,7 +211,7 @@ export class CreatejsMovieClip extends mixinCreatejsDisplayObject(createjs.Movie
 				}
 				
 				nc.filters = [];
-				nc.cacheAsBitmap = false;
+				//nc.cacheAsBitmap = false;
 				
 				this._pixiData.subInstance = o;
 			}
@@ -188,6 +219,7 @@ export class CreatejsMovieClip extends mixinCreatejsDisplayObject(createjs.Movie
 		
 		this._createjsParams.filters = value;
 	}
+	//*/
 	
 	addChild(child: ICreatejsDisplayObjectUpdater) {
 		this._pixiData.subInstance.addChild(child.pixi);

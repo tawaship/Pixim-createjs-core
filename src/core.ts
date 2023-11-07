@@ -92,6 +92,7 @@ createjs.Bitmap = PA.CreatejsBitmap;
 createjs.Graphics = PA.CreatejsGraphics;
 createjs.Text = PA.CreatejsText;
 createjs.ButtonHelper = PA.CreatejsButtonHelper;
+createjs.ColorFilter = PA.CreatejsColorFilter;
 
 // install plugins
 createjs.MotionGuidePlugin.install();

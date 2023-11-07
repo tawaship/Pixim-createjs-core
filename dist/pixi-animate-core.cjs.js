@@ -1,5 +1,5 @@
 /*!
- * @tawaship/pixi-animate-core - v3.3.0
+ * @tawaship/pixi-animate-core - v3.4.0-rc
  * 
  * @require pixi.js v^5.3.2
  * @author tawaship (makazu.mori@gmail.com)
@@ -455,15 +455,35 @@ class CreatejsMovieClip extends mixinCreatejsDisplayObject(createjs.MovieClip) {
     get filters() {
         return this._createjsParams.filters;
     }
+    //*
     set filters(value) {
+        const list = [];
+        if (value && value.length > 0) {
+            for (var i = 0; i < value.length; i++) {
+                let f = value[i];
+                if (!(f instanceof createjs.ColorFilter)) {
+                    continue;
+                }
+                list.push(f.pixi);
+            }
+        }
+        this._pixiData.instance.filters = list;
+        this._createjsParams.filters = value;
+    }
+    //*/
+    /*
+    set filters(value: TCreatejsColorFilters) {
         if (value) {
             const list = [];
+            
             for (var i = 0; i < value.length; i++) {
                 const f = value[i];
+                
                 if (f instanceof createjs.ColorMatrixFilter) {
                     continue;
                 }
-                const m = new PIXI.filters.ColorMatrixFilter();
+                
+                const m = new filters.ColorMatrixFilter();
                 m.matrix = [
                     f.redMultiplier, 0, 0, 0, f.redOffset / 255,
                     0, f.greenMultiplier, 0, 0, f.greenOffset / 255,
@@ -473,42 +493,62 @@ class CreatejsMovieClip extends mixinCreatejsDisplayObject(createjs.MovieClip) {
                 ];
                 list.push(m);
             }
+
+            for (var i = 0; i < value.length; i++) {
+                let f = value[i];
+                
+                if (!(f instanceof createjs.ColorFilter)) {
+                    continue;
+                }
+                
+                list.push(f.pixi);
+            }
+
             var o = this._pixiData.instance;
             var c = o.children;
-            var n = new PIXI.Container();
-            var nc = this._pixiData.subInstance = n.addChild(new PIXI.Container());
+            var n = new Container();
+            var nc = this._pixiData.subInstance = n.addChild(new Container());
+            
             while (c.length) {
                 nc.addChild(c[0]);
             }
+            
             o.addChild(n);
             o.filterContainer = nc;
+            
             nc.updateTransform();
             nc.calculateBounds();
+            
             const b = nc.getLocalBounds();
             const x = b.x;
             const y = b.y;
+            
             for (var i = 0; i < nc.children.length; i++) {
                 const child = nc.children[i];
+                
                 child.x -= x;
                 child.y -= y;
+                
                 if (child instanceof PixiMovieClip) {
                     const fc = child.filterContainer;
                     if (fc) {
-                        fc.cacheAsBitmap = false;
+                        //fc.cacheAsBitmap = false;
                     }
                 }
             }
             n.x = x;
             n.y = y;
+            
             nc.filters = list;
-            nc.cacheAsBitmap = true;
-        }
-        else {
+            //nc.cacheAsBitmap = true;
+        } else {
             const o = this._pixiData.instance;
+            
             if (o.filterContainer) {
                 const nc = this._pixiData.subInstance;
                 const n = nc.parent;
                 const c = nc.children;
+                
                 o.removeChildren();
                 o.filterContainer = null;
                 while (c.length) {
@@ -516,13 +556,17 @@ class CreatejsMovieClip extends mixinCreatejsDisplayObject(createjs.MovieClip) {
                     v.x += n.x;
                     v.y += n.y;
                 }
+                
                 nc.filters = [];
-                nc.cacheAsBitmap = false;
+                //nc.cacheAsBitmap = false;
+                
                 this._pixiData.subInstance = o;
             }
         }
+        
         this._createjsParams.filters = value;
     }
+    //*/
     addChild(child) {
         this._pixiData.subInstance.addChild(child.pixi);
         return super.addChild(child);
@@ -1199,6 +1243,145 @@ Object.defineProperties(CreatejsText.prototype, {
     }
 });
 
+/**
+ * [[http://pixijs.download/release/docs/PIXI.ColorMatrixFilter.html | PIXI.Sprite]]
+ */
+class PixiColorMatrixFilter extends PIXI.filters.ColorMatrixFilter {
+    constructor(cjs) {
+        super();
+        this._createjs = cjs;
+    }
+    get createjs() {
+        return this._createjs;
+    }
+}
+/**
+ * @ignore
+ */
+function createPixiColorMatrixFilterData(cjs) {
+    const pixi = new PixiColorMatrixFilter(cjs);
+    return { instance: pixi };
+}
+/**
+ * @ignore
+ */
+function createCreatejsColorFilterParams() {
+    return Object.assign(createCreatejsParams(), {
+        redMultiplier: 1,
+        greenMultiplier: 1,
+        blueMultiplier: 1,
+        alphaMultiplier: 1,
+        redOffset: 0,
+        greenOffset: 0,
+        blueOffset: 0,
+        alphaOffset: 0
+    });
+}
+/**
+ * @ignore
+ */
+const P$6 = createjs.ColorFilter;
+/**
+ * [[https://createjs.com/docs/easeljs/classes/ColorFilter.html | createjs.ColorFilter]]
+ */
+class CreatejsColorFilter extends createjs.ColorFilter {
+    constructor(...args) {
+        super(args);
+        const pixiData = this._pixiData = createPixiColorMatrixFilterData(this);
+        const createjsParams = this._createjsParams = createCreatejsColorFilterParams();
+        // ColorFilterのtweenは、列挙可能かつ hasOwnPropery なプロパティにアクセスしてしまうので、enumerableを切っておく
+        Object.defineProperties(this, {
+            _pixiData: {
+                enumerable: false,
+                value: pixiData
+            },
+            _createjsParams: {
+                enumerable: false,
+                value: createjsParams
+            },
+            redMultiplier: {
+                get() {
+                    return this._createjsParams.redMultiplier;
+                },
+                set(value) {
+                    this._pixiData.instance.matrix[0] = value, this._createjsParams.redMultiplier = value;
+                }
+            },
+            greenMultiplier: {
+                get() {
+                    return this._createjsParams.greenMultiplier;
+                },
+                set(value) {
+                    this._pixiData.instance.matrix[6] = value, this._createjsParams.greenMultiplier = value;
+                }
+            },
+            blueMultiplier: {
+                get() {
+                    return this._createjsParams.blueMultiplier;
+                },
+                set(value) {
+                    this._pixiData.instance.matrix[12] = value, this._createjsParams.blueMultiplier = value;
+                }
+            },
+            alphaMultiplier: {
+                get() {
+                    return this._createjsParams.alphaMultiplier;
+                },
+                set(value) {
+                    this._pixiData.instance.matrix[18] = value, this._createjsParams.alphaMultiplier = value;
+                },
+            },
+            redOffset: {
+                get() {
+                    return this._createjsParams.redOffset;
+                },
+                set(value) {
+                    this._pixiData.instance.matrix[4] = value / 255, this._createjsParams.redOffset = value;
+                }
+            },
+            greenOffset: {
+                get() {
+                    return this._createjsParams.greenOffset;
+                },
+                set(value) {
+                    this._pixiData.instance.matrix[9] = value / 255, this._createjsParams.greenOffset = value;
+                }
+            },
+            blueOffset: {
+                get() {
+                    return this._createjsParams.blueOffset;
+                },
+                set(value) {
+                    this._pixiData.instance.matrix[14] = value / 255, this._createjsParams.blueOffset = value;
+                }
+            },
+            alphaOffset: {
+                get() {
+                    return this._createjsParams.alphaOffset;
+                },
+                set(value) {
+                    this._pixiData.instance.matrix[19] = value / 255, this._createjsParams.alphaOffset = value;
+                }
+            }
+        });
+        P$6.apply(this, args);
+    }
+    get pixi() {
+        return this._pixiData.instance;
+    }
+}
+// temporary prototype
+Object.defineProperties(CreatejsColorFilter.prototype, {
+    _createjsParams: {
+        value: createCreatejsColorFilterParams(),
+        writable: true
+    },
+    _pixiData: {
+        value: createPixiColorMatrixFilterData(createObject(CreatejsColorFilter.prototype)),
+        writable: true
+    }
+});
+
 function resolvePath(path, basepath) {
     return PIXI.utils.url.resolve(basepath, path);
 }
@@ -1259,6 +1442,7 @@ createjs.Bitmap = CreatejsBitmap;
 createjs.Graphics = CreatejsGraphics;
 createjs.Text = CreatejsText;
 createjs.ButtonHelper = CreatejsButtonHelper;
+createjs.ColorFilter = CreatejsColorFilter;
 // install plugins
 createjs.MotionGuidePlugin.install();
 /**
@@ -1280,6 +1464,7 @@ Object.defineProperty(exports, 'PixiPoint', {
 });
 exports.CreatejsBitmap = CreatejsBitmap;
 exports.CreatejsButtonHelper = CreatejsButtonHelper;
+exports.CreatejsColorFilter = CreatejsColorFilter;
 exports.CreatejsGraphics = CreatejsGraphics;
 exports.CreatejsMovieClip = CreatejsMovieClip;
 exports.CreatejsShape = CreatejsShape;
@@ -1289,6 +1474,7 @@ exports.CreatejsStageGL = CreatejsStageGL;
 exports.CreatejsText = CreatejsText;
 exports.EventManager = EventManager;
 exports.PixiBitmap = PixiBitmap;
+exports.PixiColorMatrixFilter = PixiColorMatrixFilter;
 exports.PixiGraphics = PixiGraphics;
 exports.PixiMovieClip = PixiMovieClip;
 exports.PixiShape = PixiShape;
