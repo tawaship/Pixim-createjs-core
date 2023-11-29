@@ -77,6 +77,10 @@ npm install --save @tawaship/pixi-animate-core
 - Migrated all files to typescript
 - Abolition of some options
 
+### 3.4.0
+
+- Color tween
+
 ## Unimplemented
 
 - Filter effects
